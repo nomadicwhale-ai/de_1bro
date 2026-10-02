@@ -23,7 +23,8 @@ help:
 	@echo "make types                 rebuild docs/data-types from types.yaml"
 	@echo "make conformance           build+run per-language conformance probes"
 	@echo "make smoke                 runner smoke profile (1k+10k rows, all implementations)"
-	@echo "make bench / report        full runs / reports (Phase 2+)"
+	@echo "make bench SIZE=1m         timing run of all registered implementations"
+	@echo "make report                report/REPORT.md + charts from results/raw"
 
 setup:
 	$(PY) -m pip install -r requirements.txt
@@ -62,7 +63,7 @@ bench:
 	$(PY) -m runner run --rows $(SIZE)
 
 report:
-	@echo "Phase 4: report generation not implemented yet" && exit 1
+	$(PY) report/make_charts.py
 
 clean:
 	rm -rf $(DATA_DIR) results/raw results/tmp .pytest_cache
