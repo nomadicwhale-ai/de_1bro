@@ -1,0 +1,24 @@
+# Operation registry (spec/ops/<id>.md will hold the exact definitions - Phase 2/3).
+# tracks: which tracks must implement it. phase: delivery phase that implements it.
+OP01: {name: full_scan_aggregate,        dataset: A,   tracks: [L, S], phase: 2}
+OP02: {name: filter_project,             dataset: A,   tracks: [L, S], phase: 3}
+OP03: {name: groupby_low_cardinality,    dataset: A,   tracks: [L, S], phase: 2}
+OP04: {name: groupby_high_cardinality,   dataset: A,   tracks: [L, S], phase: 2}
+OP05: {name: groupby_multi_key,          dataset: A,   tracks: [L, S], phase: 2}
+OP06: {name: hash_join_aggregate,        dataset: AB,  tracks: [L, S], phase: 3}
+OP07: {name: star_join_aggregate,        dataset: ABC, tracks: [L, S], phase: 3}
+OP08: {name: sort,                       dataset: A,   tracks: [L, S], phase: 3}
+OP09: {name: top_n,                      dataset: A,   tracks: [L, S], phase: 3}
+OP10: {name: distinct_count,             dataset: A,   tracks: [L, S], phase: 2}
+OP11: {name: window_running_sum,         dataset: A,   tracks: [L, S], phase: 3}
+OP12: {name: deduplicate,                dataset: D,   tracks: [L, S], phase: 3}
+OP13: {name: string_ops,                 dataset: D,   tracks: [L, S], phase: 3}
+OP14: {name: json_extract,               dataset: D,   tracks: [S],    phase: 3}
+OP15: {name: parse_csv,                  dataset: A,   tracks: [L, S], phase: 2}
+OP16: {name: read_parquet_aggregate,     dataset: A,   tracks: [S],    phase: 3}
+OP17: {name: write_csv_parquet,          dataset: A,   tracks: [L, S], phase: 3}
+OP18: {name: datetime_arithmetic,        dataset: A,   tracks: [L, S], phase: 3}
+OP19: {name: null_handling,              dataset: A,   tracks: [L, S], phase: 2}
+OP20: {name: wide_numeric_scan,          dataset: E,   tracks: [L, S], phase: 3}
+OP21: {name: decimal_arithmetic,         dataset: A,   tracks: [L, S], phase: 2}
+OP22: {name: type_conversion_roundtrip,  dataset: A,   tracks: [L, S], phase: 2}

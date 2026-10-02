@@ -1,0 +1,19 @@
+.env
+data/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
+# build outputs of language implementations
+languages/*/build/
+languages/*/target/
+languages/*/bin/
+conformance/*/build/
+conformance/*/target/
+conformance/*/bin/
+*.o
+*.class
+node_modules/
+/results/tmp/
+results/raw/

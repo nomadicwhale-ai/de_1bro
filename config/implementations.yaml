@@ -1,0 +1,14 @@
+# Registry of benchmark implementations. Each one must follow the CLI contract (docs/METHODOLOGY.md):
+#   <cmd> --op OPxx --dataset A --rows N --mode streaming|materialized --chunk-rows C
+#         --threads T --input <data dir> --output-json
+# and print ONE JSON line on stdout: {"load_ms","compute_ms","checksum","row_count",
+#   optional "steady_rss_mb","chunk_rows_per_s","toolchain":{...},"notes"}
+# status: ok = built and runnable here; not_run = toolchain missing (Dockerfile provided).
+selftest:
+  track: L
+  variant: stdlib
+  cmd: ["python3", "runner/selftest/bench.py"]
+  toolchain: {name: python, version_cmd: ["python3", "--version"]}
+  ops: [OP00]
+  threads: [1]
+  modes: [streaming]

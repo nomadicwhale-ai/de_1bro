@@ -1,0 +1,4117 @@
+{
+ "generator_version": "1.0.0",
+ "seed": "0x5EED1B20",
+ "note": "Produced by the pure-Python reference. Floats in `head` are shown as f64:<16-hex IEEE-754 bits>.",
+ "cases": [
+  {
+   "scale_n": 1000,
+   "table": "sales_fact",
+   "rows": 1000,
+   "columns": [
+    "transaction_id",
+    "customer_id",
+    "product_id",
+    "store_id",
+    "quantity",
+    "unit_price_cents",
+    "discount",
+    "tax",
+    "country",
+    "category",
+    "transaction_date",
+    "transaction_timestamp",
+    "is_returned"
+   ],
+   "column_digests": {
+    "transaction_id": {
+     "sum": "000000000007a314",
+     "nulls": 0
+    },
+    "customer_id": {
+     "sum": "0000000000006469",
+     "nulls": 0
+    },
+    "product_id": {
+     "sum": "000000000000156e",
+     "nulls": 0
+    },
+    "store_id": {
+     "sum": "000000000025cc02",
+     "nulls": 0
+    },
+    "quantity": {
+     "sum": "00000000800028f8",
+     "nulls": 2
+    },
+    "unit_price_cents": {
+     "sum": "0000000007a57f7c",
+     "nulls": 0
+    },
+    "discount": {
+     "sum": "b0b0000000000014",
+     "nulls": 0
+    },
+    "tax": {
+     "sum": "f61a01735ad96a6c",
+     "nulls": 0
+    },
+    "country": {
+     "sum": "38187e77ac7c871b",
+     "nulls": 1
+    },
+    "category": {
+     "sum": "beb7697a3c272896",
+     "nulls": 0
+    },
+    "transaction_date": {
+     "sum": "000000000119d8c3",
+     "nulls": 0
+    },
+    "transaction_timestamp": {
+     "sum": "1625f241a9cd5cfe",
+     "nulls": 0
+    },
+    "is_returned": {
+     "sum": "0000000000000038",
+     "nulls": 0
+    }
+   },
+   "table_digest": "ad9c536c421ed1b4",
+   "head": [
+    [
+     1,
+     1,
+     5,
+     1582,
+     1,
+     290876,
+     "f64:3fda3d70a3d70a3d",
+     "f64:406a5c52bd3c3611",
+     "United States",
+     "category_123",
+     19549,
+     1689058513904890,
+     false
+    ],
+    [
+     2,
+     18,
+     8,
+     3667,
+     3,
+     305512,
+     "f64:3fcc28f5c28f5c29",
+     "f64:4099c70f27bb2fec",
+     "India",
+     "category_012",
+     16757,
+     1447885900600869,
+     false
+    ],
+    [
+     3,
+     9,
+     9,
+     247,
+     18,
+     9784,
+     "f64:3fcd70a3d70a3d71",
+     "f64:40560395810624dd",
+     "UAE",
+     "category_069",
+     18283,
+     1579716171717551,
+     false
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000,
+   "table": "dim_customer",
+   "rows": 100,
+   "columns": [
+    "customer_id",
+    "name",
+    "email",
+    "signup_date",
+    "segment",
+    "country",
+    "lifetime_value_cents"
+   ],
+   "column_digests": {
+    "customer_id": {
+     "sum": "00000000000013ba",
+     "nulls": 0
+    },
+    "name": {
+     "sum": "fa20d29e7a459813",
+     "nulls": 0
+    },
+    "email": {
+     "sum": "f9e72efa2f84187e",
+     "nulls": 0
+    },
+    "signup_date": {
+     "sum": "00000000001a8d7d",
+     "nulls": 0
+    },
+    "segment": {
+     "sum": "211c3bbce8d5b4de",
+     "nulls": 0
+    },
+    "country": {
+     "sum": "8aa802347e1bbf2c",
+     "nulls": 0
+    },
+    "lifetime_value_cents": {
+     "sum": "0000000125a47093",
+     "nulls": 0
+    }
+   },
+   "table_digest": "f7a5e82add00e00a",
+   "head": [
+    [
+     1,
+     "Customer 1",
+     "user1@example.com",
+     19435,
+     "consumer",
+     "India",
+     74683131
+    ],
+    [
+     2,
+     "Customer 2",
+     "user2@example.com",
+     18444,
+     "small_business",
+     "Saudi Arabia",
+     16451812
+    ],
+    [
+     3,
+     "Customer 3",
+     "user3@example.com",
+     15349,
+     "government",
+     "Italy",
+     35532774
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000,
+   "table": "dim_product",
+   "rows": 10,
+   "columns": [
+    "product_id",
+    "category",
+    "brand",
+    "weight_grams",
+    "tags",
+    "attributes"
+   ],
+   "column_digests": {
+    "product_id": {
+     "sum": "0000000000000037",
+     "nulls": 0
+    },
+    "category": {
+     "sum": "b3ecc7c7003fdc3c",
+     "nulls": 0
+    },
+    "brand": {
+     "sum": "3c3134ab4e689f98",
+     "nulls": 0
+    },
+    "weight_grams": {
+     "sum": "00000000000283aa",
+     "nulls": 3
+    },
+    "tags": {
+     "sum": "5f0e8638c350342d",
+     "nulls": 0
+    },
+    "attributes": {
+     "sum": "b706ef08973772ca",
+     "nulls": 0
+    }
+   },
+   "table_digest": "9b77e5adb23df731",
+   "head": [
+    [
+     1,
+     "category_134",
+     "brand_010",
+     null,
+     [
+      "tag_24",
+      "tag_04",
+      "tag_15",
+      "tag_01"
+     ],
+     [
+      [
+       "color",
+       "green"
+      ],
+      [
+       "size",
+       "s"
+      ]
+     ]
+    ],
+    [
+     2,
+     "category_007",
+     "brand_467",
+     34877,
+     [
+      "tag_03",
+      "tag_22",
+      "tag_07"
+     ],
+     [
+      [
+       "color",
+       "red"
+      ],
+      [
+       "size",
+       "xl"
+      ]
+     ]
+    ],
+    [
+     3,
+     "category_025",
+     "brand_376",
+     1274,
+     [
+      "tag_02",
+      "tag_25",
+      "tag_05"
+     ],
+     [
+      [
+       "color",
+       "purple"
+      ],
+      [
+       "size",
+       "m"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000,
+   "table": "events_log",
+   "rows": 1000,
+   "columns": [
+    "event_id",
+    "ts",
+    "user_id",
+    "event_type",
+    "payload_json",
+    "session_id",
+    "ip",
+    "bytes"
+   ],
+   "column_digests": {
+    "event_id": {
+     "sum": "0000000000079d4d",
+     "nulls": 0
+    },
+    "ts": {
+     "sum": "1816687ef63b9bdd",
+     "nulls": 0
+    },
+    "user_id": {
+     "sum": "00000000000015a8",
+     "nulls": 0
+    },
+    "event_type": {
+     "sum": "abf98d00012c95c5",
+     "nulls": 0
+    },
+    "payload_json": {
+     "sum": "9b3fc7de74a37f8e",
+     "nulls": 0
+    },
+    "session_id": {
+     "sum": "cec0d849bbe322c4",
+     "nulls": 0
+    },
+    "ip": {
+     "sum": "1c5d085b9f4c2e67",
+     "nulls": 0
+    },
+    "bytes": {
+     "sum": "0000000d68d39b38",
+     "nulls": 0
+    }
+   },
+   "table_digest": "c3beb80eaedf0d0c",
+   "head": [
+    [
+     1,
+     1735689604684276,
+     3,
+     "login",
+     "{\"user\":{\"id\":3},\"action\":\"login\",\"amount\":91963,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcd\"}",
+     "d359f60d-cbdf-825b-8235-b1c9aed273a8",
+     "101.191.15.191",
+     44987198
+    ],
+    [
+     2,
+     1735689619378728,
+     8,
+     "view",
+     "{\"user\":{\"id\":8},\"action\":\"view\",\"amount\":22117,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefgh\"}",
+     "c6c35a8b-2410-0d05-12c3-d53277bc4755",
+     "57.111.61.173",
+     1897765
+    ],
+    [
+     3,
+     1735689619904466,
+     9,
+     "view",
+     "{\"user\":{\"id\":9},\"action\":\"view\",\"amount\":12429,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefg\"}",
+     "39fbed8e-61aa-ec0a-cca7-43a5d3abd849",
+     "254.141.21.45",
+     122680612
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000,
+   "table": "wide_numeric",
+   "rows": 1000,
+   "columns": [
+    "id",
+    "f000",
+    "f001",
+    "f002",
+    "f003",
+    "f004",
+    "f005",
+    "f006",
+    "f007",
+    "f008",
+    "f009",
+    "f010",
+    "f011",
+    "f012",
+    "f013",
+    "f014",
+    "f015",
+    "f016",
+    "f017",
+    "f018",
+    "f019",
+    "f020",
+    "f021",
+    "f022",
+    "f023",
+    "f024",
+    "f025",
+    "f026",
+    "f027",
+    "f028",
+    "f029",
+    "f030",
+    "f031",
+    "f032",
+    "f033",
+    "f034",
+    "f035",
+    "f036",
+    "f037",
+    "f038",
+    "f039",
+    "f040",
+    "f041",
+    "f042",
+    "f043",
+    "f044",
+    "f045",
+    "f046",
+    "f047",
+    "f048",
+    "f049",
+    "f050",
+    "f051",
+    "f052",
+    "f053",
+    "f054",
+    "f055",
+    "f056",
+    "f057",
+    "f058",
+    "f059",
+    "f060",
+    "f061",
+    "f062",
+    "f063",
+    "f064",
+    "f065",
+    "f066",
+    "f067",
+    "f068",
+    "f069",
+    "f070",
+    "f071",
+    "f072",
+    "f073",
+    "f074",
+    "f075",
+    "f076",
+    "f077",
+    "f078",
+    "f079",
+    "f080",
+    "f081",
+    "f082",
+    "f083",
+    "f084",
+    "f085",
+    "f086",
+    "f087",
+    "f088",
+    "f089",
+    "f090",
+    "f091",
+    "f092",
+    "f093",
+    "f094",
+    "f095",
+    "f096",
+    "f097",
+    "f098",
+    "f099",
+    "i00",
+    "i01",
+    "i02",
+    "i03",
+    "i04",
+    "i05",
+    "i06",
+    "i07",
+    "i08",
+    "i09",
+    "i10",
+    "i11",
+    "i12",
+    "i13",
+    "i14",
+    "i15",
+    "i16",
+    "i17",
+    "i18",
+    "i19"
+   ],
+   "column_digests": {
+    "id": {
+     "sum": "000000000007a314",
+     "nulls": 0
+    },
+    "f000": {
+     "sum": "617b372b65acdee8",
+     "nulls": 0
+    },
+    "f001": {
+     "sum": "64d5320dab691d3f",
+     "nulls": 0
+    },
+    "f002": {
+     "sum": "636e39ce320c15e8",
+     "nulls": 0
+    },
+    "f003": {
+     "sum": "669ce7ba3f2babc9",
+     "nulls": 0
+    },
+    "f004": {
+     "sum": "612271a230ac7fbf",
+     "nulls": 0
+    },
+    "f005": {
+     "sum": "6566400a993e6f18",
+     "nulls": 0
+    },
+    "f006": {
+     "sum": "677f5f7161a6937c",
+     "nulls": 0
+    },
+    "f007": {
+     "sum": "6485b00c54b59534",
+     "nulls": 0
+    },
+    "f008": {
+     "sum": "626037cc6bf4ab44",
+     "nulls": 0
+    },
+    "f009": {
+     "sum": "6206b79f0584c463",
+     "nulls": 0
+    },
+    "f010": {
+     "sum": "62f79e2ba9566988",
+     "nulls": 0
+    },
+    "f011": {
+     "sum": "625999d807f94fb8",
+     "nulls": 0
+    },
+    "f012": {
+     "sum": "64d89331f51ca3f8",
+     "nulls": 0
+    },
+    "f013": {
+     "sum": "6599fb89f84a1d52",
+     "nulls": 0
+    },
+    "f014": {
+     "sum": "62b99dfa1d505a48",
+     "nulls": 0
+    },
+    "f015": {
+     "sum": "6282ce4129bf40c1",
+     "nulls": 0
+    },
+    "f016": {
+     "sum": "66bcd8b99bfa15ac",
+     "nulls": 0
+    },
+    "f017": {
+     "sum": "643394101f8470dc",
+     "nulls": 0
+    },
+    "f018": {
+     "sum": "64a9fcdd274e6aea",
+     "nulls": 0
+    },
+    "f019": {
+     "sum": "61dd67c320ed51af",
+     "nulls": 0
+    },
+    "f020": {
+     "sum": "65bdfc56b6b3331a",
+     "nulls": 0
+    },
+    "f021": {
+     "sum": "63b5a34e2a360e34",
+     "nulls": 0
+    },
+    "f022": {
+     "sum": "6235b20312948d65",
+     "nulls": 0
+    },
+    "f023": {
+     "sum": "671018a72ad06a6d",
+     "nulls": 0
+    },
+    "f024": {
+     "sum": "66052eca0b922cc6",
+     "nulls": 0
+    },
+    "f025": {
+     "sum": "67a8046e6e4596e6",
+     "nulls": 0
+    },
+    "f026": {
+     "sum": "62b1841f110c5c3e",
+     "nulls": 0
+    },
+    "f027": {
+     "sum": "678ad902ea383ce3",
+     "nulls": 0
+    },
+    "f028": {
+     "sum": "6252d932a9f1f67a",
+     "nulls": 0
+    },
+    "f029": {
+     "sum": "6489361df6f5df0d",
+     "nulls": 0
+    },
+    "f030": {
+     "sum": "5eb2c0e97b32cc99",
+     "nulls": 0
+    },
+    "f031": {
+     "sum": "6190c49e5787287a",
+     "nulls": 0
+    },
+    "f032": {
+     "sum": "64980ef6d87e38d6",
+     "nulls": 0
+    },
+    "f033": {
+     "sum": "6271424702985d01",
+     "nulls": 0
+    },
+    "f034": {
+     "sum": "65b7b629e9642a07",
+     "nulls": 0
+    },
+    "f035": {
+     "sum": "632b903e26326ba9",
+     "nulls": 0
+    },
+    "f036": {
+     "sum": "66750242c0972dd4",
+     "nulls": 0
+    },
+    "f037": {
+     "sum": "6167793dd30da55a",
+     "nulls": 0
+    },
+    "f038": {
+     "sum": "631ec5937b69655c",
+     "nulls": 0
+    },
+    "f039": {
+     "sum": "5cadebe8359e1fd0",
+     "nulls": 0
+    },
+    "f040": {
+     "sum": "5f2796ae11f080ca",
+     "nulls": 0
+    },
+    "f041": {
+     "sum": "64176e9c63d5c464",
+     "nulls": 0
+    },
+    "f042": {
+     "sum": "67d2faede4eea74f",
+     "nulls": 0
+    },
+    "f043": {
+     "sum": "6325090a9ca48d45",
+     "nulls": 0
+    },
+    "f044": {
+     "sum": "64da5553f12c73a2",
+     "nulls": 0
+    },
+    "f045": {
+     "sum": "66a1b8971130323b",
+     "nulls": 0
+    },
+    "f046": {
+     "sum": "65c2e73b11a3b08d",
+     "nulls": 0
+    },
+    "f047": {
+     "sum": "660fced250828a1c",
+     "nulls": 0
+    },
+    "f048": {
+     "sum": "6548ddb2a7e78b3e",
+     "nulls": 0
+    },
+    "f049": {
+     "sum": "636bb1f621a71bac",
+     "nulls": 0
+    },
+    "f050": {
+     "sum": "678d587ee9783086",
+     "nulls": 0
+    },
+    "f051": {
+     "sum": "61cc41612f9893cf",
+     "nulls": 0
+    },
+    "f052": {
+     "sum": "6506afaf952b95c7",
+     "nulls": 0
+    },
+    "f053": {
+     "sum": "680c4f9a7a730b71",
+     "nulls": 0
+    },
+    "f054": {
+     "sum": "648c2987211f8c46",
+     "nulls": 0
+    },
+    "f055": {
+     "sum": "650dd7d990686178",
+     "nulls": 0
+    },
+    "f056": {
+     "sum": "66219530a8ef7e5e",
+     "nulls": 0
+    },
+    "f057": {
+     "sum": "624a969f27faa143",
+     "nulls": 0
+    },
+    "f058": {
+     "sum": "61bd15148d36c071",
+     "nulls": 0
+    },
+    "f059": {
+     "sum": "626712444535e966",
+     "nulls": 0
+    },
+    "f060": {
+     "sum": "6626dda42174aefd",
+     "nulls": 0
+    },
+    "f061": {
+     "sum": "65f1e02194eed233",
+     "nulls": 0
+    },
+    "f062": {
+     "sum": "669c0522e53280c2",
+     "nulls": 0
+    },
+    "f063": {
+     "sum": "60f33313be8f496c",
+     "nulls": 0
+    },
+    "f064": {
+     "sum": "6743f7ddc437e847",
+     "nulls": 0
+    },
+    "f065": {
+     "sum": "667493cf258b3a39",
+     "nulls": 0
+    },
+    "f066": {
+     "sum": "632e050d5f7fe878",
+     "nulls": 0
+    },
+    "f067": {
+     "sum": "632e2a9e5eaa3692",
+     "nulls": 0
+    },
+    "f068": {
+     "sum": "6447a5e13781d1e0",
+     "nulls": 0
+    },
+    "f069": {
+     "sum": "6205ed351b6a46a4",
+     "nulls": 0
+    },
+    "f070": {
+     "sum": "653a68c098b3da69",
+     "nulls": 0
+    },
+    "f071": {
+     "sum": "620f305d89168494",
+     "nulls": 0
+    },
+    "f072": {
+     "sum": "62dfcd07dcfe7d87",
+     "nulls": 0
+    },
+    "f073": {
+     "sum": "61ef761b16ad96d9",
+     "nulls": 0
+    },
+    "f074": {
+     "sum": "610d9a32705618ec",
+     "nulls": 0
+    },
+    "f075": {
+     "sum": "670d73e91c0f0fe8",
+     "nulls": 0
+    },
+    "f076": {
+     "sum": "621729a11a744f3e",
+     "nulls": 0
+    },
+    "f077": {
+     "sum": "5c6a6c2a2d95b6ca",
+     "nulls": 0
+    },
+    "f078": {
+     "sum": "6304f527fb8f6990",
+     "nulls": 0
+    },
+    "f079": {
+     "sum": "6075cbf2394b5bd1",
+     "nulls": 0
+    },
+    "f080": {
+     "sum": "5b4de3707713dbc8",
+     "nulls": 0
+    },
+    "f081": {
+     "sum": "60704b95fae28660",
+     "nulls": 0
+    },
+    "f082": {
+     "sum": "65f801575bac635f",
+     "nulls": 0
+    },
+    "f083": {
+     "sum": "648de87dd24362cc",
+     "nulls": 0
+    },
+    "f084": {
+     "sum": "6661938be7baed44",
+     "nulls": 0
+    },
+    "f085": {
+     "sum": "61d631cc23da3b8c",
+     "nulls": 0
+    },
+    "f086": {
+     "sum": "6104e65f4c9a90fe",
+     "nulls": 0
+    },
+    "f087": {
+     "sum": "63dc7eaa2e42f3a0",
+     "nulls": 0
+    },
+    "f088": {
+     "sum": "62700116fff11773",
+     "nulls": 0
+    },
+    "f089": {
+     "sum": "663e922998f1e741",
+     "nulls": 0
+    },
+    "f090": {
+     "sum": "64b5dfb1b490bd89",
+     "nulls": 0
+    },
+    "f091": {
+     "sum": "632bf464c6a8affa",
+     "nulls": 0
+    },
+    "f092": {
+     "sum": "62ea9cfee317d5a8",
+     "nulls": 0
+    },
+    "f093": {
+     "sum": "642f042072730cc1",
+     "nulls": 0
+    },
+    "f094": {
+     "sum": "67bc58153ec47d22",
+     "nulls": 0
+    },
+    "f095": {
+     "sum": "62653445ed5c535f",
+     "nulls": 0
+    },
+    "f096": {
+     "sum": "61c393c5a5b2a658",
+     "nulls": 0
+    },
+    "f097": {
+     "sum": "633be0e1711fd6e8",
+     "nulls": 0
+    },
+    "f098": {
+     "sum": "647126c62959bd2d",
+     "nulls": 0
+    },
+    "f099": {
+     "sum": "65d208d90b77f67c",
+     "nulls": 0
+    },
+    "i00": {
+     "sum": "0000007697def49b",
+     "nulls": 0
+    },
+    "i01": {
+     "sum": "00000072c28692bb",
+     "nulls": 0
+    },
+    "i02": {
+     "sum": "000000729593e0f1",
+     "nulls": 0
+    },
+    "i03": {
+     "sum": "000000759751ada9",
+     "nulls": 0
+    },
+    "i04": {
+     "sum": "00000071b99518d3",
+     "nulls": 0
+    },
+    "i05": {
+     "sum": "0000007387c08eee",
+     "nulls": 0
+    },
+    "i06": {
+     "sum": "000000748d54bac6",
+     "nulls": 0
+    },
+    "i07": {
+     "sum": "00000074c1bfba0e",
+     "nulls": 0
+    },
+    "i08": {
+     "sum": "00000074cb8ae5a6",
+     "nulls": 0
+    },
+    "i09": {
+     "sum": "000000706b7a34fa",
+     "nulls": 0
+    },
+    "i10": {
+     "sum": "0000007423a15763",
+     "nulls": 0
+    },
+    "i11": {
+     "sum": "000000738818ca04",
+     "nulls": 0
+    },
+    "i12": {
+     "sum": "000000743f8e6630",
+     "nulls": 0
+    },
+    "i13": {
+     "sum": "0000007558908c1d",
+     "nulls": 0
+    },
+    "i14": {
+     "sum": "000000757b886abc",
+     "nulls": 0
+    },
+    "i15": {
+     "sum": "000000704b03e7af",
+     "nulls": 0
+    },
+    "i16": {
+     "sum": "0000006fd4aeb251",
+     "nulls": 0
+    },
+    "i17": {
+     "sum": "0000007598deab6e",
+     "nulls": 0
+    },
+    "i18": {
+     "sum": "0000007391368897",
+     "nulls": 0
+    },
+    "i19": {
+     "sum": "00000074603fe357",
+     "nulls": 0
+    }
+   },
+   "table_digest": "e150cc1bb1d9c62b",
+   "head": [
+    [
+     1,
+     "f64:3fdbddc6930ade82",
+     "f64:3fef689359a87e16",
+     "f64:3fd1475703f6ef42",
+     "f64:3fec2d2049db8175",
+     "f64:3fefcb2f94659842",
+     "f64:3fe459fccfde1a9c",
+     "f64:3fe37d4e50ca5ebf",
+     "f64:3f860db2486ab380",
+     "f64:3feb45f4f600c367",
+     "f64:3fec16bb6e695e50",
+     "f64:3feb84989221d15f",
+     "f64:3fd183babc00621a",
+     "f64:3fc13453525402d8",
+     "f64:3fc1fed4a27f4f64",
+     "f64:3fef504b47377c8a",
+     "f64:3fefcda956a3c6b4",
+     "f64:3feebd683f11d2f7",
+     "f64:3fd23f2270b1cdfc",
+     "f64:3fe9a41594f5fa3c",
+     "f64:3fd691b8434f16a6",
+     "f64:3fab06cb5ab9d3c0",
+     "f64:3fe88c08253ff404",
+     "f64:3fd50ae4ff74eaee",
+     "f64:3fd2e0860f4eb7e2",
+     "f64:3fd83bc4a55249b2",
+     "f64:3fcd6ea02ed8b6dc",
+     "f64:3fe8722f19fec08d",
+     "f64:3f77bcb64c4f2900",
+     "f64:3fef015b171917ea",
+     "f64:3fe2562cd8ad317d",
+     "f64:3febe7ccbab450b2",
+     "f64:3fcb83a9565fb0f0",
+     "f64:3fda47a472fc085a",
+     "f64:3fdc834027e76956",
+     "f64:3fecb2f4554c3a4b",
+     "f64:3fd2064277466c1c",
+     "f64:3fc6a6ee49bd6f50",
+     "f64:3fc0a0f6962b8430",
+     "f64:3fa527acc634e810",
+     "f64:3fe8234f6391bcc4",
+     "f64:3fd9a2a4dcc52822",
+     "f64:3fe77ddeddcc49e3",
+     "f64:3feaecd4fbc6ef1f",
+     "f64:3feb4bf96f5a2025",
+     "f64:3feacf0e38c788c9",
+     "f64:3fda92d437a65cbc",
+     "f64:3fce6575f8377518",
+     "f64:3fe49349f6b52c22",
+     "f64:3fbd284ededae220",
+     "f64:3fea3855ec10ec21",
+     "f64:3fd286b111ee1c24",
+     "f64:3fae86034389a4d0",
+     "f64:3fd9dacf62688cec",
+     "f64:3fa43ccad20a3180",
+     "f64:3fe4918363281da9",
+     "f64:3fea3e08bac4c1b2",
+     "f64:3fd9ff5274f866d6",
+     "f64:3fbb97c00b1d2978",
+     "f64:3f91861ac0a3e8e0",
+     "f64:3fabe3cbf9137ef0",
+     "f64:3feee375b766dcaa",
+     "f64:3fdf2ed7fc16418c",
+     "f64:3fe1ab42f4953905",
+     "f64:3fe8bb62faa81fb5",
+     "f64:3fe6a9a0a639f926",
+     "f64:3fd7d6802a6b6c86",
+     "f64:3fde1fa6025b08ba",
+     "f64:3fd25c4233e71ffc",
+     "f64:3fec1e07fc55eeb2",
+     "f64:3fcfa0cdcd651d60",
+     "f64:3fdd42d4b886cf74",
+     "f64:3fe5b6bc21839374",
+     "f64:3fef31d20e90f1a8",
+     "f64:3fec8bfe8c2e44fe",
+     "f64:3fe49b45853278a4",
+     "f64:3fe4b7310f8070c5",
+     "f64:3fe83807cca14ffb",
+     "f64:3fe47f970e18a80d",
+     "f64:3fce91f0bbb3c31c",
+     "f64:3fb95014fc782438",
+     "f64:3fd3caca096e724a",
+     "f64:3fec4913837bf397",
+     "f64:3fddfa6b4c26da0a",
+     "f64:3fe8d34c83d996ac",
+     "f64:3fed109af0ff910d",
+     "f64:3fd40ebd06b6fb32",
+     "f64:3fe9ee001f4398de",
+     "f64:3feee3c236ed99f7",
+     "f64:3fad5d2610d21eb0",
+     "f64:3fe9c6490266049d",
+     "f64:3fe82159cef2c9a6",
+     "f64:3fd50330f4117226",
+     "f64:3fe31585a0b16ad1",
+     "f64:3fd47f99091f4296",
+     "f64:3fea94e7417b0b53",
+     "f64:3fb1369879458908",
+     "f64:3fe252889979501a",
+     "f64:3fe297fff5c56e80",
+     "f64:3febc31e548c5690",
+     "f64:3faa5054d1ee8fa0",
+     384577971,
+     617741375,
+     505951489,
+     17918128,
+     714012544,
+     674021811,
+     690854078,
+     934157999,
+     874862336,
+     626344193,
+     172965382,
+     729681665,
+     503126555,
+     852274858,
+     249336714,
+     24974906,
+     969467467,
+     179655252,
+     904484392,
+     432671675
+    ],
+    [
+     2,
+     "f64:3fe81381c1f1e761",
+     "f64:3fe6fe8b52e2dd9e",
+     "f64:3f91782f81117f00",
+     "f64:3fe74ebb1ccf615a",
+     "f64:3fc34abc3283bf68",
+     "f64:3fc5cedb5636ec68",
+     "f64:3fb787a18ebb1048",
+     "f64:3fe162fcad3385af",
+     "f64:3fbeba3e78dbdd28",
+     "f64:3feabf59959bbc9c",
+     "f64:3fd3bb44ced26fd2",
+     "f64:3fa2c50c59109fc0",
+     "f64:3fe36d8aefcb8e6c",
+     "f64:3fc9c6c9cddc1598",
+     "f64:3fe0ebcbc73b85f7",
+     "f64:3febb07dab375069",
+     "f64:3fe46f4fe945291c",
+     "f64:3fedaeb12890dd11",
+     "f64:3faf2e5de18fc540",
+     "f64:3fec1adfbf91bd14",
+     "f64:3fc98b800fc67cbc",
+     "f64:3fd4c1048786248e",
+     "f64:3f8cb1a040901540",
+     "f64:3fee52edbbf26ac1",
+     "f64:3fe246d44ac92021",
+     "f64:3fdab5d7b679d8f4",
+     "f64:3fcaa90d960728d4",
+     "f64:3fecad9e6ae02fca",
+     "f64:3febd4e310c7a8dd",
+     "f64:3fe39628584cf3a6",
+     "f64:3fd88d95636a6194",
+     "f64:3fe692e7a21bdfdb",
+     "f64:3fcecce2e42e7e9c",
+     "f64:3fa3aedb77aa1610",
+     "f64:3fceb8f06bf334f0",
+     "f64:3feff277d1cc421a",
+     "f64:3fee0471182f5559",
+     "f64:3fe87dff0685cf51",
+     "f64:3fecc82bdd1649c0",
+     "f64:3fdaf10a893c8bde",
+     "f64:3fdddbb886e9b912",
+     "f64:3fd28f86adeab860",
+     "f64:3fede345735b1547",
+     "f64:3fd999276b53c726",
+     "f64:3fefc4eb2ca8fb40",
+     "f64:3fd51c7ee1d01ac4",
+     "f64:3fdfe1997d3dcfb6",
+     "f64:3fd6a0b3ded01f54",
+     "f64:3fdf80c6a960235a",
+     "f64:3feccddb0a04e8d8",
+     "f64:3fd63ac324291d6c",
+     "f64:3fd0d6435c3431e0",
+     "f64:3feeeebde23bbf28",
+     "f64:3fe238e34f2f2072",
+     "f64:3fe0df45845749ce",
+     "f64:3fc4d231e96e3b40",
+     "f64:3fcd31d05a00d0cc",
+     "f64:3fea0adb1a729b90",
+     "f64:3fe4154af6f1a346",
+     "f64:3fe2a51e0f27f187",
+     "f64:3fc248455e5ca7f8",
+     "f64:3fe7dad1659b393d",
+     "f64:3fcf410d16f87fd4",
+     "f64:3fa37221e832da10",
+     "f64:3fd3c47d91620da2",
+     "f64:3fe7de346194eb68",
+     "f64:3fd3b5f509fa3a2c",
+     "f64:3fe2d95cdfbce19d",
+     "f64:3fdd183c60fbd690",
+     "f64:3f958d1baf504520",
+     "f64:3fe7dc2ee7b5fe02",
+     "f64:3fc7232df3ac65c4",
+     "f64:3fce3ca113cbb820",
+     "f64:3fb647bc169c5100",
+     "f64:3f9941d48cbcf5a0",
+     "f64:3fcabb729c4265c8",
+     "f64:3fba2cc5653e44d0",
+     "f64:3fcd7835470590f8",
+     "f64:3febde786d63cb67",
+     "f64:3fc59fa07a83f7a8",
+     "f64:3fbb91441001a148",
+     "f64:3fd1f359315fc06c",
+     "f64:3fdfdbb5547dc2c6",
+     "f64:3fd3e482c002a71a",
+     "f64:3fecd3f63c66b8e9",
+     "f64:3fd9248403671d66",
+     "f64:3fe0ee1021984f68",
+     "f64:3fa67c5a32101ef0",
+     "f64:3fc72c7ec422a478",
+     "f64:3fc4923d8d074814",
+     "f64:3fd63508e76b1d46",
+     "f64:3fe89fd0926600e3",
+     "f64:3fcc54fd2db23c24",
+     "f64:3fe8c9d3a76efcb0",
+     "f64:3fd6b14ac703b174",
+     "f64:3fe6eb97b2c004b7",
+     "f64:3fc3af7ed2baa540",
+     "f64:3fe28e076245ab61",
+     "f64:3fc63dd0a13a27cc",
+     "f64:3fb116d84f8643f8",
+     787605882,
+     485473140,
+     944895046,
+     573576197,
+     179326959,
+     49046397,
+     590417565,
+     570222854,
+     639966057,
+     778539441,
+     311026549,
+     923588602,
+     61608783,
+     438048442,
+     953640388,
+     645529168,
+     307583484,
+     425690638,
+     116318717,
+     806042226
+    ],
+    [
+     3,
+     "f64:3fee6842ebfe63dd",
+     "f64:3fe5d6b12e679992",
+     "f64:3fd41b52e86efd8e",
+     "f64:3fd7d383ba7f68ee",
+     "f64:3fdf727bd90944dc",
+     "f64:3fc445d9a9a6d7d8",
+     "f64:3fd63b2d2b5c4320",
+     "f64:3fd13f3a24212a2a",
+     "f64:3fe7076d21fc584d",
+     "f64:3fe8fe7473ca70a4",
+     "f64:3fc2d7c10e4ba510",
+     "f64:3fe851963840b16c",
+     "f64:3fe8d942192c6158",
+     "f64:3fc00428fac02ce8",
+     "f64:3fb631b061e6d5b8",
+     "f64:3fc07c3beaec7348",
+     "f64:3fe5d7225c9b1b04",
+     "f64:3f6edee7ed10ec00",
+     "f64:3fdde78740bce852",
+     "f64:3fe3fa9e1777aafa",
+     "f64:3f97959a5296f480",
+     "f64:3fd0ab301d8d0a40",
+     "f64:3fe732a6730455f2",
+     "f64:3fd3f3a011f0207a",
+     "f64:3fe4e188801ab04c",
+     "f64:3fe2b45e86a5ec10",
+     "f64:3fe71ef6f62c6d1b",
+     "f64:3fcc03d97f90a080",
+     "f64:3fe227180583d2be",
+     "f64:3fe2936728789789",
+     "f64:3fdaf0357b67f354",
+     "f64:3feeb1ad1279b742",
+     "f64:3fcede6708df3c54",
+     "f64:3fe3bf4422594b77",
+     "f64:3fd930c25db9cb06",
+     "f64:3fef15fb25e5ec4f",
+     "f64:3f93d7d536e9ba40",
+     "f64:3fb14bcf14e618e0",
+     "f64:3f8c99a704318b80",
+     "f64:3fe325c0208714d6",
+     "f64:3fd2dd221f54d7f8",
+     "f64:3feb3f5c2d0eb27f",
+     "f64:3fcef1a5691f9df8",
+     "f64:3fd113bb1888c6f2",
+     "f64:3fe93286e3a77fad",
+     "f64:3fe86ae882a9bda0",
+     "f64:3fc600a96f211e10",
+     "f64:3fd3ddc387761888",
+     "f64:3fe2614974e2393f",
+     "f64:3fe865303fb53ee4",
+     "f64:3fe17d5bccf1ecf7",
+     "f64:3feaff0ecea9f040",
+     "f64:3fdb368aca67b686",
+     "f64:3fa6a121657a3930",
+     "f64:3fee300cea0c50dc",
+     "f64:3fee41b679e80766",
+     "f64:3fe64215cbf36620",
+     "f64:3fe583b7cbbb3148",
+     "f64:3fc93954cf51de94",
+     "f64:3fdaed7761f8821e",
+     "f64:3fec8803f0a496a5",
+     "f64:3fe0a0b773c61d33",
+     "f64:3fe33c8f88a9e4d3",
+     "f64:3fb6a4c3f9ca92c0",
+     "f64:3fd62ff9490fb068",
+     "f64:3fd09be1929c9b52",
+     "f64:3fddbfcd035cd73e",
+     "f64:3fd988cc2a86855a",
+     "f64:3fe0745096df3079",
+     "f64:3fd48d32023cc0e6",
+     "f64:3fed3ae6301497b8",
+     "f64:3fb8d0a79029c600",
+     "f64:3fe373668b80b254",
+     "f64:3fd81c17458b7de2",
+     "f64:3fbea6a0a4780200",
+     "f64:3fe32e37896e3571",
+     "f64:3fea34875629e562",
+     "f64:3fdf93358f25541a",
+     "f64:3fef729815b2d6ea",
+     "f64:3fe17d48de785291",
+     "f64:3fe2827405fb4567",
+     "f64:3fcd6aea5e26875c",
+     "f64:3fe032a0dcde0fc4",
+     "f64:3fe814b3ceec1a35",
+     "f64:3fbfd8cf5bf87830",
+     "f64:3fc35a6a07ebf794",
+     "f64:3f9acabc946e8320",
+     "f64:3fe9f4b6523fa2ee",
+     "f64:3fe0d921d66512c5",
+     "f64:3fccc27f16f86aa8",
+     "f64:3feca807b09a41a9",
+     "f64:3fdc9926ea497640",
+     "f64:3fe4ef9b78a50002",
+     "f64:3fded22d56376802",
+     "f64:3fe1c45f0fd66747",
+     "f64:3fdfb456cdf91524",
+     "f64:3fd54031ddc9fc9a",
+     "f64:3fb4713a34b591c0",
+     "f64:3fc2ce4b523079f4",
+     "f64:3fc0e0c402dd1bac",
+     889862039,
+     401965115,
+     974025692,
+     946282179,
+     408733031,
+     448755833,
+     792442322,
+     817548881,
+     991456624,
+     316344489,
+     460358040,
+     580516000,
+     927727041,
+     28460287,
+     69290847,
+     204262674,
+     410492640,
+     64020918,
+     922166098,
+     706463585
+    ]
+   ]
+  },
+  {
+   "scale_n": 10000,
+   "table": "sales_fact",
+   "rows": 10000,
+   "columns": [
+    "transaction_id",
+    "customer_id",
+    "product_id",
+    "store_id",
+    "quantity",
+    "unit_price_cents",
+    "discount",
+    "tax",
+    "country",
+    "category",
+    "transaction_date",
+    "transaction_timestamp",
+    "is_returned"
+   ],
+   "column_digests": {
+    "transaction_id": {
+     "sum": "0000000002fb0408",
+     "nulls": 0
+    },
+    "customer_id": {
+     "sum": "00000000002624d7",
+     "nulls": 0
+    },
+    "product_id": {
+     "sum": "000000000007b4ee",
+     "nulls": 0
+    },
+    "store_id": {
+     "sum": "00000000017c5e10",
+     "nulls": 0
+    },
+    "quantity": {
+     "sum": "00000000000199c0",
+     "nulls": 8
+    },
+    "unit_price_cents": {
+     "sum": "000000004a0cb558",
+     "nulls": 0
+    },
+    "discount": {
+     "sum": "fc6d70a3d70a3e44",
+     "nulls": 0
+    },
+    "tax": {
+     "sum": "d412ed30533b1092",
+     "nulls": 0
+    },
+    "country": {
+     "sum": "d360f3a8d1063b0f",
+     "nulls": 3
+    },
+    "category": {
+     "sum": "22d2426097cb58e4",
+     "nulls": 0
+    },
+    "transaction_date": {
+     "sum": "000000000afc463a",
+     "nulls": 0
+    },
+    "transaction_timestamp": {
+     "sum": "dcfed53d3b2f55df",
+     "nulls": 0
+    },
+    "is_returned": {
+     "sum": "0000000000000212",
+     "nulls": 0
+    }
+   },
+   "table_digest": "bb4053ee05018095",
+   "head": [
+    [
+     1,
+     1,
+     25,
+     1582,
+     1,
+     290876,
+     "f64:3fda3d70a3d70a3d",
+     "f64:406a5c52bd3c3611",
+     "United States",
+     "category_123",
+     19549,
+     1689058513904890,
+     false
+    ],
+    [
+     2,
+     180,
+     68,
+     3667,
+     3,
+     305512,
+     "f64:3fcc28f5c28f5c29",
+     "f64:4099c70f27bb2fec",
+     "India",
+     "category_012",
+     16757,
+     1447885900600869,
+     false
+    ],
+    [
+     3,
+     87,
+     99,
+     247,
+     18,
+     9784,
+     "f64:3fcd70a3d70a3d71",
+     "f64:40560395810624dd",
+     "UAE",
+     "category_069",
+     18283,
+     1579716171717551,
+     false
+    ]
+   ]
+  },
+  {
+   "scale_n": 10000,
+   "table": "dim_customer",
+   "rows": 1000,
+   "columns": [
+    "customer_id",
+    "name",
+    "email",
+    "signup_date",
+    "segment",
+    "country",
+    "lifetime_value_cents"
+   ],
+   "column_digests": {
+    "customer_id": {
+     "sum": "000000000007a314",
+     "nulls": 0
+    },
+    "name": {
+     "sum": "9ab869b09f35b79f",
+     "nulls": 0
+    },
+    "email": {
+     "sum": "437ea2d55d1d1397",
+     "nulls": 0
+    },
+    "signup_date": {
+     "sum": "0000000001066b8c",
+     "nulls": 0
+    },
+    "segment": {
+     "sum": "3b413fce42dc2fa0",
+     "nulls": 0
+    },
+    "country": {
+     "sum": "fab274ddf72c0411",
+     "nulls": 0
+    },
+    "lifetime_value_cents": {
+     "sum": "0000000bfd09393e",
+     "nulls": 0
+    }
+   },
+   "table_digest": "49c5f86411e951f2",
+   "head": [
+    [
+     1,
+     "Customer 1",
+     "user1@example.com",
+     19435,
+     "consumer",
+     "India",
+     74683131
+    ],
+    [
+     2,
+     "Customer 2",
+     "user2@example.com",
+     18444,
+     "small_business",
+     "Saudi Arabia",
+     16451812
+    ],
+    [
+     3,
+     "Customer 3",
+     "user3@example.com",
+     15349,
+     "government",
+     "Italy",
+     35532774
+    ]
+   ]
+  },
+  {
+   "scale_n": 10000,
+   "table": "dim_product",
+   "rows": 100,
+   "columns": [
+    "product_id",
+    "category",
+    "brand",
+    "weight_grams",
+    "tags",
+    "attributes"
+   ],
+   "column_digests": {
+    "product_id": {
+     "sum": "00000000000013ba",
+     "nulls": 0
+    },
+    "category": {
+     "sum": "758a9257e98f43e7",
+     "nulls": 0
+    },
+    "brand": {
+     "sum": "7dd78e5da40ada66",
+     "nulls": 0
+    },
+    "weight_grams": {
+     "sum": "00000000001fca1f",
+     "nulls": 14
+    },
+    "tags": {
+     "sum": "23f03d1622453e4d",
+     "nulls": 0
+    },
+    "attributes": {
+     "sum": "e48aa3db38c208f4",
+     "nulls": 0
+    }
+   },
+   "table_digest": "444080cefdbf61cd",
+   "head": [
+    [
+     1,
+     "category_134",
+     "brand_010",
+     null,
+     [
+      "tag_24",
+      "tag_04",
+      "tag_15",
+      "tag_01"
+     ],
+     [
+      [
+       "color",
+       "green"
+      ],
+      [
+       "size",
+       "s"
+      ]
+     ]
+    ],
+    [
+     2,
+     "category_007",
+     "brand_467",
+     34877,
+     [
+      "tag_03",
+      "tag_22",
+      "tag_07"
+     ],
+     [
+      [
+       "color",
+       "red"
+      ],
+      [
+       "size",
+       "xl"
+      ]
+     ]
+    ],
+    [
+     3,
+     "category_025",
+     "brand_376",
+     1274,
+     [
+      "tag_02",
+      "tag_25",
+      "tag_05"
+     ],
+     [
+      [
+       "color",
+       "purple"
+      ],
+      [
+       "size",
+       "m"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "scale_n": 10000,
+   "table": "events_log",
+   "rows": 10000,
+   "columns": [
+    "event_id",
+    "ts",
+    "user_id",
+    "event_type",
+    "payload_json",
+    "session_id",
+    "ip",
+    "bytes"
+   ],
+   "column_digests": {
+    "event_id": {
+     "sum": "0000000002f79641",
+     "nulls": 0
+    },
+    "ts": {
+     "sum": "f0e014fee9aeae0e",
+     "nulls": 0
+    },
+    "user_id": {
+     "sum": "000000000007c2d6",
+     "nulls": 0
+    },
+    "event_type": {
+     "sum": "0054403433afb98e",
+     "nulls": 0
+    },
+    "payload_json": {
+     "sum": "28d0d965d37f1066",
+     "nulls": 0
+    },
+    "session_id": {
+     "sum": "e157d3e0b511fe88",
+     "nulls": 0
+    },
+    "ip": {
+     "sum": "8d3834096da2a259",
+     "nulls": 0
+    },
+    "bytes": {
+     "sum": "0000009039424639",
+     "nulls": 0
+    }
+   },
+   "table_digest": "03d501edc2803a34",
+   "head": [
+    [
+     1,
+     1735689604684276,
+     73,
+     "login",
+     "{\"user\":{\"id\":73},\"action\":\"login\",\"amount\":91963,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcd\"}",
+     "d359f60d-cbdf-825b-8235-b1c9aed273a8",
+     "101.191.15.191",
+     44987198
+    ],
+    [
+     2,
+     1735689619378728,
+     48,
+     "view",
+     "{\"user\":{\"id\":48},\"action\":\"view\",\"amount\":22117,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefgh\"}",
+     "c6c35a8b-2410-0d05-12c3-d53277bc4755",
+     "57.111.61.173",
+     1897765
+    ],
+    [
+     3,
+     1735689619904466,
+     59,
+     "view",
+     "{\"user\":{\"id\":59},\"action\":\"view\",\"amount\":12429,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefg\"}",
+     "39fbed8e-61aa-ec0a-cca7-43a5d3abd849",
+     "254.141.21.45",
+     122680612
+    ]
+   ]
+  },
+  {
+   "scale_n": 10000,
+   "table": "wide_numeric",
+   "rows": 10000,
+   "columns": [
+    "id",
+    "f000",
+    "f001",
+    "f002",
+    "f003",
+    "f004",
+    "f005",
+    "f006",
+    "f007",
+    "f008",
+    "f009",
+    "f010",
+    "f011",
+    "f012",
+    "f013",
+    "f014",
+    "f015",
+    "f016",
+    "f017",
+    "f018",
+    "f019",
+    "f020",
+    "f021",
+    "f022",
+    "f023",
+    "f024",
+    "f025",
+    "f026",
+    "f027",
+    "f028",
+    "f029",
+    "f030",
+    "f031",
+    "f032",
+    "f033",
+    "f034",
+    "f035",
+    "f036",
+    "f037",
+    "f038",
+    "f039",
+    "f040",
+    "f041",
+    "f042",
+    "f043",
+    "f044",
+    "f045",
+    "f046",
+    "f047",
+    "f048",
+    "f049",
+    "f050",
+    "f051",
+    "f052",
+    "f053",
+    "f054",
+    "f055",
+    "f056",
+    "f057",
+    "f058",
+    "f059",
+    "f060",
+    "f061",
+    "f062",
+    "f063",
+    "f064",
+    "f065",
+    "f066",
+    "f067",
+    "f068",
+    "f069",
+    "f070",
+    "f071",
+    "f072",
+    "f073",
+    "f074",
+    "f075",
+    "f076",
+    "f077",
+    "f078",
+    "f079",
+    "f080",
+    "f081",
+    "f082",
+    "f083",
+    "f084",
+    "f085",
+    "f086",
+    "f087",
+    "f088",
+    "f089",
+    "f090",
+    "f091",
+    "f092",
+    "f093",
+    "f094",
+    "f095",
+    "f096",
+    "f097",
+    "f098",
+    "f099",
+    "i00",
+    "i01",
+    "i02",
+    "i03",
+    "i04",
+    "i05",
+    "i06",
+    "i07",
+    "i08",
+    "i09",
+    "i10",
+    "i11",
+    "i12",
+    "i13",
+    "i14",
+    "i15",
+    "i16",
+    "i17",
+    "i18",
+    "i19"
+   ],
+   "column_digests": {
+    "id": {
+     "sum": "0000000002fb0408",
+     "nulls": 0
+    },
+    "f000": {
+     "sum": "e62ab9b1340c28a0",
+     "nulls": 0
+    },
+    "f001": {
+     "sum": "f511dafd450e6127",
+     "nulls": 0
+    },
+    "f002": {
+     "sum": "e367e478d7ade64f",
+     "nulls": 0
+    },
+    "f003": {
+     "sum": "e54d303ea6ebf205",
+     "nulls": 0
+    },
+    "f004": {
+     "sum": "dd4009653d71616f",
+     "nulls": 0
+    },
+    "f005": {
+     "sum": "e4747081f9a7ea41",
+     "nulls": 0
+    },
+    "f006": {
+     "sum": "ea344535ae704acf",
+     "nulls": 0
+    },
+    "f007": {
+     "sum": "e26374849b92a5ea",
+     "nulls": 0
+    },
+    "f008": {
+     "sum": "ea8a7da97adb74aa",
+     "nulls": 0
+    },
+    "f009": {
+     "sum": "e59d46fb06d230b8",
+     "nulls": 0
+    },
+    "f010": {
+     "sum": "f4e1c01bf493b788",
+     "nulls": 0
+    },
+    "f011": {
+     "sum": "eb6cf5bf81e8e7a4",
+     "nulls": 0
+    },
+    "f012": {
+     "sum": "e3c1df75aa9d8250",
+     "nulls": 0
+    },
+    "f013": {
+     "sum": "f37acd7a2c5689b9",
+     "nulls": 0
+    },
+    "f014": {
+     "sum": "e9f8a17b2d8292fb",
+     "nulls": 0
+    },
+    "f015": {
+     "sum": "e7cafd70facd0192",
+     "nulls": 0
+    },
+    "f016": {
+     "sum": "e06f51aa4bf2ada4",
+     "nulls": 0
+    },
+    "f017": {
+     "sum": "efb716bcbcfac4c3",
+     "nulls": 0
+    },
+    "f018": {
+     "sum": "e18f68d6e99d56c6",
+     "nulls": 0
+    },
+    "f019": {
+     "sum": "d75f613ecbe2c980",
+     "nulls": 0
+    },
+    "f020": {
+     "sum": "f05bbe43f5594f2e",
+     "nulls": 0
+    },
+    "f021": {
+     "sum": "e58fc398ea8a518a",
+     "nulls": 0
+    },
+    "f022": {
+     "sum": "d9cb26b333a7152f",
+     "nulls": 0
+    },
+    "f023": {
+     "sum": "f31cdc6f78c04e09",
+     "nulls": 0
+    },
+    "f024": {
+     "sum": "f098555a5ba38308",
+     "nulls": 0
+    },
+    "f025": {
+     "sum": "e2c6f886f6a37c52",
+     "nulls": 0
+    },
+    "f026": {
+     "sum": "e67aed27f165bbd4",
+     "nulls": 0
+    },
+    "f027": {
+     "sum": "e8b44fe9b4ae403f",
+     "nulls": 0
+    },
+    "f028": {
+     "sum": "d34ae4c73436b496",
+     "nulls": 0
+    },
+    "f029": {
+     "sum": "e619809274f01a4f",
+     "nulls": 0
+    },
+    "f030": {
+     "sum": "dff8576d37d58039",
+     "nulls": 0
+    },
+    "f031": {
+     "sum": "ee2b5f01cc219266",
+     "nulls": 0
+    },
+    "f032": {
+     "sum": "df76440b2debe26b",
+     "nulls": 0
+    },
+    "f033": {
+     "sum": "dfb38431a2015243",
+     "nulls": 0
+    },
+    "f034": {
+     "sum": "e1e1d996e86b6d17",
+     "nulls": 0
+    },
+    "f035": {
+     "sum": "caadafe7b35207b0",
+     "nulls": 0
+    },
+    "f036": {
+     "sum": "e106c34c2a21041a",
+     "nulls": 0
+    },
+    "f037": {
+     "sum": "d7ee63942caecdff",
+     "nulls": 0
+    },
+    "f038": {
+     "sum": "e88b88b22904638d",
+     "nulls": 0
+    },
+    "f039": {
+     "sum": "d29dbc544b281478",
+     "nulls": 0
+    },
+    "f040": {
+     "sum": "e5fe8b249c90915e",
+     "nulls": 0
+    },
+    "f041": {
+     "sum": "f186bf521c878270",
+     "nulls": 0
+    },
+    "f042": {
+     "sum": "f617eb05913e452c",
+     "nulls": 0
+    },
+    "f043": {
+     "sum": "db98a6eceda0a3b5",
+     "nulls": 0
+    },
+    "f044": {
+     "sum": "eb68ee5d6f7e7780",
+     "nulls": 0
+    },
+    "f045": {
+     "sum": "e4f9d664031ed0dc",
+     "nulls": 0
+    },
+    "f046": {
+     "sum": "e913a14276014d3e",
+     "nulls": 0
+    },
+    "f047": {
+     "sum": "fe29f71e15d264d7",
+     "nulls": 0
+    },
+    "f048": {
+     "sum": "da49dbcd4953a080",
+     "nulls": 0
+    },
+    "f049": {
+     "sum": "e4c1454e254ffd60",
+     "nulls": 0
+    },
+    "f050": {
+     "sum": "edf2f838d0e28d07",
+     "nulls": 0
+    },
+    "f051": {
+     "sum": "de2d13eb4171506e",
+     "nulls": 0
+    },
+    "f052": {
+     "sum": "da6e47b0a10c76a0",
+     "nulls": 0
+    },
+    "f053": {
+     "sum": "e76f4aa7a143ed74",
+     "nulls": 0
+    },
+    "f054": {
+     "sum": "e2fd21e6de3aef78",
+     "nulls": 0
+    },
+    "f055": {
+     "sum": "ed3bccfdbdde0033",
+     "nulls": 0
+    },
+    "f056": {
+     "sum": "efb33dc9553b24ac",
+     "nulls": 0
+    },
+    "f057": {
+     "sum": "e294dea44a181804",
+     "nulls": 0
+    },
+    "f058": {
+     "sum": "e938a3d4b50acfbc",
+     "nulls": 0
+    },
+    "f059": {
+     "sum": "e14fd2e3eefb4a25",
+     "nulls": 0
+    },
+    "f060": {
+     "sum": "e9cdd4a85819d64d",
+     "nulls": 0
+    },
+    "f061": {
+     "sum": "e9fa411a0a560399",
+     "nulls": 0
+    },
+    "f062": {
+     "sum": "f0a173a6d97fa40f",
+     "nulls": 0
+    },
+    "f063": {
+     "sum": "dc06c4a8c6546c15",
+     "nulls": 0
+    },
+    "f064": {
+     "sum": "f445eeb074d2f54e",
+     "nulls": 0
+    },
+    "f065": {
+     "sum": "ea612766045f79d2",
+     "nulls": 0
+    },
+    "f066": {
+     "sum": "d6a89b585d95ebe2",
+     "nulls": 0
+    },
+    "f067": {
+     "sum": "e1a531afe78ba9d3",
+     "nulls": 0
+    },
+    "f068": {
+     "sum": "e629f6663877b1b3",
+     "nulls": 0
+    },
+    "f069": {
+     "sum": "e073d3a2c38bf57a",
+     "nulls": 0
+    },
+    "f070": {
+     "sum": "ed4360c8d2b6adf0",
+     "nulls": 0
+    },
+    "f071": {
+     "sum": "df7b71fb6c3d11ab",
+     "nulls": 0
+    },
+    "f072": {
+     "sum": "e3d79640ffbb4030",
+     "nulls": 0
+    },
+    "f073": {
+     "sum": "f210718d16703c5b",
+     "nulls": 0
+    },
+    "f074": {
+     "sum": "e9b229661c99c379",
+     "nulls": 0
+    },
+    "f075": {
+     "sum": "e8c6dd6470470247",
+     "nulls": 0
+    },
+    "f076": {
+     "sum": "def8fd08d2928d4e",
+     "nulls": 0
+    },
+    "f077": {
+     "sum": "e0d0415a333c3590",
+     "nulls": 0
+    },
+    "f078": {
+     "sum": "e6e315c0544520a3",
+     "nulls": 0
+    },
+    "f079": {
+     "sum": "dfb3f1d989c8a6ef",
+     "nulls": 0
+    },
+    "f080": {
+     "sum": "e79c0f2b47a0eeb1",
+     "nulls": 0
+    },
+    "f081": {
+     "sum": "e6fe87f982b31892",
+     "nulls": 0
+    },
+    "f082": {
+     "sum": "e81ce6913911f598",
+     "nulls": 0
+    },
+    "f083": {
+     "sum": "ebdf7ec66b0f1add",
+     "nulls": 0
+    },
+    "f084": {
+     "sum": "e3bf18a9c4ce143f",
+     "nulls": 0
+    },
+    "f085": {
+     "sum": "de4bfa453161f2c8",
+     "nulls": 0
+    },
+    "f086": {
+     "sum": "d30d72c422d688d4",
+     "nulls": 0
+    },
+    "f087": {
+     "sum": "e1a89c95ca59b7fb",
+     "nulls": 0
+    },
+    "f088": {
+     "sum": "e7a7176cbbdc4a63",
+     "nulls": 0
+    },
+    "f089": {
+     "sum": "ea0edc1d82ad60b7",
+     "nulls": 0
+    },
+    "f090": {
+     "sum": "e4e7c47657469e5a",
+     "nulls": 0
+    },
+    "f091": {
+     "sum": "ed6a035d66e9932d",
+     "nulls": 0
+    },
+    "f092": {
+     "sum": "eeb7ddfbf63cca15",
+     "nulls": 0
+    },
+    "f093": {
+     "sum": "db9ebd766880061a",
+     "nulls": 0
+    },
+    "f094": {
+     "sum": "eda9bbaf22698b32",
+     "nulls": 0
+    },
+    "f095": {
+     "sum": "d79713410355b12e",
+     "nulls": 0
+    },
+    "f096": {
+     "sum": "f217b1b6e947d103",
+     "nulls": 0
+    },
+    "f097": {
+     "sum": "f0cabce315f51338",
+     "nulls": 0
+    },
+    "f098": {
+     "sum": "e33f9670cf4ead4a",
+     "nulls": 0
+    },
+    "f099": {
+     "sum": "de3fbf5e6ec421bb",
+     "nulls": 0
+    },
+    "i00": {
+     "sum": "0000048fee2246c4",
+     "nulls": 0
+    },
+    "i01": {
+     "sum": "000004904dee85a9",
+     "nulls": 0
+    },
+    "i02": {
+     "sum": "0000048ce1a0e88a",
+     "nulls": 0
+    },
+    "i03": {
+     "sum": "00000484ba660dec",
+     "nulls": 0
+    },
+    "i04": {
+     "sum": "00000485bc28c256",
+     "nulls": 0
+    },
+    "i05": {
+     "sum": "000004962c9c2688",
+     "nulls": 0
+    },
+    "i06": {
+     "sum": "0000048d5166694d",
+     "nulls": 0
+    },
+    "i07": {
+     "sum": "0000049887730ad6",
+     "nulls": 0
+    },
+    "i08": {
+     "sum": "00000487134f20b2",
+     "nulls": 0
+    },
+    "i09": {
+     "sum": "00000488af2f2952",
+     "nulls": 0
+    },
+    "i10": {
+     "sum": "000004944ef23612",
+     "nulls": 0
+    },
+    "i11": {
+     "sum": "000004955dc8a088",
+     "nulls": 0
+    },
+    "i12": {
+     "sum": "000004880655b935",
+     "nulls": 0
+    },
+    "i13": {
+     "sum": "000004972c84754a",
+     "nulls": 0
+    },
+    "i14": {
+     "sum": "0000048b36327076",
+     "nulls": 0
+    },
+    "i15": {
+     "sum": "000004890731d0b3",
+     "nulls": 0
+    },
+    "i16": {
+     "sum": "0000048a149542df",
+     "nulls": 0
+    },
+    "i17": {
+     "sum": "0000048ec8efcfc5",
+     "nulls": 0
+    },
+    "i18": {
+     "sum": "00000487c500bad8",
+     "nulls": 0
+    },
+    "i19": {
+     "sum": "0000048dc1ccb925",
+     "nulls": 0
+    }
+   },
+   "table_digest": "cdead49b1b1e66e6",
+   "head": [
+    [
+     1,
+     "f64:3fdbddc6930ade82",
+     "f64:3fef689359a87e16",
+     "f64:3fd1475703f6ef42",
+     "f64:3fec2d2049db8175",
+     "f64:3fefcb2f94659842",
+     "f64:3fe459fccfde1a9c",
+     "f64:3fe37d4e50ca5ebf",
+     "f64:3f860db2486ab380",
+     "f64:3feb45f4f600c367",
+     "f64:3fec16bb6e695e50",
+     "f64:3feb84989221d15f",
+     "f64:3fd183babc00621a",
+     "f64:3fc13453525402d8",
+     "f64:3fc1fed4a27f4f64",
+     "f64:3fef504b47377c8a",
+     "f64:3fefcda956a3c6b4",
+     "f64:3feebd683f11d2f7",
+     "f64:3fd23f2270b1cdfc",
+     "f64:3fe9a41594f5fa3c",
+     "f64:3fd691b8434f16a6",
+     "f64:3fab06cb5ab9d3c0",
+     "f64:3fe88c08253ff404",
+     "f64:3fd50ae4ff74eaee",
+     "f64:3fd2e0860f4eb7e2",
+     "f64:3fd83bc4a55249b2",
+     "f64:3fcd6ea02ed8b6dc",
+     "f64:3fe8722f19fec08d",
+     "f64:3f77bcb64c4f2900",
+     "f64:3fef015b171917ea",
+     "f64:3fe2562cd8ad317d",
+     "f64:3febe7ccbab450b2",
+     "f64:3fcb83a9565fb0f0",
+     "f64:3fda47a472fc085a",
+     "f64:3fdc834027e76956",
+     "f64:3fecb2f4554c3a4b",
+     "f64:3fd2064277466c1c",
+     "f64:3fc6a6ee49bd6f50",
+     "f64:3fc0a0f6962b8430",
+     "f64:3fa527acc634e810",
+     "f64:3fe8234f6391bcc4",
+     "f64:3fd9a2a4dcc52822",
+     "f64:3fe77ddeddcc49e3",
+     "f64:3feaecd4fbc6ef1f",
+     "f64:3feb4bf96f5a2025",
+     "f64:3feacf0e38c788c9",
+     "f64:3fda92d437a65cbc",
+     "f64:3fce6575f8377518",
+     "f64:3fe49349f6b52c22",
+     "f64:3fbd284ededae220",
+     "f64:3fea3855ec10ec21",
+     "f64:3fd286b111ee1c24",
+     "f64:3fae86034389a4d0",
+     "f64:3fd9dacf62688cec",
+     "f64:3fa43ccad20a3180",
+     "f64:3fe4918363281da9",
+     "f64:3fea3e08bac4c1b2",
+     "f64:3fd9ff5274f866d6",
+     "f64:3fbb97c00b1d2978",
+     "f64:3f91861ac0a3e8e0",
+     "f64:3fabe3cbf9137ef0",
+     "f64:3feee375b766dcaa",
+     "f64:3fdf2ed7fc16418c",
+     "f64:3fe1ab42f4953905",
+     "f64:3fe8bb62faa81fb5",
+     "f64:3fe6a9a0a639f926",
+     "f64:3fd7d6802a6b6c86",
+     "f64:3fde1fa6025b08ba",
+     "f64:3fd25c4233e71ffc",
+     "f64:3fec1e07fc55eeb2",
+     "f64:3fcfa0cdcd651d60",
+     "f64:3fdd42d4b886cf74",
+     "f64:3fe5b6bc21839374",
+     "f64:3fef31d20e90f1a8",
+     "f64:3fec8bfe8c2e44fe",
+     "f64:3fe49b45853278a4",
+     "f64:3fe4b7310f8070c5",
+     "f64:3fe83807cca14ffb",
+     "f64:3fe47f970e18a80d",
+     "f64:3fce91f0bbb3c31c",
+     "f64:3fb95014fc782438",
+     "f64:3fd3caca096e724a",
+     "f64:3fec4913837bf397",
+     "f64:3fddfa6b4c26da0a",
+     "f64:3fe8d34c83d996ac",
+     "f64:3fed109af0ff910d",
+     "f64:3fd40ebd06b6fb32",
+     "f64:3fe9ee001f4398de",
+     "f64:3feee3c236ed99f7",
+     "f64:3fad5d2610d21eb0",
+     "f64:3fe9c6490266049d",
+     "f64:3fe82159cef2c9a6",
+     "f64:3fd50330f4117226",
+     "f64:3fe31585a0b16ad1",
+     "f64:3fd47f99091f4296",
+     "f64:3fea94e7417b0b53",
+     "f64:3fb1369879458908",
+     "f64:3fe252889979501a",
+     "f64:3fe297fff5c56e80",
+     "f64:3febc31e548c5690",
+     "f64:3faa5054d1ee8fa0",
+     384577971,
+     617741375,
+     505951489,
+     17918128,
+     714012544,
+     674021811,
+     690854078,
+     934157999,
+     874862336,
+     626344193,
+     172965382,
+     729681665,
+     503126555,
+     852274858,
+     249336714,
+     24974906,
+     969467467,
+     179655252,
+     904484392,
+     432671675
+    ],
+    [
+     2,
+     "f64:3fe81381c1f1e761",
+     "f64:3fe6fe8b52e2dd9e",
+     "f64:3f91782f81117f00",
+     "f64:3fe74ebb1ccf615a",
+     "f64:3fc34abc3283bf68",
+     "f64:3fc5cedb5636ec68",
+     "f64:3fb787a18ebb1048",
+     "f64:3fe162fcad3385af",
+     "f64:3fbeba3e78dbdd28",
+     "f64:3feabf59959bbc9c",
+     "f64:3fd3bb44ced26fd2",
+     "f64:3fa2c50c59109fc0",
+     "f64:3fe36d8aefcb8e6c",
+     "f64:3fc9c6c9cddc1598",
+     "f64:3fe0ebcbc73b85f7",
+     "f64:3febb07dab375069",
+     "f64:3fe46f4fe945291c",
+     "f64:3fedaeb12890dd11",
+     "f64:3faf2e5de18fc540",
+     "f64:3fec1adfbf91bd14",
+     "f64:3fc98b800fc67cbc",
+     "f64:3fd4c1048786248e",
+     "f64:3f8cb1a040901540",
+     "f64:3fee52edbbf26ac1",
+     "f64:3fe246d44ac92021",
+     "f64:3fdab5d7b679d8f4",
+     "f64:3fcaa90d960728d4",
+     "f64:3fecad9e6ae02fca",
+     "f64:3febd4e310c7a8dd",
+     "f64:3fe39628584cf3a6",
+     "f64:3fd88d95636a6194",
+     "f64:3fe692e7a21bdfdb",
+     "f64:3fcecce2e42e7e9c",
+     "f64:3fa3aedb77aa1610",
+     "f64:3fceb8f06bf334f0",
+     "f64:3feff277d1cc421a",
+     "f64:3fee0471182f5559",
+     "f64:3fe87dff0685cf51",
+     "f64:3fecc82bdd1649c0",
+     "f64:3fdaf10a893c8bde",
+     "f64:3fdddbb886e9b912",
+     "f64:3fd28f86adeab860",
+     "f64:3fede345735b1547",
+     "f64:3fd999276b53c726",
+     "f64:3fefc4eb2ca8fb40",
+     "f64:3fd51c7ee1d01ac4",
+     "f64:3fdfe1997d3dcfb6",
+     "f64:3fd6a0b3ded01f54",
+     "f64:3fdf80c6a960235a",
+     "f64:3feccddb0a04e8d8",
+     "f64:3fd63ac324291d6c",
+     "f64:3fd0d6435c3431e0",
+     "f64:3feeeebde23bbf28",
+     "f64:3fe238e34f2f2072",
+     "f64:3fe0df45845749ce",
+     "f64:3fc4d231e96e3b40",
+     "f64:3fcd31d05a00d0cc",
+     "f64:3fea0adb1a729b90",
+     "f64:3fe4154af6f1a346",
+     "f64:3fe2a51e0f27f187",
+     "f64:3fc248455e5ca7f8",
+     "f64:3fe7dad1659b393d",
+     "f64:3fcf410d16f87fd4",
+     "f64:3fa37221e832da10",
+     "f64:3fd3c47d91620da2",
+     "f64:3fe7de346194eb68",
+     "f64:3fd3b5f509fa3a2c",
+     "f64:3fe2d95cdfbce19d",
+     "f64:3fdd183c60fbd690",
+     "f64:3f958d1baf504520",
+     "f64:3fe7dc2ee7b5fe02",
+     "f64:3fc7232df3ac65c4",
+     "f64:3fce3ca113cbb820",
+     "f64:3fb647bc169c5100",
+     "f64:3f9941d48cbcf5a0",
+     "f64:3fcabb729c4265c8",
+     "f64:3fba2cc5653e44d0",
+     "f64:3fcd7835470590f8",
+     "f64:3febde786d63cb67",
+     "f64:3fc59fa07a83f7a8",
+     "f64:3fbb91441001a148",
+     "f64:3fd1f359315fc06c",
+     "f64:3fdfdbb5547dc2c6",
+     "f64:3fd3e482c002a71a",
+     "f64:3fecd3f63c66b8e9",
+     "f64:3fd9248403671d66",
+     "f64:3fe0ee1021984f68",
+     "f64:3fa67c5a32101ef0",
+     "f64:3fc72c7ec422a478",
+     "f64:3fc4923d8d074814",
+     "f64:3fd63508e76b1d46",
+     "f64:3fe89fd0926600e3",
+     "f64:3fcc54fd2db23c24",
+     "f64:3fe8c9d3a76efcb0",
+     "f64:3fd6b14ac703b174",
+     "f64:3fe6eb97b2c004b7",
+     "f64:3fc3af7ed2baa540",
+     "f64:3fe28e076245ab61",
+     "f64:3fc63dd0a13a27cc",
+     "f64:3fb116d84f8643f8",
+     787605882,
+     485473140,
+     944895046,
+     573576197,
+     179326959,
+     49046397,
+     590417565,
+     570222854,
+     639966057,
+     778539441,
+     311026549,
+     923588602,
+     61608783,
+     438048442,
+     953640388,
+     645529168,
+     307583484,
+     425690638,
+     116318717,
+     806042226
+    ],
+    [
+     3,
+     "f64:3fee6842ebfe63dd",
+     "f64:3fe5d6b12e679992",
+     "f64:3fd41b52e86efd8e",
+     "f64:3fd7d383ba7f68ee",
+     "f64:3fdf727bd90944dc",
+     "f64:3fc445d9a9a6d7d8",
+     "f64:3fd63b2d2b5c4320",
+     "f64:3fd13f3a24212a2a",
+     "f64:3fe7076d21fc584d",
+     "f64:3fe8fe7473ca70a4",
+     "f64:3fc2d7c10e4ba510",
+     "f64:3fe851963840b16c",
+     "f64:3fe8d942192c6158",
+     "f64:3fc00428fac02ce8",
+     "f64:3fb631b061e6d5b8",
+     "f64:3fc07c3beaec7348",
+     "f64:3fe5d7225c9b1b04",
+     "f64:3f6edee7ed10ec00",
+     "f64:3fdde78740bce852",
+     "f64:3fe3fa9e1777aafa",
+     "f64:3f97959a5296f480",
+     "f64:3fd0ab301d8d0a40",
+     "f64:3fe732a6730455f2",
+     "f64:3fd3f3a011f0207a",
+     "f64:3fe4e188801ab04c",
+     "f64:3fe2b45e86a5ec10",
+     "f64:3fe71ef6f62c6d1b",
+     "f64:3fcc03d97f90a080",
+     "f64:3fe227180583d2be",
+     "f64:3fe2936728789789",
+     "f64:3fdaf0357b67f354",
+     "f64:3feeb1ad1279b742",
+     "f64:3fcede6708df3c54",
+     "f64:3fe3bf4422594b77",
+     "f64:3fd930c25db9cb06",
+     "f64:3fef15fb25e5ec4f",
+     "f64:3f93d7d536e9ba40",
+     "f64:3fb14bcf14e618e0",
+     "f64:3f8c99a704318b80",
+     "f64:3fe325c0208714d6",
+     "f64:3fd2dd221f54d7f8",
+     "f64:3feb3f5c2d0eb27f",
+     "f64:3fcef1a5691f9df8",
+     "f64:3fd113bb1888c6f2",
+     "f64:3fe93286e3a77fad",
+     "f64:3fe86ae882a9bda0",
+     "f64:3fc600a96f211e10",
+     "f64:3fd3ddc387761888",
+     "f64:3fe2614974e2393f",
+     "f64:3fe865303fb53ee4",
+     "f64:3fe17d5bccf1ecf7",
+     "f64:3feaff0ecea9f040",
+     "f64:3fdb368aca67b686",
+     "f64:3fa6a121657a3930",
+     "f64:3fee300cea0c50dc",
+     "f64:3fee41b679e80766",
+     "f64:3fe64215cbf36620",
+     "f64:3fe583b7cbbb3148",
+     "f64:3fc93954cf51de94",
+     "f64:3fdaed7761f8821e",
+     "f64:3fec8803f0a496a5",
+     "f64:3fe0a0b773c61d33",
+     "f64:3fe33c8f88a9e4d3",
+     "f64:3fb6a4c3f9ca92c0",
+     "f64:3fd62ff9490fb068",
+     "f64:3fd09be1929c9b52",
+     "f64:3fddbfcd035cd73e",
+     "f64:3fd988cc2a86855a",
+     "f64:3fe0745096df3079",
+     "f64:3fd48d32023cc0e6",
+     "f64:3fed3ae6301497b8",
+     "f64:3fb8d0a79029c600",
+     "f64:3fe373668b80b254",
+     "f64:3fd81c17458b7de2",
+     "f64:3fbea6a0a4780200",
+     "f64:3fe32e37896e3571",
+     "f64:3fea34875629e562",
+     "f64:3fdf93358f25541a",
+     "f64:3fef729815b2d6ea",
+     "f64:3fe17d48de785291",
+     "f64:3fe2827405fb4567",
+     "f64:3fcd6aea5e26875c",
+     "f64:3fe032a0dcde0fc4",
+     "f64:3fe814b3ceec1a35",
+     "f64:3fbfd8cf5bf87830",
+     "f64:3fc35a6a07ebf794",
+     "f64:3f9acabc946e8320",
+     "f64:3fe9f4b6523fa2ee",
+     "f64:3fe0d921d66512c5",
+     "f64:3fccc27f16f86aa8",
+     "f64:3feca807b09a41a9",
+     "f64:3fdc9926ea497640",
+     "f64:3fe4ef9b78a50002",
+     "f64:3fded22d56376802",
+     "f64:3fe1c45f0fd66747",
+     "f64:3fdfb456cdf91524",
+     "f64:3fd54031ddc9fc9a",
+     "f64:3fb4713a34b591c0",
+     "f64:3fc2ce4b523079f4",
+     "f64:3fc0e0c402dd1bac",
+     889862039,
+     401965115,
+     974025692,
+     946282179,
+     408733031,
+     448755833,
+     792442322,
+     817548881,
+     991456624,
+     316344489,
+     460358040,
+     580516000,
+     927727041,
+     28460287,
+     69290847,
+     204262674,
+     410492640,
+     64020918,
+     922166098,
+     706463585
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000000,
+   "table": "sales_fact",
+   "rows": 100000,
+   "columns": [
+    "transaction_id",
+    "customer_id",
+    "product_id",
+    "store_id",
+    "quantity",
+    "unit_price_cents",
+    "discount",
+    "tax",
+    "country",
+    "category",
+    "transaction_date",
+    "transaction_timestamp",
+    "is_returned"
+   ],
+   "column_digests": {
+    "transaction_id": {
+     "sum": "000000012a06b550",
+     "nulls": 0
+    },
+    "customer_id": {
+     "sum": "00000000953b9966",
+     "nulls": 0
+    },
+    "product_id": {
+     "sum": "000000001dc3e82b",
+     "nulls": 0
+    },
+    "store_id": {
+     "sum": "000000000eefe4e2",
+     "nulls": 0
+    },
+    "quantity": {
+     "sum": "0000000000100529",
+     "nulls": 96
+    },
+    "unit_price_cents": {
+     "sum": "00000002e601fb92",
+     "nulls": 0
+    },
+    "discount": {
+     "sum": "e1f28f5c28f5cb3f",
+     "nulls": 0
+    },
+    "tax": {
+     "sum": "0228cd9d859c8c69",
+     "nulls": 0
+    },
+    "country": {
+     "sum": "7dc27ab9a2234e2e",
+     "nulls": 13
+    },
+    "category": {
+     "sum": "6e35c40624e5778e",
+     "nulls": 0
+    },
+    "transaction_date": {
+     "sum": "000000006debda3e",
+     "nulls": 0
+    },
+    "transaction_timestamp": {
+     "sum": "a34c98653d0b159e",
+     "nulls": 0
+    },
+    "is_returned": {
+     "sum": "000000000000134f",
+     "nulls": 0
+    }
+   },
+   "table_digest": "752e3d14b7b839fa",
+   "head": [
+    [
+     1,
+     39,
+     4725,
+     1582,
+     1,
+     290876,
+     "f64:3fda3d70a3d70a3d",
+     "f64:406a5c52bd3c3611",
+     "United States",
+     "category_123",
+     19549,
+     1689058513904890,
+     false
+    ],
+    [
+     2,
+     17917,
+     2368,
+     3667,
+     3,
+     305512,
+     "f64:3fcc28f5c28f5c29",
+     "f64:4099c70f27bb2fec",
+     "India",
+     "category_012",
+     16757,
+     1447885900600869,
+     false
+    ],
+    [
+     3,
+     8695,
+     3199,
+     247,
+     18,
+     9784,
+     "f64:3fcd70a3d70a3d71",
+     "f64:40560395810624dd",
+     "UAE",
+     "category_069",
+     18283,
+     1579716171717551,
+     false
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000000,
+   "table": "dim_customer",
+   "rows": 100000,
+   "columns": [
+    "customer_id",
+    "name",
+    "email",
+    "signup_date",
+    "segment",
+    "country",
+    "lifetime_value_cents"
+   ],
+   "column_digests": {
+    "customer_id": {
+     "sum": "000000012a06b550",
+     "nulls": 0
+    },
+    "name": {
+     "sum": "1cc042b79282abd3",
+     "nulls": 0
+    },
+    "email": {
+     "sum": "402b01eed0ca205f",
+     "nulls": 0
+    },
+    "signup_date": {
+     "sum": "0000000065fc22d5",
+     "nulls": 0
+    },
+    "segment": {
+     "sum": "fa914d239b5497a8",
+     "nulls": 0
+    },
+    "country": {
+     "sum": "f61c32089502f389",
+     "nulls": 0
+    },
+    "lifetime_value_cents": {
+     "sum": "00000489c6223d96",
+     "nulls": 0
+    }
+   },
+   "table_digest": "e5513ccea87d6e6b",
+   "head": [
+    [
+     1,
+     "Customer 1",
+     "user1@example.com",
+     19435,
+     "consumer",
+     "India",
+     74683131
+    ],
+    [
+     2,
+     "Customer 2",
+     "user2@example.com",
+     18444,
+     "small_business",
+     "Saudi Arabia",
+     16451812
+    ],
+    [
+     3,
+     "Customer 3",
+     "user3@example.com",
+     15349,
+     "government",
+     "Italy",
+     35532774
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000000,
+   "table": "dim_product",
+   "rows": 10000,
+   "columns": [
+    "product_id",
+    "category",
+    "brand",
+    "weight_grams",
+    "tags",
+    "attributes"
+   ],
+   "column_digests": {
+    "product_id": {
+     "sum": "0000000002fb0408",
+     "nulls": 0
+    },
+    "category": {
+     "sum": "86db403cb9606186",
+     "nulls": 0
+    },
+    "brand": {
+     "sum": "ed0cb4bcd04ad5d6",
+     "nulls": 0
+    },
+    "weight_grams": {
+     "sum": "000000000d46bbab",
+     "nulls": 985
+    },
+    "tags": {
+     "sum": "4221b7b416d93ba7",
+     "nulls": 0
+    },
+    "attributes": {
+     "sum": "f55eee9c7a212d66",
+     "nulls": 0
+    }
+   },
+   "table_digest": "7b871edbe88554b2",
+   "head": [
+    [
+     1,
+     "category_134",
+     "brand_010",
+     null,
+     [
+      "tag_24",
+      "tag_04",
+      "tag_15",
+      "tag_01"
+     ],
+     [
+      [
+       "color",
+       "green"
+      ],
+      [
+       "size",
+       "s"
+      ]
+     ]
+    ],
+    [
+     2,
+     "category_007",
+     "brand_467",
+     34877,
+     [
+      "tag_03",
+      "tag_22",
+      "tag_07"
+     ],
+     [
+      [
+       "color",
+       "red"
+      ],
+      [
+       "size",
+       "xl"
+      ]
+     ]
+    ],
+    [
+     3,
+     "category_025",
+     "brand_376",
+     1274,
+     [
+      "tag_02",
+      "tag_25",
+      "tag_05"
+     ],
+     [
+      [
+       "color",
+       "purple"
+      ],
+      [
+       "size",
+       "m"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000000,
+   "table": "events_log",
+   "rows": 100000,
+   "columns": [
+    "event_id",
+    "ts",
+    "user_id",
+    "event_type",
+    "payload_json",
+    "session_id",
+    "ip",
+    "bytes"
+   ],
+   "column_digests": {
+    "event_id": {
+     "sum": "00000001289d98ba",
+     "nulls": 0
+    },
+    "ts": {
+     "sum": "68c0d60f06eca054",
+     "nulls": 0
+    },
+    "user_id": {
+     "sum": "000000001dca8f77",
+     "nulls": 0
+    },
+    "event_type": {
+     "sum": "c8720ae74335eef3",
+     "nulls": 0
+    },
+    "payload_json": {
+     "sum": "419e73630cb4a866",
+     "nulls": 0
+    },
+    "session_id": {
+     "sum": "782cbbabef3f9b60",
+     "nulls": 0
+    },
+    "ip": {
+     "sum": "9df9acf8d5b93669",
+     "nulls": 0
+    },
+    "bytes": {
+     "sum": "000005a9170d1adc",
+     "nulls": 0
+    }
+   },
+   "table_digest": "9131dab73e5c53c7",
+   "head": [
+    [
+     1,
+     1735689604684276,
+     7773,
+     "login",
+     "{\"user\":{\"id\":7773},\"action\":\"login\",\"amount\":91963,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcd\"}",
+     "d359f60d-cbdf-825b-8235-b1c9aed273a8",
+     "101.191.15.191",
+     44987198
+    ],
+    [
+     2,
+     1735689619378728,
+     7748,
+     "view",
+     "{\"user\":{\"id\":7748},\"action\":\"view\",\"amount\":22117,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefgh\"}",
+     "c6c35a8b-2410-0d05-12c3-d53277bc4755",
+     "57.111.61.173",
+     1897765
+    ],
+    [
+     3,
+     1735689619904466,
+     5159,
+     "view",
+     "{\"user\":{\"id\":5159},\"action\":\"view\",\"amount\":12429,\"note\":\"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefg\"}",
+     "39fbed8e-61aa-ec0a-cca7-43a5d3abd849",
+     "254.141.21.45",
+     122680612
+    ]
+   ]
+  },
+  {
+   "scale_n": 1000000,
+   "table": "wide_numeric",
+   "rows": 100000,
+   "columns": [
+    "id",
+    "f000",
+    "f001",
+    "f002",
+    "f003",
+    "f004",
+    "f005",
+    "f006",
+    "f007",
+    "f008",
+    "f009",
+    "f010",
+    "f011",
+    "f012",
+    "f013",
+    "f014",
+    "f015",
+    "f016",
+    "f017",
+    "f018",
+    "f019",
+    "f020",
+    "f021",
+    "f022",
+    "f023",
+    "f024",
+    "f025",
+    "f026",
+    "f027",
+    "f028",
+    "f029",
+    "f030",
+    "f031",
+    "f032",
+    "f033",
+    "f034",
+    "f035",
+    "f036",
+    "f037",
+    "f038",
+    "f039",
+    "f040",
+    "f041",
+    "f042",
+    "f043",
+    "f044",
+    "f045",
+    "f046",
+    "f047",
+    "f048",
+    "f049",
+    "f050",
+    "f051",
+    "f052",
+    "f053",
+    "f054",
+    "f055",
+    "f056",
+    "f057",
+    "f058",
+    "f059",
+    "f060",
+    "f061",
+    "f062",
+    "f063",
+    "f064",
+    "f065",
+    "f066",
+    "f067",
+    "f068",
+    "f069",
+    "f070",
+    "f071",
+    "f072",
+    "f073",
+    "f074",
+    "f075",
+    "f076",
+    "f077",
+    "f078",
+    "f079",
+    "f080",
+    "f081",
+    "f082",
+    "f083",
+    "f084",
+    "f085",
+    "f086",
+    "f087",
+    "f088",
+    "f089",
+    "f090",
+    "f091",
+    "f092",
+    "f093",
+    "f094",
+    "f095",
+    "f096",
+    "f097",
+    "f098",
+    "f099",
+    "i00",
+    "i01",
+    "i02",
+    "i03",
+    "i04",
+    "i05",
+    "i06",
+    "i07",
+    "i08",
+    "i09",
+    "i10",
+    "i11",
+    "i12",
+    "i13",
+    "i14",
+    "i15",
+    "i16",
+    "i17",
+    "i18",
+    "i19"
+   ],
+   "column_digests": {
+    "id": {
+     "sum": "000000012a06b550",
+     "nulls": 0
+    },
+    "f000": {
+     "sum": "e59dc682f9d2271e",
+     "nulls": 0
+    },
+    "f001": {
+     "sum": "e8a98d81b0e19461",
+     "nulls": 0
+    },
+    "f002": {
+     "sum": "0b0e4556d3f3783f",
+     "nulls": 0
+    },
+    "f003": {
+     "sum": "0cf9aed0669c938b",
+     "nulls": 0
+    },
+    "f004": {
+     "sum": "15b520d0de7220ad",
+     "nulls": 0
+    },
+    "f005": {
+     "sum": "00f105701ec9ea55",
+     "nulls": 0
+    },
+    "f006": {
+     "sum": "caa9d0126e9987c6",
+     "nulls": 0
+    },
+    "f007": {
+     "sum": "1f871bd47cd62b3c",
+     "nulls": 0
+    },
+    "f008": {
+     "sum": "e0112bdc9b79a531",
+     "nulls": 0
+    },
+    "f009": {
+     "sum": "ec4e93c3a9bdf52b",
+     "nulls": 0
+    },
+    "f010": {
+     "sum": "14a81d40ee1cb6bc",
+     "nulls": 0
+    },
+    "f011": {
+     "sum": "f41e7e413a845cad",
+     "nulls": 0
+    },
+    "f012": {
+     "sum": "0ed735c679a0052a",
+     "nulls": 0
+    },
+    "f013": {
+     "sum": "ca437815a2d0abfb",
+     "nulls": 0
+    },
+    "f014": {
+     "sum": "e46d28281a1a0995",
+     "nulls": 0
+    },
+    "f015": {
+     "sum": "ebec6b43ba445483",
+     "nulls": 0
+    },
+    "f016": {
+     "sum": "ca235e1f66c6637e",
+     "nulls": 0
+    },
+    "f017": {
+     "sum": "f868de1cc505f70c",
+     "nulls": 0
+    },
+    "f018": {
+     "sum": "d3c90b3f6a132434",
+     "nulls": 0
+    },
+    "f019": {
+     "sum": "e9159f96511e66b5",
+     "nulls": 0
+    },
+    "f020": {
+     "sum": "1e20a22cf2fc1b2b",
+     "nulls": 0
+    },
+    "f021": {
+     "sum": "2693b3aa761b4f48",
+     "nulls": 0
+    },
+    "f022": {
+     "sum": "f49187edb0ed4b17",
+     "nulls": 0
+    },
+    "f023": {
+     "sum": "28d9aa6a59c4c40c",
+     "nulls": 0
+    },
+    "f024": {
+     "sum": "120c2a5ba3afc829",
+     "nulls": 0
+    },
+    "f025": {
+     "sum": "e6f1901b7a9b65a8",
+     "nulls": 0
+    },
+    "f026": {
+     "sum": "f515f7ba410fb0f8",
+     "nulls": 0
+    },
+    "f027": {
+     "sum": "211a1db4edd3b708",
+     "nulls": 0
+    },
+    "f028": {
+     "sum": "ef6c8dd71493ea59",
+     "nulls": 0
+    },
+    "f029": {
+     "sum": "d54e05430ea00481",
+     "nulls": 0
+    },
+    "f030": {
+     "sum": "0300627f864ad275",
+     "nulls": 0
+    },
+    "f031": {
+     "sum": "15ea31629bf55505",
+     "nulls": 0
+    },
+    "f032": {
+     "sum": "07d946a429529838",
+     "nulls": 0
+    },
+    "f033": {
+     "sum": "08fa8273cc8fe97b",
+     "nulls": 0
+    },
+    "f034": {
+     "sum": "f72f695c055a5abf",
+     "nulls": 0
+    },
+    "f035": {
+     "sum": "02dd868fce2a2f7d",
+     "nulls": 0
+    },
+    "f036": {
+     "sum": "f506869ec27d4458",
+     "nulls": 0
+    },
+    "f037": {
+     "sum": "df298525362baf5d",
+     "nulls": 0
+    },
+    "f038": {
+     "sum": "026604fc450f8bff",
+     "nulls": 0
+    },
+    "f039": {
+     "sum": "089bf8d60c938e2a",
+     "nulls": 0
+    },
+    "f040": {
+     "sum": "da8ee9dc183605eb",
+     "nulls": 0
+    },
+    "f041": {
+     "sum": "13395cc1cfb63a60",
+     "nulls": 0
+    },
+    "f042": {
+     "sum": "167250e660408b17",
+     "nulls": 0
+    },
+    "f043": {
+     "sum": "c5b9940838cc69f0",
+     "nulls": 0
+    },
+    "f044": {
+     "sum": "f625c2d118e2d4b0",
+     "nulls": 0
+    },
+    "f045": {
+     "sum": "ea0bb161d926aa69",
+     "nulls": 0
+    },
+    "f046": {
+     "sum": "ef5f672ce947b601",
+     "nulls": 0
+    },
+    "f047": {
+     "sum": "05c8b53b44b1a5a4",
+     "nulls": 0
+    },
+    "f048": {
+     "sum": "e459afd2261c8f03",
+     "nulls": 0
+    },
+    "f049": {
+     "sum": "f718b530e9b4b4d6",
+     "nulls": 0
+    },
+    "f050": {
+     "sum": "ec984b4a211a33f1",
+     "nulls": 0
+    },
+    "f051": {
+     "sum": "ec464eb7b0b46f23",
+     "nulls": 0
+    },
+    "f052": {
+     "sum": "f9e35707f0e2cfb2",
+     "nulls": 0
+    },
+    "f053": {
+     "sum": "ee8e27b0747f832a",
+     "nulls": 0
+    },
+    "f054": {
+     "sum": "ea5857f3b9097be8",
+     "nulls": 0
+    },
+    "f055": {
+     "sum": "fda83397532e285b",
+     "nulls": 0
+    },
+    "f056": {
+     "sum": "fab8c2e46b7d8c2b",
+     "nulls": 0
+    },
+    "f057": {
+     "sum": "0b1765e8ffc2d68c",
+     "nulls": 0
+    },
+    "f058": {
+     "sum": "fdaa3e00204e4a37",
+     "nulls": 0
+    },
+    "f059": {
+     "sum": "db13ac6424c3d373",
+     "nulls": 0
+    },
+    "f060": {
+     "sum": "0d961b9813a75e42",
+     "nulls": 0
+    },
+    "f061": {
+     "sum": "f54751403c46a7c7",
+     "nulls": 0
+    },
+    "f062": {
+     "sum": "134f95a682440331",
+     "nulls": 0
+    },
+    "f063": {
+     "sum": "d6636726318ae401",
+     "nulls": 0
+    },
+    "f064": {
+     "sum": "e92dee7349ea7015",
+     "nulls": 0
+    },
+    "f065": {
+     "sum": "0bc5e19b61aaf8cc",
+     "nulls": 0
+    },
+    "f066": {
+     "sum": "f8a099ed3536be21",
+     "nulls": 0
+    },
+    "f067": {
+     "sum": "f57db81f10a3f31a",
+     "nulls": 0
+    },
+    "f068": {
+     "sum": "1d4b71b5e21ac963",
+     "nulls": 0
+    },
+    "f069": {
+     "sum": "0e90220f45f90f35",
+     "nulls": 0
+    },
+    "f070": {
+     "sum": "172bc5a12a88ce06",
+     "nulls": 0
+    },
+    "f071": {
+     "sum": "fe825cf345251b6b",
+     "nulls": 0
+    },
+    "f072": {
+     "sum": "f6fd108ad0d4625c",
+     "nulls": 0
+    },
+    "f073": {
+     "sum": "196acc64d6294839",
+     "nulls": 0
+    },
+    "f074": {
+     "sum": "1d30ad1c70b59102",
+     "nulls": 0
+    },
+    "f075": {
+     "sum": "12b13e4ad71b6254",
+     "nulls": 0
+    },
+    "f076": {
+     "sum": "d6526fd0e7dc1b3e",
+     "nulls": 0
+    },
+    "f077": {
+     "sum": "ea851c1dca11bc05",
+     "nulls": 0
+    },
+    "f078": {
+     "sum": "063f2c71673f3cec",
+     "nulls": 0
+    },
+    "f079": {
+     "sum": "00688c53c36d958c",
+     "nulls": 0
+    },
+    "f080": {
+     "sum": "e795c078206be91e",
+     "nulls": 0
+    },
+    "f081": {
+     "sum": "ee4bf319f46d3018",
+     "nulls": 0
+    },
+    "f082": {
+     "sum": "de7a825b912e1a6a",
+     "nulls": 0
+    },
+    "f083": {
+     "sum": "187afd06447925dd",
+     "nulls": 0
+    },
+    "f084": {
+     "sum": "dfa05d0787c09886",
+     "nulls": 0
+    },
+    "f085": {
+     "sum": "faccb2fe4417a595",
+     "nulls": 0
+    },
+    "f086": {
+     "sum": "c6e17c446928558c",
+     "nulls": 0
+    },
+    "f087": {
+     "sum": "e8cbd33d0da26121",
+     "nulls": 0
+    },
+    "f088": {
+     "sum": "e40d3aa8654a8cab",
+     "nulls": 0
+    },
+    "f089": {
+     "sum": "f31f2f89edd63dfc",
+     "nulls": 0
+    },
+    "f090": {
+     "sum": "f83fdc157e5c40b8",
+     "nulls": 0
+    },
+    "f091": {
+     "sum": "eb007b6a2e24c8d6",
+     "nulls": 0
+    },
+    "f092": {
+     "sum": "f3a33dd2cd2267ca",
+     "nulls": 0
+    },
+    "f093": {
+     "sum": "d6e7164cd7def610",
+     "nulls": 0
+    },
+    "f094": {
+     "sum": "321e0644ead49825",
+     "nulls": 0
+    },
+    "f095": {
+     "sum": "d25755836fe56e0d",
+     "nulls": 0
+    },
+    "f096": {
+     "sum": "fddd61324373b4d5",
+     "nulls": 0
+    },
+    "f097": {
+     "sum": "e2775bc556bd3072",
+     "nulls": 0
+    },
+    "f098": {
+     "sum": "e0c0698bfe3d7455",
+     "nulls": 0
+    },
+    "f099": {
+     "sum": "d52e16cd3cc98746",
+     "nulls": 0
+    },
+    "i00": {
+     "sum": "00002d72c15ecabd",
+     "nulls": 0
+    },
+    "i01": {
+     "sum": "00002d811f56a45b",
+     "nulls": 0
+    },
+    "i02": {
+     "sum": "00002d5f0ba41bab",
+     "nulls": 0
+    },
+    "i03": {
+     "sum": "00002d6d567264be",
+     "nulls": 0
+    },
+    "i04": {
+     "sum": "00002d65a063f596",
+     "nulls": 0
+    },
+    "i05": {
+     "sum": "00002d83502f82af",
+     "nulls": 0
+    },
+    "i06": {
+     "sum": "00002d7cba8772b3",
+     "nulls": 0
+    },
+    "i07": {
+     "sum": "00002d7458968312",
+     "nulls": 0
+    },
+    "i08": {
+     "sum": "00002d77c9d3bab6",
+     "nulls": 0
+    },
+    "i09": {
+     "sum": "00002d5c0df2a70a",
+     "nulls": 0
+    },
+    "i10": {
+     "sum": "00002d8515631b27",
+     "nulls": 0
+    },
+    "i11": {
+     "sum": "00002d5464577790",
+     "nulls": 0
+    },
+    "i12": {
+     "sum": "00002d83981bcf13",
+     "nulls": 0
+    },
+    "i13": {
+     "sum": "00002d9e74f9a52a",
+     "nulls": 0
+    },
+    "i14": {
+     "sum": "00002d64c8129f45",
+     "nulls": 0
+    },
+    "i15": {
+     "sum": "00002d6e71105589",
+     "nulls": 0
+    },
+    "i16": {
+     "sum": "00002d71de1257fe",
+     "nulls": 0
+    },
+    "i17": {
+     "sum": "00002d7dd5ed6af5",
+     "nulls": 0
+    },
+    "i18": {
+     "sum": "00002d6a85911d8b",
+     "nulls": 0
+    },
+    "i19": {
+     "sum": "00002d7221c3fd84",
+     "nulls": 0
+    }
+   },
+   "table_digest": "627185331aa800a4",
+   "head": [
+    [
+     1,
+     "f64:3fdbddc6930ade82",
+     "f64:3fef689359a87e16",
+     "f64:3fd1475703f6ef42",
+     "f64:3fec2d2049db8175",
+     "f64:3fefcb2f94659842",
+     "f64:3fe459fccfde1a9c",
+     "f64:3fe37d4e50ca5ebf",
+     "f64:3f860db2486ab380",
+     "f64:3feb45f4f600c367",
+     "f64:3fec16bb6e695e50",
+     "f64:3feb84989221d15f",
+     "f64:3fd183babc00621a",
+     "f64:3fc13453525402d8",
+     "f64:3fc1fed4a27f4f64",
+     "f64:3fef504b47377c8a",
+     "f64:3fefcda956a3c6b4",
+     "f64:3feebd683f11d2f7",
+     "f64:3fd23f2270b1cdfc",
+     "f64:3fe9a41594f5fa3c",
+     "f64:3fd691b8434f16a6",
+     "f64:3fab06cb5ab9d3c0",
+     "f64:3fe88c08253ff404",
+     "f64:3fd50ae4ff74eaee",
+     "f64:3fd2e0860f4eb7e2",
+     "f64:3fd83bc4a55249b2",
+     "f64:3fcd6ea02ed8b6dc",
+     "f64:3fe8722f19fec08d",
+     "f64:3f77bcb64c4f2900",
+     "f64:3fef015b171917ea",
+     "f64:3fe2562cd8ad317d",
+     "f64:3febe7ccbab450b2",
+     "f64:3fcb83a9565fb0f0",
+     "f64:3fda47a472fc085a",
+     "f64:3fdc834027e76956",
+     "f64:3fecb2f4554c3a4b",
+     "f64:3fd2064277466c1c",
+     "f64:3fc6a6ee49bd6f50",
+     "f64:3fc0a0f6962b8430",
+     "f64:3fa527acc634e810",
+     "f64:3fe8234f6391bcc4",
+     "f64:3fd9a2a4dcc52822",
+     "f64:3fe77ddeddcc49e3",
+     "f64:3feaecd4fbc6ef1f",
+     "f64:3feb4bf96f5a2025",
+     "f64:3feacf0e38c788c9",
+     "f64:3fda92d437a65cbc",
+     "f64:3fce6575f8377518",
+     "f64:3fe49349f6b52c22",
+     "f64:3fbd284ededae220",
+     "f64:3fea3855ec10ec21",
+     "f64:3fd286b111ee1c24",
+     "f64:3fae86034389a4d0",
+     "f64:3fd9dacf62688cec",
+     "f64:3fa43ccad20a3180",
+     "f64:3fe4918363281da9",
+     "f64:3fea3e08bac4c1b2",
+     "f64:3fd9ff5274f866d6",
+     "f64:3fbb97c00b1d2978",
+     "f64:3f91861ac0a3e8e0",
+     "f64:3fabe3cbf9137ef0",
+     "f64:3feee375b766dcaa",
+     "f64:3fdf2ed7fc16418c",
+     "f64:3fe1ab42f4953905",
+     "f64:3fe8bb62faa81fb5",
+     "f64:3fe6a9a0a639f926",
+     "f64:3fd7d6802a6b6c86",
+     "f64:3fde1fa6025b08ba",
+     "f64:3fd25c4233e71ffc",
+     "f64:3fec1e07fc55eeb2",
+     "f64:3fcfa0cdcd651d60",
+     "f64:3fdd42d4b886cf74",
+     "f64:3fe5b6bc21839374",
+     "f64:3fef31d20e90f1a8",
+     "f64:3fec8bfe8c2e44fe",
+     "f64:3fe49b45853278a4",
+     "f64:3fe4b7310f8070c5",
+     "f64:3fe83807cca14ffb",
+     "f64:3fe47f970e18a80d",
+     "f64:3fce91f0bbb3c31c",
+     "f64:3fb95014fc782438",
+     "f64:3fd3caca096e724a",
+     "f64:3fec4913837bf397",
+     "f64:3fddfa6b4c26da0a",
+     "f64:3fe8d34c83d996ac",
+     "f64:3fed109af0ff910d",
+     "f64:3fd40ebd06b6fb32",
+     "f64:3fe9ee001f4398de",
+     "f64:3feee3c236ed99f7",
+     "f64:3fad5d2610d21eb0",
+     "f64:3fe9c6490266049d",
+     "f64:3fe82159cef2c9a6",
+     "f64:3fd50330f4117226",
+     "f64:3fe31585a0b16ad1",
+     "f64:3fd47f99091f4296",
+     "f64:3fea94e7417b0b53",
+     "f64:3fb1369879458908",
+     "f64:3fe252889979501a",
+     "f64:3fe297fff5c56e80",
+     "f64:3febc31e548c5690",
+     "f64:3faa5054d1ee8fa0",
+     384577971,
+     617741375,
+     505951489,
+     17918128,
+     714012544,
+     674021811,
+     690854078,
+     934157999,
+     874862336,
+     626344193,
+     172965382,
+     729681665,
+     503126555,
+     852274858,
+     249336714,
+     24974906,
+     969467467,
+     179655252,
+     904484392,
+     432671675
+    ],
+    [
+     2,
+     "f64:3fe81381c1f1e761",
+     "f64:3fe6fe8b52e2dd9e",
+     "f64:3f91782f81117f00",
+     "f64:3fe74ebb1ccf615a",
+     "f64:3fc34abc3283bf68",
+     "f64:3fc5cedb5636ec68",
+     "f64:3fb787a18ebb1048",
+     "f64:3fe162fcad3385af",
+     "f64:3fbeba3e78dbdd28",
+     "f64:3feabf59959bbc9c",
+     "f64:3fd3bb44ced26fd2",
+     "f64:3fa2c50c59109fc0",
+     "f64:3fe36d8aefcb8e6c",
+     "f64:3fc9c6c9cddc1598",
+     "f64:3fe0ebcbc73b85f7",
+     "f64:3febb07dab375069",
+     "f64:3fe46f4fe945291c",
+     "f64:3fedaeb12890dd11",
+     "f64:3faf2e5de18fc540",
+     "f64:3fec1adfbf91bd14",
+     "f64:3fc98b800fc67cbc",
+     "f64:3fd4c1048786248e",
+     "f64:3f8cb1a040901540",
+     "f64:3fee52edbbf26ac1",
+     "f64:3fe246d44ac92021",
+     "f64:3fdab5d7b679d8f4",
+     "f64:3fcaa90d960728d4",
+     "f64:3fecad9e6ae02fca",
+     "f64:3febd4e310c7a8dd",
+     "f64:3fe39628584cf3a6",
+     "f64:3fd88d95636a6194",
+     "f64:3fe692e7a21bdfdb",
+     "f64:3fcecce2e42e7e9c",
+     "f64:3fa3aedb77aa1610",
+     "f64:3fceb8f06bf334f0",
+     "f64:3feff277d1cc421a",
+     "f64:3fee0471182f5559",
+     "f64:3fe87dff0685cf51",
+     "f64:3fecc82bdd1649c0",
+     "f64:3fdaf10a893c8bde",
+     "f64:3fdddbb886e9b912",
+     "f64:3fd28f86adeab860",
+     "f64:3fede345735b1547",
+     "f64:3fd999276b53c726",
+     "f64:3fefc4eb2ca8fb40",
+     "f64:3fd51c7ee1d01ac4",
+     "f64:3fdfe1997d3dcfb6",
+     "f64:3fd6a0b3ded01f54",
+     "f64:3fdf80c6a960235a",
+     "f64:3feccddb0a04e8d8",
+     "f64:3fd63ac324291d6c",
+     "f64:3fd0d6435c3431e0",
+     "f64:3feeeebde23bbf28",
+     "f64:3fe238e34f2f2072",
+     "f64:3fe0df45845749ce",
+     "f64:3fc4d231e96e3b40",
+     "f64:3fcd31d05a00d0cc",
+     "f64:3fea0adb1a729b90",
+     "f64:3fe4154af6f1a346",
+     "f64:3fe2a51e0f27f187",
+     "f64:3fc248455e5ca7f8",
+     "f64:3fe7dad1659b393d",
+     "f64:3fcf410d16f87fd4",
+     "f64:3fa37221e832da10",
+     "f64:3fd3c47d91620da2",
+     "f64:3fe7de346194eb68",
+     "f64:3fd3b5f509fa3a2c",
+     "f64:3fe2d95cdfbce19d",
+     "f64:3fdd183c60fbd690",
+     "f64:3f958d1baf504520",
+     "f64:3fe7dc2ee7b5fe02",
+     "f64:3fc7232df3ac65c4",
+     "f64:3fce3ca113cbb820",
+     "f64:3fb647bc169c5100",
+     "f64:3f9941d48cbcf5a0",
+     "f64:3fcabb729c4265c8",
+     "f64:3fba2cc5653e44d0",
+     "f64:3fcd7835470590f8",
+     "f64:3febde786d63cb67",
+     "f64:3fc59fa07a83f7a8",
+     "f64:3fbb91441001a148",
+     "f64:3fd1f359315fc06c",
+     "f64:3fdfdbb5547dc2c6",
+     "f64:3fd3e482c002a71a",
+     "f64:3fecd3f63c66b8e9",
+     "f64:3fd9248403671d66",
+     "f64:3fe0ee1021984f68",
+     "f64:3fa67c5a32101ef0",
+     "f64:3fc72c7ec422a478",
+     "f64:3fc4923d8d074814",
+     "f64:3fd63508e76b1d46",
+     "f64:3fe89fd0926600e3",
+     "f64:3fcc54fd2db23c24",
+     "f64:3fe8c9d3a76efcb0",
+     "f64:3fd6b14ac703b174",
+     "f64:3fe6eb97b2c004b7",
+     "f64:3fc3af7ed2baa540",
+     "f64:3fe28e076245ab61",
+     "f64:3fc63dd0a13a27cc",
+     "f64:3fb116d84f8643f8",
+     787605882,
+     485473140,
+     944895046,
+     573576197,
+     179326959,
+     49046397,
+     590417565,
+     570222854,
+     639966057,
+     778539441,
+     311026549,
+     923588602,
+     61608783,
+     438048442,
+     953640388,
+     645529168,
+     307583484,
+     425690638,
+     116318717,
+     806042226
+    ],
+    [
+     3,
+     "f64:3fee6842ebfe63dd",
+     "f64:3fe5d6b12e679992",
+     "f64:3fd41b52e86efd8e",
+     "f64:3fd7d383ba7f68ee",
+     "f64:3fdf727bd90944dc",
+     "f64:3fc445d9a9a6d7d8",
+     "f64:3fd63b2d2b5c4320",
+     "f64:3fd13f3a24212a2a",
+     "f64:3fe7076d21fc584d",
+     "f64:3fe8fe7473ca70a4",
+     "f64:3fc2d7c10e4ba510",
+     "f64:3fe851963840b16c",
+     "f64:3fe8d942192c6158",
+     "f64:3fc00428fac02ce8",
+     "f64:3fb631b061e6d5b8",
+     "f64:3fc07c3beaec7348",
+     "f64:3fe5d7225c9b1b04",
+     "f64:3f6edee7ed10ec00",
+     "f64:3fdde78740bce852",
+     "f64:3fe3fa9e1777aafa",
+     "f64:3f97959a5296f480",
+     "f64:3fd0ab301d8d0a40",
+     "f64:3fe732a6730455f2",
+     "f64:3fd3f3a011f0207a",
+     "f64:3fe4e188801ab04c",
+     "f64:3fe2b45e86a5ec10",
+     "f64:3fe71ef6f62c6d1b",
+     "f64:3fcc03d97f90a080",
+     "f64:3fe227180583d2be",
+     "f64:3fe2936728789789",
+     "f64:3fdaf0357b67f354",
+     "f64:3feeb1ad1279b742",
+     "f64:3fcede6708df3c54",
+     "f64:3fe3bf4422594b77",
+     "f64:3fd930c25db9cb06",
+     "f64:3fef15fb25e5ec4f",
+     "f64:3f93d7d536e9ba40",
+     "f64:3fb14bcf14e618e0",
+     "f64:3f8c99a704318b80",
+     "f64:3fe325c0208714d6",
+     "f64:3fd2dd221f54d7f8",
+     "f64:3feb3f5c2d0eb27f",
+     "f64:3fcef1a5691f9df8",
+     "f64:3fd113bb1888c6f2",
+     "f64:3fe93286e3a77fad",
+     "f64:3fe86ae882a9bda0",
+     "f64:3fc600a96f211e10",
+     "f64:3fd3ddc387761888",
+     "f64:3fe2614974e2393f",
+     "f64:3fe865303fb53ee4",
+     "f64:3fe17d5bccf1ecf7",
+     "f64:3feaff0ecea9f040",
+     "f64:3fdb368aca67b686",
+     "f64:3fa6a121657a3930",
+     "f64:3fee300cea0c50dc",
+     "f64:3fee41b679e80766",
+     "f64:3fe64215cbf36620",
+     "f64:3fe583b7cbbb3148",
+     "f64:3fc93954cf51de94",
+     "f64:3fdaed7761f8821e",
+     "f64:3fec8803f0a496a5",
+     "f64:3fe0a0b773c61d33",
+     "f64:3fe33c8f88a9e4d3",
+     "f64:3fb6a4c3f9ca92c0",
+     "f64:3fd62ff9490fb068",
+     "f64:3fd09be1929c9b52",
+     "f64:3fddbfcd035cd73e",
+     "f64:3fd988cc2a86855a",
+     "f64:3fe0745096df3079",
+     "f64:3fd48d32023cc0e6",
+     "f64:3fed3ae6301497b8",
+     "f64:3fb8d0a79029c600",
+     "f64:3fe373668b80b254",
+     "f64:3fd81c17458b7de2",
+     "f64:3fbea6a0a4780200",
+     "f64:3fe32e37896e3571",
+     "f64:3fea34875629e562",
+     "f64:3fdf93358f25541a",
+     "f64:3fef729815b2d6ea",
+     "f64:3fe17d48de785291",
+     "f64:3fe2827405fb4567",
+     "f64:3fcd6aea5e26875c",
+     "f64:3fe032a0dcde0fc4",
+     "f64:3fe814b3ceec1a35",
+     "f64:3fbfd8cf5bf87830",
+     "f64:3fc35a6a07ebf794",
+     "f64:3f9acabc946e8320",
+     "f64:3fe9f4b6523fa2ee",
+     "f64:3fe0d921d66512c5",
+     "f64:3fccc27f16f86aa8",
+     "f64:3feca807b09a41a9",
+     "f64:3fdc9926ea497640",
+     "f64:3fe4ef9b78a50002",
+     "f64:3fded22d56376802",
+     "f64:3fe1c45f0fd66747",
+     "f64:3fdfb456cdf91524",
+     "f64:3fd54031ddc9fc9a",
+     "f64:3fb4713a34b591c0",
+     "f64:3fc2ce4b523079f4",
+     "f64:3fc0e0c402dd1bac",
+     889862039,
+     401965115,
+     974025692,
+     946282179,
+     408733031,
+     448755833,
+     792442322,
+     817548881,
+     991456624,
+     316344489,
+     460358040,
+     580516000,
+     927727041,
+     28460287,
+     69290847,
+     204262674,
+     410492640,
+     64020918,
+     922166098,
+     706463585
+    ]
+   ]
+  }
+ ]
+}

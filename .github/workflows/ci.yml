@@ -1,0 +1,27 @@
+name: ci
+on:
+  push:
+  pull_request:
+jobs:
+  generator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - run: pip install -r requirements.txt
+      - name: Golden + cross-implementation tests (reference == vectorised)
+        run: python -m pytest tests -q
+      - name: Generate 1k and 10k datasets, verify manifests
+        run: |
+          python -m generator gen --dataset all --rows 1k --out data --workers 2
+          python -m generator gen --dataset all --rows 10k --out data --workers 2
+          python -m generator verify data
+      - name: Runner smoke + result schema validation
+        run: python -m runner run --smoke
+      - name: Data-type docs are up to date
+        run: python docs/data-types/build.py --check
+        if: hashFiles('docs/data-types/build.py') != ''
+      - name: Conformance probes (available toolchains)
+        run: bash conformance/run_all.sh
+        if: hashFiles('conformance/run_all.sh') != ''

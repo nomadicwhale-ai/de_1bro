@@ -1,0 +1,10 @@
+numpy>=2.0
+pyarrow>=17
+duckdb>=1.0
+polars>=1.0
+xxhash>=3.4
+PyYAML>=6.0
+jsonschema>=4.20
+psutil>=5.9
+pytest>=8.0
+matplotlib>=3.8   # charts (Phase 4)

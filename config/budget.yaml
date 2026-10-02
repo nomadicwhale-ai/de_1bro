@@ -1,0 +1,14 @@
+# Resource budget. A (implementation x op x size x mode) combination that would exceed it is
+# recorded as status "skipped" with the reason, never silently dropped.
+# Values here are defaults; the corresponding .env variables override them.
+max_rss_gb: 12            # MAX_RSS_GB
+max_wall_seconds_per_run: 3600   # RUN_TIMEOUT_SEC
+max_disk_gb: null         # MAX_DISK_GB (null = free disk)
+timed_runs:
+  default: 7              # <= 100M rows
+  "1000000000": 3         # 1B rows
+warmup_runs: 1
+noisy_iqr_pct: 10
+# Materialized mode is only attempted when the estimated in-memory size of the dataset
+# (see docs/dataset-sizes.md, arrow in-memory column) times this factor fits in max_rss_gb.
+materialized_overhead_factor: 3.0
