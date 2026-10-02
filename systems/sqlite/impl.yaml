@@ -1,0 +1,11 @@
+sqlite:
+  track: S
+  variant: default
+  cmd: ["python3", "systems/sqlite/bench.py"]
+  toolchain: {name: sqlite, version_cmd: ["python3", "-c", "import sqlite3;print(sqlite3.sqlite_version)"]}
+  flags: "in-memory csv.reader+executemany"
+  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [materialized]
+  input: csv
+  max_rows: 10000000

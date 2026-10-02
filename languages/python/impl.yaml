@@ -1,0 +1,10 @@
+python:
+  track: L
+  variant: stdlib
+  cmd: ["python3", "-O", "languages/python/bench.py"]
+  toolchain: {name: cpython, version_cmd: ["python3", "-c", "import platform;print(platform.python_version())"]}
+  flags: "-O stdlib-only (csv, collections, itertools)"
+  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv

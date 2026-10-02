@@ -1,0 +1,13 @@
+{
+ "op": "OP05",
+ "dataset": "A",
+ "rows": 1000000,
+ "checksum": "fb96b9e339ab746c3b76dd7285f0399e",
+ "row_count": 87893,
+ "floats": {},
+ "rtol": 1e-09,
+ "source": "duckdb",
+ "duckdb_version": "1.5.6",
+ "data_table_digest": "188fe5bbc861b888",
+ "generator_version": "1.0.0"
+}

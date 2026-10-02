@@ -1,0 +1,11 @@
+rust:
+  track: L
+  variant: stdlib
+  build: ["cargo", "build", "--release", "--manifest-path", "languages/rust/Cargo.toml"]
+  cmd: ["languages/rust/target/release/bench"]
+  toolchain: {name: rustc, version_cmd: ["rustc", "--version"]}
+  flags: "--release opt-level=3 lto=thin codegen-units=1 panic=abort"
+  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv

@@ -1,0 +1,11 @@
+go:
+  track: L
+  variant: stdlib
+  build: ["go", "build", "-C", "languages/go", "-trimpath", "-o", "bin/bench", "."]
+  cmd: ["languages/go/bin/bench"]
+  toolchain: {name: go, version_cmd: ["go", "env", "GOVERSION"]}
+  flags: "go build -trimpath"
+  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv
