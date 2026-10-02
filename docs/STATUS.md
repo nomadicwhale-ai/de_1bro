@@ -1,6 +1,6 @@
-# Status (end of Phase 2)
+# Status (Phase 3a complete)
 
-Last updated after merging Phase 1+2 into `main` (PR #1).
+Last updated after the Phase 3a timing campaign (Phase 1+2 merged in PR #1/#2).
 
 ## Phase summary
 
@@ -8,7 +8,8 @@ Last updated after merging Phase 1+2 into `main` (PR #1).
 |---|---|---|
 | 1 Foundations | repo skeleton, `.env.example`, deterministic generator (1k-1B, streaming), golden tests, manifests, disk guard, result schema, runner, data-type docs, conformance probes | **done** |
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22; DuckDB oracle + pure-Python cross-check; result digests | **done, correctness-validated** (no timing campaign yet) |
-| 3 Breadth | remaining languages/engines/ops, real timing campaign, first report | next (see `docs/PLAN.md`) |
+| 3a First results | timing campaign (5 runs + warm-up) for the 6 implementations at 1M/10M, generated report + charts | **done** - `report/REPORT.md`, `report/FINDINGS.md`, `results/published/phase3a/` |
+| 3b/3c Breadth | remaining ops, more languages/engines | next (see `docs/PLAN.md`) |
 | 4 Scale + analysis | 100M/1B runs, parallel track, profiler evidence, charts, final report | planned |
 
 ## What exists and is verified
@@ -40,7 +41,7 @@ OP10 distinct counts, OP15 CSV parse, OP19 null handling, OP21 decimal vs float 
 
 ## Known caveats (do not publish rankings before these are addressed)
 
-1. **No timing campaign yet.** Numbers seen so far came from single runs on a machine shared with other jobs.
+1. **Timing campaign is small:** 5 timed runs on one 4-vCPU machine (45 of 254 cells flagged noisy); 10M for Python/SQLite covers a subset of operations.
 2. **Not every combination was run at 10m** (python and sqlite subsets above); nothing has run above 10m.
 3. **Not-installed toolchains:** C#, Julia, Swift, Kotlin, Scala, R (conformance sources + Dockerfiles exist, untested);
    no Java/C++/JS benchmark implementations yet. PostgreSQL, Spark, pandas, Arrow, ClickHouse not started.
