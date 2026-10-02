@@ -13,8 +13,8 @@ machine, not statements about the languages in general.** Values are `load + com
   Rust-vs-Go differences as "these two implementations", not "these two languages".
 * **Stdlib CPython is roughly 8-24x slower than Rust/Go** at 1M rows across the nine operations (materialized),
   and uses about 1.5-2.5x their peak memory; at 10M it needs ~30 s just to parse the CSV chunks.
-* Parsing dominates: for most scan/aggregate operations over CSV, `load` is 80-99% of `load + compute`
-  for Rust and Go. Compute-only ranks therefore differ from end-to-end ranks (the report shows both).
+* Parsing dominates the cheap operations: for OP01/OP03/OP04/OP19/OP21 `load` is roughly 85-99% of `load + compute`
+  for Rust and Go at 1M (for OP05/OP10 compute is 40-60%). Compute-only ranks therefore differ from end-to-end ranks (the report shows both).
 
 ## Track S (data systems)
 * **DuckDB is fastest or near-fastest on single-thread streaming for 8 of 9 operations at 10M**, typically 2-6x
@@ -24,7 +24,7 @@ machine, not statements about the languages in general.** Values are `load + com
 * **CSV parsing (OP15) reverses the picture:** at 10M Rust 2.6 s and Go 3.7 s vs DuckDB 7.9 s and Polars 7.9 s on one thread
   (DuckDB and Polars are comparable at 4 threads: 2.6 s and 2.1 s).
 * **Thread scaling (1 -> 4 threads, 10M streaming):** DuckDB OP01 0.45 -> 0.14 s (3.2x), Polars OP01 1.4 -> 0.42 s (3.4x);
-  scaling is weaker on OP04/OP10 (about 1.6-2.1x) where hash tables dominate.
+  scaling varies by operation: OP04 (high-cardinality group-by) 1.6x (DuckDB) / 2.7x (Polars), OP10 (distinct counts) 4.2x / 4.6x.
 * **SQLite** (validation-only): OP01 at 10M takes ~47 s, ~45 s of which is importing the CSV into an in-memory table;
   DuckDB materialized does the same work in 0.7 s.
 
