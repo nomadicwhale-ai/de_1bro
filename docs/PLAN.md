@@ -3,7 +3,7 @@
 Priorities (unchanged): correctness > reproducibility > fairness > coverage. Work is ordered so every step
 produces a publishable, verified increment; later items can be dropped without invalidating earlier ones.
 
-## Phase 3a - first real results (highest value, cheapest)
+## Phase 3a - first real results - DONE (see report/REPORT.md, report/FINDINGS.md)
 1. Timing campaign for the Phase 2 implementations: 1 warm-up + 7 timed runs at 1m and 10m (3 at larger sizes),
    quiet machine, fixed seed shuffle. Output `results/raw/*.jsonl` (commit a curated copy under `results/published/`).
 2. `report/make_charts.py` + `report/REPORT.md` v0: per-op tables (dense ranks with noise-band ties), bar charts, the

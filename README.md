@@ -11,7 +11,8 @@ specification and `docs/METHODOLOGY.md` for the rules.
 |---|---|---|
 | 1 Foundations | repo skeleton, `.env`, deterministic generator (1k–1B rows, streaming), golden tests, manifests, disk guard, result schema, runner, data-type docs, conformance probes | **done** |
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22, DuckDB oracle | **done** (correctness-validated; no timing campaign yet) |
-| 3 Breadth | first timing campaign + report, remaining ops, languages/engines | next |
+| 3a First results | timing campaign + generated report/charts for the 6 implementations (1M, 10M) | **done** - [`report/REPORT.md`](report/REPORT.md), [`report/FINDINGS.md`](report/FINDINGS.md) |
+| 3b/3c Breadth | remaining ops, more languages/engines | next |
 | 4 Scale + analysis | 100M/1B runs, parallel track, charts, report | planned |
 
 Details: [`docs/STATUS.md`](docs/STATUS.md) (verified matrix + caveats) and [`docs/PLAN.md`](docs/PLAN.md) (what comes next).
