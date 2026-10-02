@@ -16,7 +16,7 @@ specification and `docs/METHODOLOGY.md` for the rules.
 | 3c+ Breadth | remaining ops (OP02, 11-14, 16-18, 20), JS/TS and more languages, PostgreSQL/pandas/Arrow/Spark | next |
 | 4 Scale + analysis | 100M/1B runs, parallel track, charts, report | planned |
 
-Details: [`docs/STATUS.md`](docs/STATUS.md) (verified matrix + caveats) and [`docs/PLAN.md`](docs/PLAN.md) (what comes next).
+Details: [`docs/STATUS.md`](docs/STATUS.md) (verified matrix + caveats) and [`docs/PLAN.md`](docs/PLAN.md) (prioritised roadmap, risks, handoff).
 
 ## Quick start
 
