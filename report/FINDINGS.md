@@ -49,17 +49,17 @@ Same caveat as above: these describe these implementations, not the languages.
   `std::unordered_map`/`unordered_set`, whose libstdc++ hash for integers is the identity function and which allocates a
   node per element; Rust/Go/Java use flat or custom maps. This is an implementation choice that the README documents,
   not a statement about C++ - a flat hash map would likely close the gap.
-* **Java is the slowest Track L implementation on most operations** (typically 1.3-2x C++), and 4x slower on OP08 because
+* **Java is the slowest Track L implementation on most operations** (typically 1.4-2.3x C++), and 4x slower on OP08 because
   the standard-library comparator sort works on boxed indexes (a primitive sort cannot carry the 2-key order). Each run is a
   fresh JVM, so JIT warm-up and GC are inside the timing; the effect is largest at small sizes.
 * Rust is slowest of the compiled three on OP05 (5.1 s vs C++ 2.9 s, Go 3.2 s) - a composite-key hashing choice, see its README.
 
 ## Track S vs Track L (different inputs: Parquet vs CSV, so a pipeline comparison)
-* DuckDB or Polars is the fastest implementation on 11 of 13 operations at 10M (Polars wins OP07, OP08, OP19).
+* DuckDB or Polars is the fastest implementation on 12 of 13 operations at 10M (Polars wins OP07, OP08, OP19); OP15 is the exception.
 * **CSV parse (OP15) is again the reverse:** C++ 2.3 s, Rust 2.5 s, Go 3.8 s, Java 4.7 s vs DuckDB 8.0 s and Polars 8.5 s
   (single thread).
 * New operations in Track S: OP06 join DuckDB 1.4 s / Polars 2.4 s; OP08 sort Polars 1.6 s / DuckDB 2.5 s;
-  OP09 top-100 DuckDB 1.2 s / Polars 2.1 s. SQLite at 10M: OP06 11.6 s, OP07 9.7 s, OP08 13.3 s, OP09 5.3 s (load-dominated).
+  OP09 top-100 DuckDB 1.2 s / Polars 2.1 s. SQLite at 10M takes 55-62 s per operation (load + compute), almost all of it CSV import.
 
 ## Still not covered
 OP02, OP11-OP14, OP16-OP18, OP20; JavaScript/TypeScript, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark,
