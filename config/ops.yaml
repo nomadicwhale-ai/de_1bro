@@ -1,4 +1,4 @@
-# Operation registry (spec/ops/<id>.md will hold the exact definitions - Phase 2/3).
+# Operation registry. Exact definitions of the Phase 2 ops live in spec/ops/<id>.md (generated from runner/ops.py).
 # tracks: which tracks must implement it. phase: delivery phase that implements it.
 OP01: {name: full_scan_aggregate,        dataset: A,   tracks: [L, S], phase: 2}
 OP02: {name: filter_project,             dataset: A,   tracks: [L, S], phase: 3}

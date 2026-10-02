@@ -1,6 +1,6 @@
 # Methodology
 
-Status: Phase 1 (foundations). Rules marked **[enforced]** are checked by code; the rest are
+Status: Phases 1-2 complete (see docs/STATUS.md). Rules marked **[enforced]** are checked by code; the rest are
 protocol that Phase 2+ implementations and the runner follow.
 
 ## Tracks
@@ -40,7 +40,7 @@ Rankings use dense ranks with ties when medians fall within the noise band.
 A record is `status: ok` only if its checksum **and** row count match the expected value for that
 (op, dataset, rows). Otherwise `incorrect` and it is excluded from rankings. Missing oracle ⇒ `skipped`
 (never silently "ok"). Oracle: DuckDB over the same Parquet (Phase 2); in Phase 1 the harness op `OP00`
-(digest of the generated table) is checked against `spec/golden.json` / the dataset manifest.
+(digest of the generated table) is checked against `spec/golden.json` / the dataset manifest. Phase 2 ops are checked against `results/expected/` (DuckDB oracle, cross-checked by `runner/ref_ops.py`).
 Float outputs: relative tolerance 1e-9 with a specified summation order, 1e-6 otherwise (per-op spec).
 
 ## Fairness rules

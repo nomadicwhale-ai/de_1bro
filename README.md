@@ -9,10 +9,12 @@ specification and `docs/METHODOLOGY.md` for the rules.
 
 | Phase | Scope | State |
 |---|---|---|
-| 1 Foundations | repo skeleton, `.env`, deterministic generator (1k–1B rows, streaming), golden tests, manifests, disk guard, result schema, runner, data-type docs, conformance probes | **done** (see below) |
-| 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01–05,10,15,19,21,22 | next |
-| 3 Breadth | remaining languages/engines/ops | planned |
+| 1 Foundations | repo skeleton, `.env`, deterministic generator (1k–1B rows, streaming), golden tests, manifests, disk guard, result schema, runner, data-type docs, conformance probes | **done** |
+| 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22, DuckDB oracle | **done** (correctness-validated; no timing campaign yet) |
+| 3 Breadth | first timing campaign + report, remaining ops, languages/engines | next |
 | 4 Scale + analysis | 100M/1B runs, parallel track, charts, report | planned |
+
+Details: [`docs/STATUS.md`](docs/STATUS.md) (verified matrix + caveats) and [`docs/PLAN.md`](docs/PLAN.md) (what comes next).
 
 ## Quick start
 
@@ -25,6 +27,8 @@ make verify                   # sha256 + content-digest check of everything unde
 make gen-dry SIZE=1b          # estimate size, check disk guard, write nothing
 make stream SIZE=1b DATASETS=A   # generate + digest 1B rows on the fly (no files)
 make smoke                    # runner smoke profile, results validated against schema/result.schema.json
+python -m runner.oracle --rows 1k,10k    # expected results (DuckDB) for the Phase 2 ops
+python -m runner build && python -m runner run --rows 1k,10k --runs 1 --warmup 0 --force   # all implementations
 ```
 
 ## Datasets (`spec/generator.md`)
@@ -54,7 +58,9 @@ generator/   deterministic generator (reference.py, fast.py), checksum, writers,
 spec/        generator.md, checksum.md, golden.json (expected digests)
 schema/      result.schema.json
 config/      budget.yaml, ops.yaml, implementations.yaml
-runner/      process-isolated runner, stats, sysinfo, OP00 self-test implementation
+runner/      process-isolated runner, stats, sysinfo, op registry (ops.py), DuckDB oracle, pure-Python ref ops
+languages/   Track L implementations (python, rust, go) - each with impl.yaml + README notes
+systems/     Track S implementations (duckdb, polars, sqlite)
 docs/        METHODOLOGY.md, dataset-sizes.md, data-types/
 conformance/ per-language probes of integer/float/string/time semantics
 tests/       golden + cross-implementation tests
