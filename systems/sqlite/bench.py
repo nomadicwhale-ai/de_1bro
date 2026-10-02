@@ -80,7 +80,7 @@ Q = {
          "count(*) FILTER (WHERE is_returned) FROM sales",
  "OP03": "SELECT country, count(*), sum(quantity), sum(cents) FROM sales GROUP BY country",
  "OP04": "SELECT customer_id, count(*), sum(cents) FROM sales GROUP BY customer_id",
- "OP05": f"SELECT country, category, y.year, count(*), sum(cents) FROM sales JOIN ({YMD_SQL}) y USING (date_days) "
+ "OP05": f"WITH y AS MATERIALIZED ({YMD_SQL}) SELECT country, category, y.year, count(*), sum(cents) FROM sales JOIN y USING (date_days) "
          "GROUP BY country, category, y.year",
  "OP10": "SELECT (SELECT count(DISTINCT customer_id) FROM sales), (SELECT count(DISTINCT product_id) FROM sales), "
          "(SELECT count(*) FROM (SELECT DISTINCT store_id, date_days FROM sales))",
@@ -97,11 +97,12 @@ Q = {
  # exact sum + formatted decimal; floats: sum() and (>=3.43) Kahan-Babuska sum()
  "OP21": "SELECT s, CAST(s/100 AS TEXT) || '.' || printf('%02d', s % 100), f1, f2 FROM "
          "(SELECT sum(cents) AS s, sum(cents/100.0) AS f1, sum(cents/100.0) AS f2 FROM sales)",
- "OP22": "SELECT count(*) FILTER (WHERE CAST(CAST(transaction_id*4294967311 + customer_id AS REAL) AS INTEGER) "
+ "OP22": f"WITH y AS MATERIALIZED ({YMD_SQL}) "
+         "SELECT count(*) FILTER (WHERE CAST(CAST(transaction_id*4294967311 + customer_id AS REAL) AS INTEGER) "
          "<> transaction_id*4294967311 + customer_id), "
          "count(*) FILTER (WHERE CAST((cents/100.0)*100.0 AS INTEGER) <> cents), "
          "count(*) FILTER (WHERE (ts_us/1000)*1000 <> ts_us), "
-         f"sum(y.year*10000 + y.month*100 + y.day) FROM sales JOIN ({YMD_SQL}) y USING (date_days)",
+         f"sum(y.year*10000 + y.month*100 + y.day) FROM sales JOIN y USING (date_days)",
 }
 
 

@@ -125,6 +125,9 @@ func main() {
 		}
 	}
 
+	if os.Getenv("BENCH_DEBUG") != "" {
+		fmt.Fprintln(os.Stderr, result)
+	}
 	sum, n := digest(result)
 	var fl string
 	if floats != nil {
