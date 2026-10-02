@@ -160,11 +160,11 @@ def main():
         files = sorted(glob.glob(os.path.join(ddir, "part-*.csv")))
         t0 = time.perf_counter()
         if args.mode == "materialized":
-            df = pl.concat([pl.read_csv(f, schema=CSV_SCHEMA, null_values=["\\N"], has_header=True,
+            df = pl.concat([pl.read_csv(f, schema=CSV_SCHEMA, null_values=["\\N"], missing_utf8_is_empty_string=True, has_header=True,
                                         n_threads=args.threads) for f in files])
             res = op15(df.lazy()).collect()
         else:
-            res = op15(pl.scan_csv(files, schema=CSV_SCHEMA, null_values=["\\N"], has_header=True)
+            res = op15(pl.scan_csv(files, schema=CSV_SCHEMA, null_values=["\\N"], missing_utf8_is_empty_string=True, has_header=True)
                        ).collect(engine="streaming")
         rows, floats = finish(res, op)
         compute_ms = (time.perf_counter() - t0) * 1000
