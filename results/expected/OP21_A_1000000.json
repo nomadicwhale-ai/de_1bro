@@ -1,0 +1,16 @@
+{
+ "op": "OP21",
+ "dataset": "A",
+ "rows": 1000000,
+ "checksum": "41f8bcd02cf1538341f8bcd02cf15383",
+ "row_count": 1,
+ "floats": {
+  "naive_sum": 1249600920.8599691,
+  "kahan_sum": 1249600920.86
+ },
+ "rtol": 1e-09,
+ "source": "duckdb",
+ "duckdb_version": "1.5.6",
+ "data_table_digest": "188fe5bbc861b888",
+ "generator_version": "1.0.0"
+}

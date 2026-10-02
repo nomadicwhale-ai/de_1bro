@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import random
 import shutil
@@ -36,7 +37,16 @@ SCHEMA = json.loads((ROOT / "schema" / "result.schema.json").read_text())
 
 # ------------------------------------------------------------------ registry / config
 def load_impls() -> dict:
-    return yaml.safe_load((ROOT / "config" / "implementations.yaml").read_text())
+    """config/implementations.yaml plus fragments languages/*/impl.yaml and systems/*/impl.yaml."""
+    impls = yaml.safe_load((ROOT / "config" / "implementations.yaml").read_text()) or {}
+    for pat in ("languages/*/impl.yaml", "systems/*/impl.yaml"):
+        for f in sorted(ROOT.glob(pat)):
+            frag = yaml.safe_load(f.read_text()) or {}
+            dup = set(frag) & set(impls)
+            if dup:
+                raise SystemExit(f"{f}: duplicate implementation names {sorted(dup)}")
+            impls.update(frag)
+    return impls
 
 
 def load_budget() -> dict:
@@ -144,9 +154,24 @@ def run_config(name: str, impl: dict, op: str, dataset: str, rows: int, mode: st
         return {**base, "status": "not_run", "skip_reason": impl.get("reason", "toolchain not installed")}
     if op not in impl.get("ops", []):
         return {**base, "status": "n/a", "skip_reason": f"{name} does not implement {op}"}
+    label = S.size_label(rows)
+    table = S.DATASET_TABLES[dataset]
+    from .ops import OPS as _OPS
+    need = "csv" if _OPS.get(op, {}).get("csv_input") else impl.get("input", "csv")
+    if impl.get("max_rows") and rows > impl["max_rows"]:
+        return {**base, "status": "skipped",
+                "skip_reason": f"{name} is limited to {impl['max_rows']:,} rows (validation use only)"}
+    ext = "parquet" if need == "parquet" else "csv"
+    ddir = data_dir / table / label
+    if not (ddir / "manifest.json").exists() or not list(ddir.glob(f"part-*.{ext}")):
+        return {**base, "status": "skipped",
+                "skip_reason": f"dataset not generated ({ext}): make gen SIZE={label} DATASETS={dataset}"}
     exp = expected_checksum(op, dataset, rows, data_dir)
     if exp is None:
-        return {**base, "status": "skipped", "skip_reason": "no oracle result for this op/size yet"}
+        return {**base, "status": "skipped",
+                "skip_reason": f"no expected result: python -m runner.oracle --rows {label} --op {op}"}
+    if mode not in impl.get("modes", ["streaming", "materialized"]):
+        return {**base, "status": "n/a", "skip_reason": f"{name} has no {mode} mode"}
 
     cmd = list(impl["cmd"]) + ["--op", op, "--dataset", dataset, "--rows", str(rows), "--mode", mode,
                               "--chunk-rows", str(chunk_rows), "--threads", str(threads),
@@ -169,6 +194,11 @@ def run_config(name: str, impl: dict, op: str, dataset: str, rows: int, mode: st
         last = res
     s = stats.summarize(runs, budget["noisy_iqr_pct"])
     correct = last["checksum"] == exp["checksum"] and last.get("row_count") == exp["row_count"]
+    floats_got = last.get("floats") or {}
+    for name, want in (exp.get("floats") or {}).items():
+        got = floats_got.get(name)
+        if got is None or not math.isclose(float(got), want, rel_tol=exp.get("rtol", 1e-9)):
+            correct = False
     compute_s = max(s["median_ms"], 1e-6) / 1000.0
     rec = {
         **base, "status": "ok" if correct else "incorrect", "correct": correct,
@@ -179,7 +209,7 @@ def run_config(name: str, impl: dict, op: str, dataset: str, rows: int, mode: st
         "total_ms": min(total_ms), "runs": runs, **s, "rows_per_s": rows / compute_s,
         "mb_per_s": None, "peak_rss_mb": max(x for x in rss if x is not None),
         "steady_rss_mb": last.get("steady_rss_mb"), "notes": last.get("notes"),
-        "chunk_rows_per_s": last.get("chunk_rows_per_s", []),
+        "chunk_rows_per_s": last.get("chunk_rows_per_s", []), "floats": floats_got,
         "oracle": exp.get("source", "expected-file"),
     }
     if last.get("toolchain"):
@@ -216,6 +246,41 @@ def done_keys(out_dir: Path) -> set:
     return keys
 
 
+_built: set = set()
+
+
+def build_impl(name: str, impl: dict) -> bool:
+    """Run the implementation's optional `build` command once (cwd = repo root)."""
+    if name in _built or not impl.get("build"):
+        return True
+    cmd = impl["build"]
+    print(f"  building {name}: {' '.join(cmd) if isinstance(cmd, list) else cmd}")
+    r = subprocess.run(cmd, shell=isinstance(cmd, str), cwd=ROOT, capture_output=True, text=True)
+    if r.returncode != 0:
+        print(r.stdout[-1500:], r.stderr[-1500:])
+        return False
+    _built.add(name)
+    return True
+
+
+def cmd_specs(a) -> int:
+    from .ops import OPS, spec_markdown
+    for k in OPS:
+        (ROOT / "spec" / "ops" / f"{k}.md").write_text(spec_markdown(k))
+    print(f"wrote {len(OPS)} spec files")
+    return 0
+
+
+def cmd_build(a) -> int:
+    impls = load_impls()
+    ok = True
+    for name in (a.impl.split(",") if a.impl else impls):
+        if impls[name].get("status") == "not_run":
+            continue
+        ok &= build_impl(name, impls[name])
+    return 0 if ok else 1
+
+
 def cmd_run(a) -> int:
     impls = load_impls()
     budget = load_budget()
@@ -250,6 +315,16 @@ def cmd_run(a) -> int:
         if key in skip:
             print(f"  skip (already done) {key}")
             continue
+        if impl.get("status") != "not_run" and not build_impl(name, impl):
+            rec = {"run_id": run_id, "track": impl["track"], "implementation": name,
+                   "variant": impl.get("variant", "default"), "op": op, "dataset": ds, "rows": rows,
+                   "mode": mode, "threads": threads, "env": envinfo, "status": "failed",
+                   "skip_reason": None, "notes": "build failed"}
+            with open(out_file, "a") as f:
+                f.write(json.dumps(rec) + "\n")
+            print(f"  FAILED    {name}: build failed")
+            bad += 1
+            continue
         timed = a.runs or (env.get_int("TIMED_RUNS_1B", 3) if rows >= 10**9 else env.get_int("TIMED_RUNS", 7))
         rec = run_config(name, impl, op, ds, rows, mode, threads, a.chunk_rows, data_dir, budget,
                          envinfo, run_id, timed, a.warmup if a.warmup is not None else env.get_int("WARMUP_RUNS", 1))
@@ -279,6 +354,11 @@ def main(argv=None) -> int:
     r.add_argument("--dry-run", action="store_true")
     r.add_argument("--force", action="store_true", help="re-run even if results exist")
     r.set_defaults(fn=cmd_run)
+    sp = sub.add_parser("specs", help="regenerate spec/ops/*.md from runner/ops.py")
+    sp.set_defaults(fn=cmd_specs)
+    b = sub.add_parser("build", help="build registered implementations")
+    b.add_argument("--impl")
+    b.set_defaults(fn=cmd_build)
     v = sub.add_parser("validate")
     v.add_argument("files", nargs="+", type=Path)
     v.set_defaults(fn=lambda a: validate_records(a.files))
