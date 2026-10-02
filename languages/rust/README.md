@@ -6,7 +6,7 @@ in `impl.yaml`. No dependencies, no `unsafe`, no `target-cpu=native`. Profile: `
 
 ## Implementation notes
 * Layout: `src/hash.rs` (own mix64, FNV-1a, result digest, Fx-style hasher), `src/csv.rs` (byte-level
-  CSV scanning, integer/cents/date/timestamp parsing, columnar `Columns`), `src/ops.rs` (the 9 ops),
+  CSV scanning, integer/cents/date/timestamp parsing, columnar `Columns`), `src/ops.rs` (the 13 ops),
   `src/main.rs` (CLI, files, timing, JSON).
 * Input: each chunk file is read whole with `std::fs::read` (~113 MB per 1M-row chunk) and scanned as bytes.
   Fields are split by hand (no quoting needed; NULL is exactly `\N`). Fields an op does not need are skipped
@@ -29,6 +29,10 @@ in `impl.yaml`. No dependencies, no `unsafe`, no `target-cpu=native`. Profile: `
   untimed; group maps are the result at the end of `compute_ms`.
 * OP21: naive and Kahan sums carry across chunks in row order. OP22 uses `as` casts (round-to-nearest
   i64->f64, truncating f64->i64) and wrapping i64 arithmetic.
+* OP06-OP09 (joins/sort/top-N): dimension CSVs are read first (`load_ms` includes them); only the leading fields
+  are parsed (dim_product: first three, quoted JSON tail ignored). Joins use the Fx-hashed std `HashMap<i64,u32>` (customer/product id -> dense segment/brand index, per-group
+  `Agg` vectors); OP07 probes an enterprise-customer `HashSet` then the product map. OP08 sorts `(ts, id)` tuples
+  with `sort_unstable` (materialized only); OP09 aggregates per customer, then `select_nth_unstable_by` + sort of the top 100.
 
 ## Caveats / known deviations
 * String arenas use `u32` offsets, limiting a materialized string column to 4 GiB of bytes (fine up to ~100M rows

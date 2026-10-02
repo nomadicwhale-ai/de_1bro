@@ -30,3 +30,5 @@ Driver: `systems/polars/bench.py` (python `polars` 1.44.x), registered as `polar
   value a compensated sum approximates. Not a true Kahan loop.
 * OP15 with 1 thread is slow (~5 s per 1M rows), dominated by timestamp string parsing.
 * `streaming` is the new streaming engine; some ops may fall back to in-memory internally.
+
+Phase 3b (OP06-OP09): native lazy `join`/`sort`/`group_by`; dimension Parquet tables (id + segment/brand) are read eagerly first (load_ms); streaming uses `scan_parquet` + `collect(engine="streaming")`. OP08 (materialized only) sorts by (timestamp, id), builds `rn` as `int_range` UInt64 and sums `rn*id` in wrapping UInt64 (matches mod 2^64). OP09 sorts totals (desc) with id tie-break and takes `head(100)`.

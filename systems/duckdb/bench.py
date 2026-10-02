@@ -69,6 +69,30 @@ OPS = {
                  count(*) FILTER (WHERE is_returned) FROM sales""", 17, []),
 }
 
+# Phase 3b ops: (sales columns, dims needed, SQL over sales/customers/products, ncols).  SQL written here (not the oracle's).
+SC = "(s.unit_price * 100)::BIGINT"
+OPS.update({
+    "OP06": (["customer_id", "quantity", "unit_price"], ["customers"],
+             f"""SELECT c.segment, count(*), sum({SC})::BIGINT, sum(s.quantity)::BIGINT
+                 FROM sales s JOIN customers c ON s.customer_id = c.customer_id GROUP BY c.segment""", 4, []),
+    "OP07": (["customer_id", "product_id", "unit_price"], ["customers", "products"],
+             f"""SELECT p.brand, count(*), sum({SC})::BIGINT FROM sales s
+                 JOIN customers c ON s.customer_id = c.customer_id
+                 JOIN products p ON s.product_id = p.product_id
+                 WHERE c.segment = 'enterprise' GROUP BY p.brand""", 3, []),
+    # rn * id summed in HUGEINT (128-bit, cannot overflow for N <= 1e9), reduced mod 2^64 at the end.
+    "OP08": (["transaction_id", "transaction_timestamp"], [],
+             """WITH o AS (SELECT transaction_id, row_number() OVER (ORDER BY transaction_timestamp, transaction_id) AS rn
+                           FROM sales)
+                SELECT arg_min(transaction_id, rn), arg_max(transaction_id, rn),
+                       (sum(rn::HUGEINT * transaction_id::HUGEINT) % 18446744073709551616::HUGEINT)::HUGEINT FROM o""", 3, []),
+    "OP09": (["customer_id", "unit_price"], [],
+             f"""SELECT row_number() OVER (ORDER BY total DESC, customer_id), customer_id, total FROM
+                 (SELECT customer_id, sum({CENTS})::BIGINT AS total FROM sales GROUP BY customer_id
+                  ORDER BY total DESC, customer_id LIMIT 100)""", 3, []),
+})
+DIM_SRC = {"customers": ("dim_customer", "customer_id, segment"), "products": ("dim_product", "product_id, brand")}
+
 CSV_TYPES = ("{'transaction_id':'BIGINT','customer_id':'BIGINT','product_id':'BIGINT',"
              "'store_id':'INTEGER','quantity':'INTEGER','unit_price':'DECIMAL(18,2)',"
              "'discount':'DOUBLE','tax':'DOUBLE','country':'VARCHAR','category':'VARCHAR',"
@@ -87,7 +111,13 @@ def main() -> int:
     ap.add_argument("--output-json", action="store_true")
     a = ap.parse_args()
 
-    cols, sql, ncols, float_names = OPS[a.op]
+    spec = OPS[a.op]
+    if len(spec) == 5:
+        cols, dims, sql, ncols, float_names = spec
+    else:
+        (cols, sql, ncols, float_names), dims = spec, []
+    if a.op == "OP08" and a.mode != "materialized":
+        sys.exit("OP08 is materialized only")
     label = LABELS[a.rows]
     ddir = Path(a.input) / "sales_fact" / label
 
@@ -111,13 +141,20 @@ def main() -> int:
         compute_ms = (time.perf_counter() - t0) * 1000
     else:
         pq = str(ddir / "part-*.parquet").replace("'", "''")
+        t0 = time.perf_counter()
+        for d in dims:  # small dimension tables are always loaded first (counts as load_ms)
+            dname, dcols = DIM_SRC[d]
+            dp = str(Path(a.input) / dname / label / "part-*.parquet").replace("'", "''")
+            con.execute(f"CREATE TABLE {d} AS SELECT {dcols} FROM read_parquet('{dp}')")
         if a.mode == "materialized":
-            t0 = time.perf_counter()
             con.execute(f"CREATE TABLE sales AS SELECT {', '.join(cols)} FROM read_parquet('{pq}')")
-            load_ms = (time.perf_counter() - t0) * 1000
+            run_sql = sql
+        elif dims:
+            con.execute(f"CREATE VIEW sales AS SELECT {', '.join(cols)} FROM read_parquet('{pq}')")
             run_sql = sql
         else:
             run_sql = sql.replace("FROM sales", f"FROM read_parquet('{pq}')")
+        load_ms = (time.perf_counter() - t0) * 1000
         t0 = time.perf_counter()
         res = con.execute(run_sql).fetchall()
         compute_ms = (time.perf_counter() - t0) * 1000

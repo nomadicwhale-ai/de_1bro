@@ -23,3 +23,5 @@ Driver: `bench.py` (python `duckdb` package, in-memory database). Registered as 
 * OP15 `sum_discount_e6`/`sum_tax_e6`: the floored values are cast to BIGINT before summing (exact).
   The oracle SQL sums them as DOUBLE, which is inexact above 2^53 (~9e15; happens at 10m rows for tax)
   and thread-order dependent, so an oracle for 10m+ generated that way may not be reproducible.
+
+Phase 3b (OP06-OP09): joins/sort/top-N in DuckDB SQL over Parquet; dim_customer/dim_product (id + segment/brand) are loaded as tables first (load_ms) in both modes; streaming joins read sales via a view over `read_parquet`. OP08 (materialized only) uses `row_number()` over (timestamp, id) and sums `rn*id` in HUGEINT, reduced mod 2^64. OP09 is group-by + ORDER BY/LIMIT 100 + `row_number()`.

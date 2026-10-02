@@ -27,3 +27,5 @@ Driver: `bench.py` (python3 stdlib `sqlite3`, SQLite 3.45.1 here). Registered as
 ## Known unfairness
 Per-row Python parsing makes load_ms much slower than a native importer (DuckDB/CLI `.import`). Each invocation
 re-imports the data (one process per op), so every op pays the full load.
+
+Phase 3b (OP06-OP09, materialized): dim_customer/dim_product CSVs are imported (Python `csv` module, since tags/attributes are quoted JSON; only id + segment/brand kept) into PRIMARY KEY tables, counted in load_ms; ops are plain SQL joins / window functions. OP08: SQLite `sum()` raises on int64 overflow, so `rn*id` is summed in SQL as five 12-bit limb sums of the id, and the host folds the five integers mod 2^64 (scalar arithmetic only).
