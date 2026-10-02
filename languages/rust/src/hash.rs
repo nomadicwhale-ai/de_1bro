@@ -97,7 +97,7 @@ impl Hasher for Fx {
     }
     #[inline]
     fn finish(&self) -> u64 {
-        self.0.rotate_left(26)
+        (self.0 ^ (self.0 >> 32)).wrapping_mul(GOLDEN).rotate_left(26)
     }
 }
 
