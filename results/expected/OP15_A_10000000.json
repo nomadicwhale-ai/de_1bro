@@ -2,7 +2,7 @@
  "op": "OP15",
  "dataset": "A",
  "rows": 10000000,
- "checksum": "42f532b81d2ea8da42f532b81d2ea8da",
+ "checksum": "70cf397934022d3870cf397934022d38",
  "row_count": 1,
  "floats": {},
  "rtol": 1e-09,

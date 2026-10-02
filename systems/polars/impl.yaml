@@ -1,0 +1,10 @@
+polars:
+  track: S
+  variant: default
+  cmd: ["python3", "systems/polars/bench.py"]
+  toolchain: {name: polars, version_cmd: ["python3", "-c", "import polars;print(polars.__version__)"]}
+  flags: "POLARS_MAX_THREADS=threads"
+  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22]
+  threads: [1, 4]
+  modes: [streaming, materialized]
+  input: parquet
