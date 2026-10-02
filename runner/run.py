@@ -162,10 +162,13 @@ def run_config(name: str, impl: dict, op: str, dataset: str, rows: int, mode: st
         return {**base, "status": "skipped",
                 "skip_reason": f"{name} is limited to {impl['max_rows']:,} rows (validation use only)"}
     ext = "parquet" if need == "parquet" else "csv"
-    ddir = data_dir / table / label
-    if not (ddir / "manifest.json").exists() or not list(ddir.glob(f"part-*.{ext}")):
-        return {**base, "status": "skipped",
-                "skip_reason": f"dataset not generated ({ext}): make gen SIZE={label} DATASETS={dataset}"}
+    for tname in _OPS.get(op, {}).get("tables", [table]):
+        ddir = data_dir / tname / label
+        if not (ddir / "manifest.json").exists() or not list(ddir.glob(f"part-*.{ext}")):
+            return {**base, "status": "skipped",
+                    "skip_reason": f"dataset not generated ({tname}, {ext}): make gen SIZE={label} DATASETS=A,B,C"}
+    if _OPS.get(op, {}).get("modes") and mode not in _OPS[op]["modes"]:
+        return {**base, "status": "n/a", "skip_reason": f"{op} is defined for {_OPS[op]['modes']} only"}
     exp = expected_checksum(op, dataset, rows, data_dir)
     if exp is None:
         return {**base, "status": "skipped",

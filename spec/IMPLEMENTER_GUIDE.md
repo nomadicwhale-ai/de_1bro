@@ -74,3 +74,20 @@ python3 -m runner run --impl <name> --rows 1k,10k,1m --runs 1 --warmup 0 --force
 Every (op, mode, threads) must report `OK`; `INCORRECT` means your result differs from the oracle
 (`results/expected/`), `SKIPPED` means data/expected result is missing. Debug by comparing against
 `runner/ref_ops.py`. Also run 10m once at the end if memory/time allow (`--rows 10m`). Do not commit.
+
+## Phase 3b addendum (OP06-OP09: joins, sort, top-N)
+* New ops: `OP06` hash join + group by segment, `OP07` star join + filter + group by brand, `OP08` full sort
+  (materialized only; the runner marks streaming n/a), `OP09` top-100 customers. See `spec/ops/OPxx.md`.
+* Join ops read additional tables from the same data root: `<input>/dim_customer/<label>/part-*.{csv,parquet}`
+  and `<input>/dim_product/<label>/part-*...` (same `<label>` as sales_fact). Load the (small) dimension tables
+  first, then stream or load the sales chunks; use the language's own hash map for the join (Track L) or the
+  engine's join (Track S). Dimension load time counts as `load_ms`.
+* Dimension CSV columns - dim_customer: `customer_id,name,email,signup_date,segment,country,lifetime_value`
+  (no quoted fields); dim_product: `product_id,category,brand,weight_grams,tags,attributes` where the last two
+  fields are RFC-4180 quoted JSON (doubled quotes, no newlines): read only the first three fields and ignore the
+  rest of the line - no general quote handling is needed.
+* OP08: sort keys are `(transaction_timestamp micros, transaction_id)`; use the language's standard sort
+  (no external libraries); result = first id, last id and the wrapping uint64 sum of `rn * transaction_id`.
+* Register the new ops in `impl.yaml` `ops:` only after they pass at 1k, 10k, 1m (and 10m if feasible).
+* Oracle expected results exist for 1k, 10k, 1m, 10m (`results/expected/`); data for A, B, C exists locally
+  (`make gen SIZE=1m DATASETS=A,B,C` regenerates it).
