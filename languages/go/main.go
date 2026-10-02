@@ -77,6 +77,24 @@ func main() {
 		if !ok {
 			fail(fmt.Errorf("unsupported op %q", *op))
 		}
+		if *op == "OP08" && *mode != "materialized" {
+			fail(fmt.Errorf("OP08 is materialized only"))
+		}
+		var dimD time.Duration
+		if *op == "OP06" || *op == "OP07" {
+			t0 := time.Now()
+			lbl := sizeLabel(*rows)
+			if err = dims.loadCustomers(filepath.Join(*input, "dim_customer", lbl)); err != nil {
+				fail(err)
+			}
+			if *op == "OP07" {
+				if err = dims.loadProducts(filepath.Join(*input, "dim_product", lbl)); err != nil {
+					fail(err)
+				}
+			}
+			dimD = time.Since(t0)
+		}
+		loadD = dimD
 		agg := def.mk()
 		var b *Batch
 		switch *mode {
@@ -112,7 +130,7 @@ func main() {
 				}
 			}
 			buf = nil
-			loadD = time.Since(t0)
+			loadD += time.Since(t0)
 			t1 := time.Now()
 			agg.Consume(b)
 			result = agg.Result(b)

@@ -4,7 +4,7 @@ sqlite:
   cmd: ["python3", "systems/sqlite/bench.py"]
   toolchain: {name: sqlite, version_cmd: ["python3", "-c", "import sqlite3;print(sqlite3.sqlite_version)"]}
   flags: "in-memory csv.reader+executemany"
-  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22]
+  ops: [OP01, OP03, OP04, OP05, OP10, OP15, OP19, OP21, OP22, OP06, OP07, OP08, OP09]
   threads: [1]
   modes: [materialized]
   input: csv

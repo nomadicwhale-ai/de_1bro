@@ -29,6 +29,10 @@ Build: `go build -C languages/go -trimpath -o bin/bench .` (output `languages/go
 * **OP15** fuses parse and summarise per row (all 13 columns converted) and reports `load_ms = 0` in both modes.
 * `compute_ms` includes building the result rows (e.g. strings for group keys) but not the digest or JSON output.
 * No `unsafe`, no cgo, no assembly. Build flags: `-trimpath` only (default optimisation).
+* OP06-OP09 (joins/sort/top-N): dimension CSVs are read first (`load_ms` includes them); only the leading fields
+  are parsed (dim_product: first three, quoted JSON tail ignored). Joins use stdlib `map[int64]int32` into dense accumulator slices; OP07 probes an enterprise-customer set, then the
+  product map. OP08 sorts `(ts, id)` structs with `slices.SortFunc` (pdqsort, materialized only); OP09 aggregates per
+  customer in a map, then fully sorts the group indices (count desc, id asc) and keeps 100.
 
 ## Known limitations / unfairness
 * CSV parsing assumes no quoted fields (the generator never emits quotes, commas or newlines inside values);

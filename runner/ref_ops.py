@@ -155,5 +155,42 @@ def op22(rows):
     return _digest([(a, b, c, ymd)]), {}
 
 
+def op06(rows, dims):
+    g = defaultdict(lambda: [0, 0, 0, False])
+    for r in rows:
+        a = g[dims["segment"][r[CID]]]
+        a[0] += 1
+        a[1] += r[CENTS]
+        if r[QTY] is not None:
+            a[2] += r[QTY]
+            a[3] = True
+    return _digest([(k, a[0], a[1], a[2] if a[3] else None) for k, a in g.items()]), {}
+
+
+def op07(rows, dims):
+    g = defaultdict(lambda: [0, 0])
+    for r in rows:
+        if dims["segment"][r[CID]] == "enterprise":
+            a = g[dims["brand"][r[PID]]]
+            a[0] += 1
+            a[1] += r[CENTS]
+    return _digest([(k, a[0], a[1]) for k, a in g.items()]), {}
+
+
+def op08(rows):
+    order = sorted(rows, key=lambda r: (r[TS], r[TID]))
+    pos = sum((i + 1) * r[TID] for i, r in enumerate(order)) % (1 << 64)
+    return _digest([(order[0][TID], order[-1][TID], pos)]), {}
+
+
+def op09(rows):
+    tot = defaultdict(int)
+    for r in rows:
+        tot[r[CID]] += r[CENTS]
+    top = sorted(tot.items(), key=lambda kv: (-kv[1], kv[0]))[:100]
+    return _digest([(i + 1, c, t) for i, (c, t) in enumerate(top)]), {}
+
+
+NEEDS_DIMS = {"OP06", "OP07"}
 REF = {"OP01": op01, "OP03": op03, "OP04": op04, "OP05": op05, "OP10": op10, "OP15": op15,
-       "OP19": op19, "OP21": op21, "OP22": op22}
+       "OP19": op19, "OP21": op21, "OP22": op22, "OP06": op06, "OP07": op07, "OP08": op08, "OP09": op09}

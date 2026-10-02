@@ -1,8 +1,10 @@
 mod csv;
+mod dims;
 mod hash;
 mod ops;
 
 use csv::{parse_chunk, Columns};
+use dims::Dims;
 use hash::Digest;
 use ops::*;
 use std::path::PathBuf;
@@ -70,6 +72,7 @@ fn drive<const M: u32, O: Op>(files: &[PathBuf], a: &Args, op: &mut O) -> Result
         load += ms(t.elapsed());
         let t = Instant::now();
         op.consume(&cols);
+        op.finish();
         comp += ms(t.elapsed());
     } else {
         cols.reserve(M, a.chunk_rows);
@@ -84,6 +87,9 @@ fn drive<const M: u32, O: Op>(files: &[PathBuf], a: &Args, op: &mut O) -> Result
             op.consume(&cols);
             comp += ms(t.elapsed());
         }
+        let t = Instant::now();
+        op.finish();
+        comp += ms(t.elapsed());
     }
     Ok((load, comp))
 }
@@ -97,7 +103,7 @@ fn finish<O: Op>(files: &[PathBuf], a: &Args, mut op: O, m: u32) -> Result<(f64,
             }
         };
     }
-    let (l, c) = go!(OP01_MASK, OP03_MASK, OP04_MASK, OP05_MASK, OP10_MASK, OP19_MASK, OP21_MASK, OP22_MASK);
+    let (l, c) = go!(OP01_MASK, OP03_MASK, OP04_MASK, OP05_MASK, OP10_MASK, OP19_MASK, OP21_MASK, OP22_MASK, OP06_MASK, OP07_MASK, OP08_MASK, OP09_MASK);
     let mut d = Digest::default();
     let fl = op.digest(&mut d);
     Ok((l, c, d, fl))
@@ -114,7 +120,21 @@ fn run(a: &Args) -> Result<String, String> {
     if files.is_empty() {
         return Err(format!("no csv files in {}", dir.display()));
     }
-    let (load, comp, digest, floats) = match a.op.as_str() {
+    let root = a.input.join("dim_customer").join(label(a.rows));
+    let prod = a.input.join("dim_product").join(label(a.rows));
+    let mut dims = Dims::default();
+    let t = Instant::now();
+    match a.op.as_str() {
+        "OP06" => dims.load_customers(&root)?,
+        "OP07" => {
+            dims.load_customers(&root)?;
+            dims.load_products(&prod)?;
+        }
+        "OP08" if !a.materialized => return Err("OP08 is materialized only".into()),
+        _ => {}
+    }
+    let dim_ms = ms(t.elapsed());
+    let (mut load, comp, digest, floats) = match a.op.as_str() {
         "OP01" => finish(&files, a, Op01::default(), OP01_MASK)?,
         "OP03" => finish(&files, a, Op03::default(), OP03_MASK)?,
         "OP04" => finish(&files, a, Op04::default(), OP04_MASK)?,
@@ -123,6 +143,10 @@ fn run(a: &Args) -> Result<String, String> {
         "OP19" => finish(&files, a, Op19::default(), OP19_MASK)?,
         "OP21" => finish(&files, a, Op21::default(), OP21_MASK)?,
         "OP22" => finish(&files, a, Op22::default(), OP22_MASK)?,
+        "OP06" => finish(&files, a, Op06::new(&dims), OP06_MASK)?,
+        "OP07" => finish(&files, a, Op07::new(&dims), OP07_MASK)?,
+        "OP08" => finish(&files, a, Op08::default(), OP08_MASK)?,
+        "OP09" => finish(&files, a, Op09::default(), OP09_MASK)?,
         "OP15" => {
             // Parsing is the operation: compute_ms = read + parse + summarise, load_ms = 0.
             let mut op = Op15::default();
@@ -138,6 +162,7 @@ fn run(a: &Args) -> Result<String, String> {
         }
         o => return Err(format!("unsupported op {o}")),
     };
+    load += dim_ms;
     let ver = std::process::Command::new("rustc")
         .arg("--version")
         .output()

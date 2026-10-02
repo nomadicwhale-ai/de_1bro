@@ -11,13 +11,13 @@ produces a publishable, verified increment; later items can be dropped without i
    Track L and Track S in separate tables.
 3. Extend oracle cross-check to 100k rows (pure Python vs DuckDB) and run 100m for the compiled/engine implementations.
 
-## Phase 3b - breadth of operations (dataset A, then B/C/D/E)
+## Phase 3b - breadth of operations (OP06-OP09 DONE for all 8 implementations; remainder below)
 OP02 filter, OP06/07 joins (needs `dim_customer`, `dim_product`), OP08 sort, OP09 top-N, OP11 window, OP12 dedup (D),
 OP13 strings (D), OP14 JSON (D), OP16 Parquet read, OP17 write, OP18 date/time, OP20 wide scan (E).
 Each op: entry in `runner/ops.py` (spec + oracle SQL) -> pure-Python semantics in `runner/ref_ops.py` -> implementations.
 
 ## Phase 3c - breadth of implementations (install toolchains first; otherwise Dockerfile + `not_run`)
-1. Java, C++ (installed here) and JavaScript/TypeScript (node installed): std-only, same contract.
+1. Java and C++ DONE (all 13 ops). Next: JavaScript/TypeScript (node installed): std-only, same contract. Python has not been extended to OP06-OP09.
 2. Systems: PostgreSQL (psql client present, server needed), pandas, PyArrow compute, Spark local (needs JVM + pyspark).
 3. Toolchains not installed (C#, Julia, Swift, Kotlin, Scala, R): run from their Dockerfiles when available.
 4. Parallel variants (fixed N threads) for Rust/Go/Java/C++ once single-thread numbers are stable.

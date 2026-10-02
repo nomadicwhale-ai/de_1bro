@@ -1,12 +1,15 @@
-//! The nine operations. Each op consumes typed columns (one chunk in streaming mode, all rows in
+//! The thirteen operations. Each op consumes typed columns (one chunk in streaming mode, all rows in
 //! materialized mode) into its own state; `digest` turns the final state into result rows (untimed).
 use crate::csv::*;
 use crate::hash::*;
+use crate::dims::Dims;
 
 pub trait Op {
     fn consume(&mut self, c: &Columns);
     /// Feed result rows to the digest; returns float results.
     fn digest(&self, d: &mut Digest) -> Vec<(&'static str, f64)>;
+    /// Final timed step after the last chunk (e.g. top-N selection); result rows exist afterwards.
+    fn finish(&mut self) {}
 }
 
 #[derive(Default, Clone, Copy)]
@@ -297,6 +300,131 @@ impl Op for Op22 {
     }
     fn digest(&self, d: &mut Digest) -> Vec<(&'static str, f64)> {
         d.add(&[V::I(self.a), V::I(self.b), V::I(self.c), V::I(self.ymd)]);
+        vec![]
+    }
+}
+
+// ---------------------------------------------------------------- OP06
+pub const OP06_MASK: u32 = C_CID | C_QTY | C_PRICE;
+pub struct Op06 {
+    cust: FxMap<i64, u32>, // customer_id -> segment index
+    segs: Vec<Vec<u8>>,
+    aggs: Vec<Agg>,
+}
+impl Op06 {
+    pub fn new(d: &Dims) -> Self {
+        Op06 { cust: d.cust.clone(), segs: d.segs.clone(), aggs: vec![Agg::default(); d.segs.len()] }
+    }
+}
+impl Op for Op06 {
+    fn consume(&mut self, c: &Columns) {
+        for i in 0..c.n {
+            if let Some(&g) = self.cust.get(&c.cid[i]) {
+                self.aggs[g as usize].add(c.qty[i], c.cents[i]);
+            }
+        }
+    }
+    fn digest(&self, d: &mut Digest) -> Vec<(&'static str, f64)> {
+        for (s, a) in self.segs.iter().zip(&self.aggs) {
+            if a.count > 0 {
+                d.add(&[V::S(s), V::I(a.count), V::I(a.sp), a.sq_v()]);
+            }
+        }
+        vec![]
+    }
+}
+
+// ---------------------------------------------------------------- OP07
+pub const OP07_MASK: u32 = C_CID | C_PID | C_PRICE;
+pub struct Op07 {
+    ent: FxSet<i64>,       // enterprise customer ids
+    prod: FxMap<i64, u32>, // product_id -> brand index
+    brands: Vec<Vec<u8>>,
+    aggs: Vec<Agg>,
+}
+impl Op07 {
+    pub fn new(d: &Dims) -> Self {
+        let ent = d.cust.iter().filter(|(_, &g)| d.segs[g as usize] == b"enterprise").map(|(&k, _)| k).collect();
+        Op07 { ent, prod: d.prod.clone(), brands: d.brands.clone(), aggs: vec![Agg::default(); d.brands.len()] }
+    }
+}
+impl Op for Op07 {
+    fn consume(&mut self, c: &Columns) {
+        for i in 0..c.n {
+            if self.ent.contains(&c.cid[i]) {
+                if let Some(&g) = self.prod.get(&c.pid[i]) {
+                    self.aggs[g as usize].add(None, c.cents[i]);
+                }
+            }
+        }
+    }
+    fn digest(&self, d: &mut Digest) -> Vec<(&'static str, f64)> {
+        for (s, a) in self.brands.iter().zip(&self.aggs) {
+            if a.count > 0 {
+                d.add(&[V::S(s), V::I(a.count), V::I(a.sp)]);
+            }
+        }
+        vec![]
+    }
+}
+
+// ---------------------------------------------------------------- OP08
+pub const OP08_MASK: u32 = C_TID | C_TS;
+#[derive(Default)]
+pub struct Op08 {
+    first: i64,
+    last: i64,
+    pos: u64,
+}
+impl Op for Op08 {
+    fn consume(&mut self, c: &Columns) {
+        // (timestamp micros, transaction_id) pairs, std unstable (pdqsort/ipnsort) sort on the tuple order.
+        let mut v: Vec<(i64, i64)> = (0..c.n).map(|i| (c.ts[i], c.tid[i])).collect();
+        v.sort_unstable();
+        if let (Some(f), Some(l)) = (v.first(), v.last()) {
+            self.first = f.1;
+            self.last = l.1;
+        }
+        let mut s = 0u64;
+        for (i, &(_, id)) in v.iter().enumerate() {
+            s = s.wrapping_add((i as u64 + 1).wrapping_mul(id as u64));
+        }
+        self.pos = s;
+    }
+    fn digest(&self, d: &mut Digest) -> Vec<(&'static str, f64)> {
+        d.add(&[V::I(self.first), V::I(self.last), V::I(self.pos as i64)]);
+        vec![]
+    }
+}
+
+// ---------------------------------------------------------------- OP09
+pub const OP09_MASK: u32 = C_CID | C_PRICE;
+#[derive(Default)]
+pub struct Op09 {
+    map: FxMap<i64, i64>,
+    top: Vec<(i64, i64)>, // (sum, customer_id), ranked
+}
+impl Op for Op09 {
+    fn consume(&mut self, c: &Columns) {
+        for i in 0..c.n {
+            let e = self.map.entry(c.cid[i]).or_insert(0);
+            *e = e.wrapping_add(c.cents[i]);
+        }
+    }
+    fn finish(&mut self) {
+        let mut v: Vec<(i64, i64)> = self.map.iter().map(|(&k, &s)| (s, k)).collect();
+        let ord = |a: &(i64, i64), b: &(i64, i64)| b.0.cmp(&a.0).then(a.1.cmp(&b.1));
+        if v.len() > 100 {
+            v.select_nth_unstable_by(100, ord);
+            v.truncate(100);
+        }
+        v.sort_unstable_by(ord);
+        self.top = v;
+    }
+    fn digest(&self, d: &mut Digest) -> Vec<(&'static str, f64)> {
+        for (r, &(s, k)) in self.top.iter().enumerate() {
+            d.add(&[V::I(r as i64 + 1), V::I(k), V::I(s)]);
+        }
         vec![]
     }
 }

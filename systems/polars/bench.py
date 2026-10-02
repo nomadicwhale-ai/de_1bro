@@ -106,6 +106,32 @@ def op22(lf):
         (d.year().cast(I64) * 10000 + d.month().cast(I64) * 100 + d.day().cast(I64)).sum().cast(I64))
 
 
+# Phase 3b ops. Dimension frames (customers/products) are eager DataFrames passed as lazies in `dims`.
+def op06(lf, dims):
+    j = lf.join(dims["customers"], on="customer_id", how="inner")
+    return agg(j.group_by("segment"), pl.len().cast(I64), CENTS.sum().cast(I64), sum_or_null(C("quantity")))
+
+
+def op07(lf, dims):
+    cust = dims["customers"].filter(C("segment") == "enterprise")
+    j = lf.join(cust, on="customer_id", how="inner").join(dims["products"], on="product_id", how="inner")
+    return agg(j.group_by("brand"), pl.len().cast(I64), CENTS.sum().cast(I64))
+
+
+def op08(lf, dims):
+    # wrapping uint64 arithmetic: rn * id and the sum both wrap mod 2^64 (polars release build)
+    o = lf.sort(["transaction_timestamp", "transaction_id"]).select(
+        C("transaction_id").cast(pl.UInt64).alias("id"))
+    o = o.with_columns(pl.int_range(1, pl.len() + 1, dtype=pl.UInt64).alias("rn"))
+    return o.select(C("id").first().alias("c0"), C("id").last().alias("c1"), (C("rn") * C("id")).sum().alias("c2"))
+
+
+def op09(lf, dims):
+    g = lf.group_by("customer_id").agg(CENTS.sum().cast(I64).alias("total"))
+    top = g.sort(["total", "customer_id"], descending=[True, False]).head(100)
+    return top.select(pl.int_range(1, pl.len() + 1, dtype=I64).alias("c0"), C("customer_id"), C("total"))
+
+
 OPS = {
     "OP01": (["quantity", "unit_price", "is_returned"], op01),
     "OP03": (["country", "quantity", "unit_price"], op03),
@@ -115,7 +141,15 @@ OPS = {
     "OP19": (["quantity", "country"], op19),
     "OP21": (["unit_price"], op21),
     "OP22": (["transaction_id", "customer_id", "unit_price", "transaction_timestamp", "transaction_date"], op22),
+    "OP06": (["customer_id", "quantity", "unit_price"], op06),
+    "OP07": (["customer_id", "product_id", "unit_price"], op07),
+    "OP08": (["transaction_id", "transaction_timestamp"], op08),
+    "OP09": (["customer_id", "unit_price"], op09),
 }
+NEW = {"OP06", "OP07", "OP08", "OP09"}
+DIMS = {"OP06": ["customers"], "OP07": ["customers", "products"]}
+DIM_SRC = {"customers": ("dim_customer", ["customer_id", "segment"]),
+           "products": ("dim_product", ["product_id", "brand"])}
 
 CSV_SCHEMA = {
     "transaction_id": pl.Int64, "customer_id": pl.Int64, "product_id": pl.Int64, "store_id": pl.Int64,
@@ -171,15 +205,24 @@ def main():
     else:
         cols, fn = OPS[op]
         files = sorted(glob.glob(os.path.join(ddir, "part-*.parquet")))
+        if op == "OP08" and args.mode != "materialized":
+            sys.exit("OP08 is materialized only")
+        dims = {}
+        t0 = time.perf_counter()
+        for d in DIMS.get(op, []):  # dimension tables always loaded first (counts as load_ms)
+            dn, dc = DIM_SRC[d]
+            dims[d] = pl.read_parquet(sorted(glob.glob(os.path.join(args.input, dn, label, "part-*.parquet"))),
+                                      columns=dc).lazy()
         if args.mode == "materialized":
-            t0 = time.perf_counter()
             df = pl.read_parquet(files, columns=cols)
             load_ms = (time.perf_counter() - t0) * 1000
             t0 = time.perf_counter()
-            res = fn(df.lazy()).collect()
+            res = (fn(df.lazy(), dims) if op in NEW else fn(df.lazy())).collect()
         else:
+            load_ms = (time.perf_counter() - t0) * 1000 if dims else 0.0
             t0 = time.perf_counter()
-            res = fn(pl.scan_parquet(files)).collect(engine="streaming")
+            lf = pl.scan_parquet(files)
+            res = (fn(lf, dims) if op in NEW else fn(lf)).collect(engine="streaming")
         rows, floats = finish(res, op)
         compute_ms = (time.perf_counter() - t0) * 1000
     checksum, count = digest_rows(rows)

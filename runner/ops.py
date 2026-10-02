@@ -140,12 +140,72 @@ OPS: dict[str, dict] = {
     },
 }
 
+OPS.update({
+    "OP06": {
+        "name": "hash_join_aggregate",
+        "title": "Hash join sales x dim_customer, aggregate by segment",
+        "tables": ["sales_fact", "dim_customer"],
+        "columns": ["segment", "count_rows", "sum_price_cents", "sum_quantity"],
+        "group": True,
+        "text": ("Inner join `sales_fact.customer_id = dim_customer.customer_id` (every sale matches exactly one "
+                 "customer), group by customer `segment`: row count, int64 cents sum, quantity sum (NULL quantity "
+                 "skipped; NULL if all NULL). Inputs: sales_fact and dim_customer chunk files."),
+        "sql": f"""SELECT c.segment, count(*), sum({CENTS.replace('unit_price', 's.unit_price')})::BIGINT, sum(s.quantity)::BIGINT
+                   FROM sales s JOIN customers c ON s.customer_id = c.customer_id GROUP BY c.segment""",
+    },
+    "OP07": {
+        "name": "star_join_aggregate",
+        "title": "Star join sales x dim_customer x dim_product, filter, aggregate by brand",
+        "tables": ["sales_fact", "dim_customer", "dim_product"],
+        "columns": ["brand", "count_rows", "sum_price_cents"],
+        "group": True,
+        "text": ("Join sales to `dim_customer` (customer_id) and `dim_product` (product_id); keep rows whose customer "
+                 "`segment = 'enterprise'`; group by product `brand`: row count and int64 cents sum."),
+        "sql": f"""SELECT p.brand, count(*), sum({CENTS.replace('unit_price', 's.unit_price')})::BIGINT FROM sales s
+                   JOIN customers c ON s.customer_id = c.customer_id
+                   JOIN products p ON s.product_id = p.product_id
+                   WHERE c.segment = 'enterprise' GROUP BY p.brand""",
+    },
+    "OP08": {
+        "name": "sort",
+        "title": "Full sort by (transaction_timestamp, transaction_id)",
+        "modes": ["materialized"],
+        "columns": ["first_id", "last_id", "positional_sum_mod_2_64"],
+        "group": False,
+        "text": ("Sort all rows by `(transaction_timestamp, transaction_id)` ascending (a total order: ids are unique). "
+                 "With 1-based sorted position `rn`: `first_id` / `last_id` = transaction_id at rn = 1 / N, and "
+                 "`positional_sum_mod_2_64` = (sum over rows of `rn * transaction_id`) mod 2^64 (wrapping uint64 "
+                 "arithmetic gives the same value). Materialized mode only (a full in-memory sort); the sort itself "
+                 "is the timed work."),
+        "sql": """WITH o AS (SELECT transaction_id, row_number() OVER (ORDER BY transaction_timestamp, transaction_id) AS rn
+                   FROM sales)
+                  SELECT arg_min(transaction_id, rn), arg_max(transaction_id, rn),
+                         (sum(rn::HUGEINT * transaction_id::HUGEINT) % 18446744073709551616::HUGEINT) FROM o""",
+    },
+    "OP09": {
+        "name": "top_n",
+        "title": "Top 100 customers by revenue",
+        "columns": ["rank", "customer_id", "sum_price_cents"],
+        "group": True,
+        "text": ("Group by `customer_id`, sum int64 cents, take the 100 largest totals; ties broken by smaller "
+                 "`customer_id`. `rank` is 1..100. Result is exactly 100 rows (N >= 1000 guarantees >= 100 customers)."),
+        "sql": f"""SELECT rn, customer_id, total FROM (
+                     SELECT row_number() OVER (ORDER BY total DESC, customer_id) AS rn, customer_id, total
+                     FROM (SELECT customer_id, sum({CENTS})::BIGINT AS total FROM sales GROUP BY customer_id)) WHERE rn <= 100""",
+    },
+})
+
 
 def spec_markdown(op_id: str) -> str:
     o = OPS[op_id]
     cols = ", ".join(f"`{c}`" for c in o["columns"])
     floats = o.get("floats")
-    input_kind = "CSV chunk files" if o.get("csv_input") else "dataset A (CSV chunks for Track L, Parquet for Track S)"
+    tabs = o.get("tables", ["sales_fact"])
+    input_kind = ("CSV chunk files" if o.get("csv_input") else "dataset A (CSV chunks for Track L, Parquet for Track S)")
+    if len(tabs) > 1:
+        input_kind += f"; tables: {', '.join(tabs)} (`data/<table>/<size>/part-*.*`)"
+    if o.get("modes"):
+        input_kind += f"; modes: {', '.join(o['modes'])} only"
     lines = [
         f"# {op_id} - {o['title']}", "",
         f"Dataset: A (`sales_fact`). Input: {input_kind}. Registry name: `{o['name']}`.", "",

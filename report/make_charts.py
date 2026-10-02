@@ -27,7 +27,7 @@ TRACK_TITLE = {"L": "Track L - programming languages (stdlib only)", "S": "Track
 
 def load(raw: Path) -> list[dict]:
     recs = {}
-    for f in sorted(raw.glob("*.jsonl")):
+    for f in sorted(raw.rglob("*.jsonl")):
         for line in f.read_text().splitlines():
             if not line.strip():
                 continue
@@ -63,7 +63,7 @@ def fmt_ms(x):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--raw", default=str(ROOT / "results" / "raw"))
+    ap.add_argument("--raw", default=str(ROOT / "results" / "published"))
     ap.add_argument("--out", default=str(ROOT / "report"))
     a = ap.parse_args(argv)
     out = Path(a.out)

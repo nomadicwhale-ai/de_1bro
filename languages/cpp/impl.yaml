@@ -1,0 +1,11 @@
+cpp:
+  track: L
+  variant: stdlib
+  build: ["bash", "-c", "mkdir -p languages/cpp/bin && g++ -std=c++20 -O3 -DNDEBUG -o languages/cpp/bin/bench languages/cpp/src/*.cpp"]
+  cmd: ["languages/cpp/bin/bench"]
+  toolchain: {name: g++, version_cmd: ["g++", "--version"]}
+  flags: "-std=c++20 -O3"
+  ops: [OP01, OP03, OP04, OP05, OP06, OP07, OP08, OP09, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv

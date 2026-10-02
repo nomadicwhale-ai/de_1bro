@@ -63,6 +63,38 @@ def import_csv(con, files):
     con.execute("COMMIT")
 
 
+def import_dims(con, root, label, names):
+    """dim_customer / dim_product CSVs -> tables (only the columns the ops need). csv module handles the quoted JSON."""
+    for n in names:
+        fs = sorted((Path(root) / n / label).glob("part-*.csv"))
+        if n == "dim_customer":
+            con.execute("CREATE TABLE customers(customer_id INTEGER PRIMARY KEY, segment TEXT)")
+            ins = "INSERT INTO customers VALUES (?,?)"
+            pick = lambda r: (int(r[0]), None if r[4] == "\\N" else r[4])
+        else:
+            con.execute("CREATE TABLE products(product_id INTEGER PRIMARY KEY, brand TEXT)")
+            ins = "INSERT INTO products VALUES (?,?)"
+            pick = lambda r: (int(r[0]), None if r[2] == "\\N" else r[2])
+        def rows():
+            for f in fs:
+                with open(f, newline="", encoding="utf-8") as fh:
+                    rd = csv.reader(fh)
+                    next(rd)
+                    for r in rd:
+                        yield pick(r)
+        con.execute("BEGIN")
+        con.executemany(ins, rows())
+        con.execute("COMMIT")
+
+
+# OP08: sum(rn*transaction_id) can exceed int64 (SQLite sum() then raises an overflow error), so id is split into
+# 12-bit limbs; each per-limb sum(rn*limb) stays far below 2^63 for N <= 1e9. The host then folds the 5 limb sums:
+# total = sum(limb_sum_k << 12k) mod 2^64 (5 scalar ops on the result, not a row loop).
+OP08_SQL = """WITH o AS (SELECT transaction_id AS id, row_number() OVER (ORDER BY ts_us, transaction_id) AS rn FROM sales)
+SELECT (SELECT id FROM o WHERE rn = 1), (SELECT id FROM o WHERE rn = (SELECT count(*) FROM o)),
+ sum(rn * (id & 4095)), sum(rn * ((id >> 12) & 4095)), sum(rn * ((id >> 24) & 4095)),
+ sum(rn * ((id >> 36) & 4095)), sum(rn * (id >> 48)) FROM o"""
+
 # Hinnant civil_from_days in pure SQL, evaluated once per DISTINCT date_days value (few thousand) and
 # joined back to the fact rows; yields columns date_days, year, month, day.
 YMD_SQL = """
@@ -106,6 +138,19 @@ Q = {
 }
 
 
+Q.update({
+ "OP06": "SELECT c.segment, count(*), sum(s.cents), sum(s.quantity) FROM sales s "
+         "JOIN customers c ON s.customer_id = c.customer_id GROUP BY c.segment",
+ "OP07": "SELECT p.brand, count(*), sum(s.cents) FROM sales s JOIN customers c ON s.customer_id = c.customer_id "
+         "JOIN products p ON s.product_id = p.product_id WHERE c.segment = 'enterprise' GROUP BY p.brand",
+ "OP08": OP08_SQL,
+ "OP09": "SELECT row_number() OVER (ORDER BY total DESC, customer_id), customer_id, total FROM "
+         "(SELECT customer_id, sum(cents) AS total FROM sales GROUP BY customer_id "
+         "ORDER BY total DESC, customer_id LIMIT 100)",
+})
+DIMS = {"OP06": ["dim_customer"], "OP07": ["dim_customer", "dim_product"]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--op", required=True)
@@ -137,9 +182,14 @@ def main():
     else:
         t0 = clock()
         import_csv(con, files)
+        import_dims(con, a.input, LABELS[a.rows], DIMS.get(a.op, []))
         load_ms = (clock() - t0) * 1000
         t0 = clock()
         res = con.execute(Q[a.op]).fetchall()
+        if a.op == "OP08":
+            r = res[0]
+            tot = sum(int(x) << (12 * k) for k, x in enumerate(r[2:])) % (1 << 64)
+            res = [(r[0], r[1], tot)]
         compute_ms = (clock() - t0) * 1000
 
     from generator.resultdigest import digest_rows

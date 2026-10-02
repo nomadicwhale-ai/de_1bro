@@ -26,6 +26,10 @@ def compute(op_id: str, data_dir: Path, rows: int, threads: int = 4) -> dict:
     con = duckdb.connect()
     con.execute(f"PRAGMA threads={threads}")
     con.execute(f"CREATE VIEW sales AS SELECT * FROM read_parquet('{parquet_glob(data_dir, rows)}')")
+    for view, table in (("customers", "dim_customer"), ("products", "dim_product")):
+        if table in o.get("tables", []):
+            g = str(data_dir / table / S.size_label(rows) / "part-*.parquet")
+            con.execute(f"CREATE VIEW {view} AS SELECT * FROM read_parquet('{g}')")
     res = con.execute(o["sql"]).fetchall()
     ncols = len(o["columns"])
     floats = o.get("floats", [])
