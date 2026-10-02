@@ -12,7 +12,8 @@ specification and `docs/METHODOLOGY.md` for the rules.
 | 1 Foundations | repo skeleton, `.env`, deterministic generator (1k–1B rows, streaming), golden tests, manifests, disk guard, result schema, runner, data-type docs, conformance probes | **done** |
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22, DuckDB oracle | **done** (correctness-validated; no timing campaign yet) |
 | 3a First results | timing campaign + generated report/charts for the 6 implementations (1M, 10M) | **done** - [`report/REPORT.md`](report/REPORT.md), [`report/FINDINGS.md`](report/FINDINGS.md) |
-| 3b/3c Breadth | remaining ops, more languages/engines | next |
+| 3b slice | OP06-09 (joins, sort, top-N); Java + C++; 8 implementations x 13 ops | **done** - see [`report/FINDINGS.md`](report/FINDINGS.md) |
+| 3c+ Breadth | remaining ops (OP02, 11-14, 16-18, 20), JS/TS and more languages, PostgreSQL/pandas/Arrow/Spark | next |
 | 4 Scale + analysis | 100M/1B runs, parallel track, charts, report | planned |
 
 Details: [`docs/STATUS.md`](docs/STATUS.md) (verified matrix + caveats) and [`docs/PLAN.md`](docs/PLAN.md) (what comes next).
@@ -60,7 +61,7 @@ spec/        generator.md, checksum.md, golden.json (expected digests)
 schema/      result.schema.json
 config/      budget.yaml, ops.yaml, implementations.yaml
 runner/      process-isolated runner, stats, sysinfo, op registry (ops.py), DuckDB oracle, pure-Python ref ops
-languages/   Track L implementations (python, rust, go) - each with impl.yaml + README notes
+languages/   Track L implementations (python, rust, go, java, cpp) - each with impl.yaml + README notes
 systems/     Track S implementations (duckdb, polars, sqlite)
 docs/        METHODOLOGY.md, dataset-sizes.md, data-types/
 conformance/ per-language probes of integer/float/string/time semantics

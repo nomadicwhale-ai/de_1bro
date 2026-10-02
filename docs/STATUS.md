@@ -1,6 +1,6 @@
-# Status (Phase 3a complete)
+# Status (Phase 3b slice complete)
 
-Last updated after the Phase 3a timing campaign (Phase 1+2 merged in PR #1/#2).
+Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
 
 ## Phase summary
 
@@ -9,7 +9,8 @@ Last updated after the Phase 3a timing campaign (Phase 1+2 merged in PR #1/#2).
 | 1 Foundations | repo skeleton, `.env.example`, deterministic generator (1k-1B, streaming), golden tests, manifests, disk guard, result schema, runner, data-type docs, conformance probes | **done** |
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22; DuckDB oracle + pure-Python cross-check; result digests | **done, correctness-validated** (no timing campaign yet) |
 | 3a First results | timing campaign (5 runs + warm-up) for the 6 implementations at 1M/10M, generated report + charts | **done** - `report/REPORT.md`, `report/FINDINGS.md`, `results/published/phase3a/` |
-| 3b/3c Breadth | remaining ops, more languages/engines | next (see `docs/PLAN.md`) |
+| 3b/3c Breadth | joins/sort/top-N (OP06-09) for all implementations, Java + C++ on all 13 ops | **slice done** - 8 implementations, 13 ops; `results/published/phase3b/` |
+| 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; JS/TS, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next (see `docs/PLAN.md`) |
 | 4 Scale + analysis | 100M/1B runs, parallel track, profiler evidence, charts, final report | planned |
 
 ## What exists and is verified
@@ -25,6 +26,10 @@ Last updated after the Phase 3a timing campaign (Phase 1+2 merged in PR #1/#2).
   conformance probes for 13 languages (7 executed).
 
 ## Correctness matrix (runner, single run, correctness only - NOT benchmark timings)
+
+Phase 3b added `java` and `cpp` (track L, stdlib, all 13 ops, both modes except OP08 materialized-only) and OP06-OP09 for
+rust, go, duckdb, polars, sqlite. Validation at 1k/10k/1m: 624 + 12 records OK, 0 incorrect; timing campaigns: 804 OK records in total
+for Phase 3b (see `results/published/`). The table below is the Phase 2 snapshot (ops 01,03,04,05,10,15,19,21,22).
 
 | implementation | track | ops | modes | threads | 1k / 10k / 1m | 10m |
 |---|---|---|---|---|---|---|

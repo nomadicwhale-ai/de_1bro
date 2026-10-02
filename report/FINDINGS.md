@@ -32,3 +32,35 @@ machine, not statements about the languages in general.** Values are `load + com
 No operation above 10M rows; no parallel Track L variants; no joins/sorts/windows/strings (Phase 3b); no Java, C++,
 JavaScript/TypeScript, C#, Julia, Swift, Kotlin, Scala, R, PostgreSQL, Spark, pandas or Arrow yet. Rankings from 6
 implementations must not be extrapolated to the full list.
+
+---
+
+# Phase 3b additions (Java, C++, joins/sort/top-N)
+
+Data: `results/published/phase3b/` (java and cpp on all 13 ops at 1M/10M; OP06-OP09 for rust, go, duckdb, polars, sqlite).
+Whole report now covers 446 records (104 flagged `noisy`), all correct against the oracle. Rust/Go/Python numbers for
+OP01-OP05, OP10, OP15, OP19, OP21, OP22 come from the earlier Phase 3a campaign (same idle machine, different time).
+Same caveat as above: these describe these implementations, not the languages.
+
+## Track L at 10M rows, materialized, load + compute (4 stdlib-only implementations)
+* **C++ is fastest or within ~5% of fastest on 12 of 13 operations**, e.g. OP01 1.4 s (Go 1.8, Rust 1.9, Java 3.0),
+  OP06 hash join 1.9 s (Go 2.6, Rust 3.0, Java 3.6), OP08 full sort 3.0 s (Rust 3.2, Go 4.1, Java 12.0).
+* **The exception is OP10 (distinct counts): C++ is the slowest at 8.5 s vs Rust 3.2 s.** The C++ version uses
+  `std::unordered_map`/`unordered_set`, whose libstdc++ hash for integers is the identity function and which allocates a
+  node per element; Rust/Go/Java use flat or custom maps. This is an implementation choice that the README documents,
+  not a statement about C++ - a flat hash map would likely close the gap.
+* **Java is the slowest Track L implementation on most operations** (typically 1.3-2x C++), and 4x slower on OP08 because
+  the standard-library comparator sort works on boxed indexes (a primitive sort cannot carry the 2-key order). Each run is a
+  fresh JVM, so JIT warm-up and GC are inside the timing; the effect is largest at small sizes.
+* Rust is slowest of the compiled three on OP05 (5.1 s vs C++ 2.9 s, Go 3.2 s) - a composite-key hashing choice, see its README.
+
+## Track S vs Track L (different inputs: Parquet vs CSV, so a pipeline comparison)
+* DuckDB or Polars is the fastest implementation on 11 of 13 operations at 10M (Polars wins OP07, OP08, OP19).
+* **CSV parse (OP15) is again the reverse:** C++ 2.3 s, Rust 2.5 s, Go 3.8 s, Java 4.7 s vs DuckDB 8.0 s and Polars 8.5 s
+  (single thread).
+* New operations in Track S: OP06 join DuckDB 1.4 s / Polars 2.4 s; OP08 sort Polars 1.6 s / DuckDB 2.5 s;
+  OP09 top-100 DuckDB 1.2 s / Polars 2.1 s. SQLite at 10M: OP06 11.6 s, OP07 9.7 s, OP08 13.3 s, OP09 5.3 s (load-dominated).
+
+## Still not covered
+OP02, OP11-OP14, OP16-OP18, OP20; JavaScript/TypeScript, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark,
+ClickHouse; nothing above 10M rows; no parallel Track L variants.
