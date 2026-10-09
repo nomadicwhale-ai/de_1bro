@@ -18,8 +18,8 @@ Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
 * `cpp-tuned` (`tuned`): dependency-free flat maps/sets for OP04/09/10, both modes, one thread.
 * `java-tuned` (`tuned`): primitive index merge sort for OP08, materialized only, one thread.
 * Original `cpp` / `java` stdlib operation implementations, parsers and flags remain unchanged.
-* C++ baseline + tuned validation at 1k/10k/1m: 93 OK, 3 OP08-streaming n/a, zero incorrect/failures/schema problems.
-  Java acceptance validation is pending the JDK toolchain in this environment.
+* C++/Java baseline + tuned validation at 1k/10k/1m: **171 OK, 6 OP08-streaming n/a**, zero incorrect/failures/schema
+  problems. C++: 93 OK +3 n/a; Java (OpenJDK 21.0.2): 78 OK +3 n/a. All 70 tests passed.
 * `make report` gives `stdlib` and `tuned` separate tables/charts/ranks. Item-3 published records use one run,
   no warm-up and are correctness evidence, not publication-grade performance results.
 

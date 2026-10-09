@@ -42,8 +42,8 @@ All 13 ops (OP01 OP03-OP10 OP15 OP19 OP21 OP22), modes streaming + materialized 
   loss, assumptions about generator ranges, libraries or parallelism. Auxiliary indexes use 8 bytes/row.
 * Allocating buffers, sorting, wrapping positional sum and result creation are timed as `compute_ms`;
   digest and JSON are outside timing. The original `Ops.Op08` boxed-index stdlib sort is unchanged.
-* Report tables/charts/ranks keep `stdlib` and `tuned` separate. Acceptance validation at 1k/10k/1m is
-  pending a JDK in the author environment. Reproduce: `python -m runner run --impl java,java-tuned --rows 1k,10k,1m --runs 1 --warmup 0 --force`.
+* Validated alongside `java` at 1k/10k/1m on OpenJDK 21.0.2; report tables/charts/ranks keep `stdlib`
+  and `tuned` separate. Reproduce: `python -m runner run --impl java,java-tuned --rows 1k,10k,1m --runs 1 --warmup 0 --force`.
 
 ## Known limitations / unfairness
 * CSV parsing assumes no quoted fields in sales_fact/dim_customer (generator never emits them); `\r\n` is tolerated.

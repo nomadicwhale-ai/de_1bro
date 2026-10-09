@@ -16,14 +16,25 @@ def test_report_separates_variants(tmp_path):
     raw, out = tmp_path / "raw", tmp_path / "out"
     raw.mkdir()
     # Same implementation name deliberately tests variant as part of record identity.
-    records = [record("java", "stdlib", 100), record("java", "tuned", 1),
-               record("library", "ecosystem", 0.5), {**record("bad", "tuned", 0.1), "status": "incorrect"}]
+    baseline = record("java", "stdlib", 100)
+    baseline["env"] = {"cpu": "Xeon baseline", "cores": 4, "ram_gb": 15.72, "os": "old OS"}
+    tuned = record("java", "tuned", 1)
+    tuned["env"] = {"cpu": "tuned VM", "cores": 6, "ram_gb": 328.76, "os": "new OS"}
+    records = [baseline, tuned, record("library", "ecosystem", 0.5),
+               {**record("bad", "tuned", 0.1), "status": "incorrect"}]
     (raw / "records.jsonl").write_text("\n".join(map(json.dumps, records)))
     assert len(load(raw)) == 3
     main(["--raw", str(raw), "--out", str(out)])
     text = (out / "REPORT.md").read_text()
     assert "variant `stdlib`" in text and "variant `tuned`" in text and "variant `ecosystem`" in text
     assert text.count("**#1**") == 3  # fastest tuned/library entries cannot demote the baseline
+    assert "Xeon baseline | 4 | 15.72 | old OS" in text
+    assert "tuned VM | 6 | 328.76 | new OS" in text
+    baseline_id = next(line.split("|")[1].strip() for line in text.splitlines() if "| Xeon baseline |" in line)
+    tuned_id = next(line.split("|")[1].strip() for line in text.splitlines() if "| tuned VM |" in line)
+    assert f"variant `stdlib`)\n\nEnvironment: **{baseline_id}**" in text
+    assert f"variant `tuned`)\n\nEnvironment: **{tuned_id}**" in text
+    assert f"<sub>{baseline_id}; load" in text and f"<sub>{tuned_id}; load" in text
     assert "bad" not in text
     for chart in ("L_1k_bars.png", "L_tuned_1k_bars.png", "L_ecosystem_1k_bars.png"):
         assert (out / "charts" / chart).is_file()

@@ -65,7 +65,9 @@ Same caveat as above: these describe these implementations, not the languages.
 * `cpp-tuned` replaces node-based maps/sets on OP04/09/10; `java-tuned` adds primitive index merge sort on OP08.
   Both are dependency-free `tuned` variants, separate from unchanged `stdlib` baselines in tables/charts/ranks.
 * Published item-3 records are one-run/no-warm-up correctness checks at 1k/10k/1m, not comparable performance
-  evidence against the earlier campaigns; no speedup claim is made. Java acceptance validation is pending the JDK.
+  evidence against the earlier campaigns; no speedup claim is made. Original + tuned C++/Java validation:
+  171 OK +6 OP08-streaming n/a, zero incorrect/failures/schema problems; full tests passed. Environment IDs
+  in the generated report preserve the earlier 4-core Xeon context separately from the item-3 VM.
 
 ## Still not covered
 OP02, OP11-OP14, OP16-OP18, OP20; JavaScript/TypeScript, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark,
