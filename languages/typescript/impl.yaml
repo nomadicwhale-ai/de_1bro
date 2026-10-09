@@ -1,0 +1,11 @@
+typescript:
+  track: L
+  variant: stdlib
+  build: ["node", "--experimental-strip-types", "--check", "languages/typescript/bench.mts"]
+  cmd: ["node", "--experimental-strip-types", "--max-old-space-size=8192", "languages/typescript/bench.mts"]
+  toolchain: {name: node, version_cmd: ["node", "--version"]}
+  flags: "--experimental-strip-types --max-old-space-size=8192"
+  ops: [OP01, OP03, OP04, OP05, OP06, OP07, OP08, OP09, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv

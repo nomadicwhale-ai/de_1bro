@@ -1,0 +1,11 @@
+javascript:
+  track: L
+  variant: stdlib
+  build: ["node", "languages/typescript/emit-javascript.mjs", "--check"]
+  cmd: ["node", "--max-old-space-size=8192", "languages/javascript/bench.mjs"]
+  toolchain: {name: node, version_cmd: ["node", "--version"]}
+  flags: "--max-old-space-size=8192"
+  ops: [OP01, OP03, OP04, OP05, OP06, OP07, OP08, OP09, OP10, OP15, OP19, OP21, OP22]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv

@@ -9,7 +9,7 @@ ends in a merged, verified increment; later items can be dropped without invalid
 |---|---|---|
 | Data | deterministic generator, 5 tables, 1k-1B (streaming), manifests, golden digests | `spec/generator.md`, `spec/golden.json`, tests |
 | Oracle | 13 ops: OP01,03,04,05,06,07,08,09,10,15,19,21,22; DuckDB == pure-Python at 1k/10k; expected results to 10M | `runner/ops.py`, `runner/ref_ops.py`, `results/expected/` |
-| Track L | python, rust, go, java, cpp (stdlib only) | `languages/*` (python lacks OP06-09) |
+| Track L | python, rust, go, java, cpp, javascript, typescript (stdlib only) | `languages/*` (python lacks OP06-09); JS/TS: all 13 ops validated |
 | Track S | duckdb, polars, sqlite | `systems/*` |
 | Results | 804 correct timing records (1M/10M) | `results/published/`, `report/REPORT.md`, `report/FINDINGS.md` |
 | Docs | data-type tables (78 `unverified` fields), conformance probes (7/13 languages run) | `docs/data-types/`, `conformance/` |
@@ -23,7 +23,7 @@ Effort: S = a few hundred lines / ~1 agent task, M = 2-3 agent tasks, L = open-e
 | 1 | **Trust fixes (do first)**: extend the pure-Python vs DuckDB cross-check to 100k rows; add OP06-09 expected-result self-check at 100k; add a CI job that builds all implementations and runs `runner run --smoke` + 1k/10k correctness; create `docs/FAIRNESS_ISSUES.md` | S | high | CI green on a clean clone; cross-check test passes at 100k |
 | 2 | **Python OP06-09** (stdlib) so Track L is uniform across the 13 ops | S | medium | OK at 1k/10k/1m; impl.yaml updated |
 | 3 | **Flat-hash-map variants for C++ (OP04/09/10)** and primitive sort for Java OP08, as *labelled variants* next to the current implementations (variant `ecosystem`/`tuned`), so the report separates "naive stdlib" from "tuned stdlib" | S | high (removes the main fairness caveat) | both variants correct; report shows both |
-| 4 | **JavaScript (node) and TypeScript** std-only implementations, all 13 ops (BigInt/number caveats documented) | M | high (language coverage) | OK at 1k/10k/1m; 10m subset |
+| 4 | **JavaScript (node) and TypeScript — implemented and validated**: std-only, all 13 ops; shared typed source + generated JS, BigInt/number caveats in READMEs | M | high (language coverage) | 150 OK at 1k/10k/1m (both modes; OP08 materialized-only); 12 OK at 10m (OP01/06/22, both modes); Node v22.23.1 |
 | 5 | **Remaining ops**: OP02 filter, OP18 date/time, OP20 wide scan (needs dataset E), OP11 window, then OP12-14 (dataset D), OP16/17 I/O | M-L | high | spec + oracle + reference + >=4 implementations each |
 | 6 | **More systems**: pandas, PyArrow compute (cheap, pip), then PostgreSQL (server install), Spark local (JVM + pyspark), ClickHouse (if installable) | M-L | medium-high | same contract; `status: not_run` + reason where infeasible |
 | 7 | **Parallel Track L variants** (fixed 4 threads) for rust/go/java/cpp on OP01/03/04/10 | M | medium | correctness at 1 and 4 threads; scaling table |
