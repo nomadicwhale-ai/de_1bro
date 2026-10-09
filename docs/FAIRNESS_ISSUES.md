@@ -22,6 +22,7 @@
 **Independent validation now reaches 100k, not the larger timing scales.** `tests/test_oracle.py` compares all 13 operations against pure Python at 1k/10k/100k and self-checks committed OP06-OP09 expected files at those scales; 1M/10M remain DuckDB-only oracle results.
 
 - CI builds every registered implementation on a clean checkout and runs smoke plus forced 1k/10k correctness; unexpected skips fail the job.
+- Python's premature OP06-OP09 registration was corrected to its nine implemented operations; this restores honest coverage, not missing implementations. Roadmap item 2 will re-add them after validation.
 - Correctness CI is not a benchmark campaign and does not resolve F01-F08.
 
 ## Recording a dispute

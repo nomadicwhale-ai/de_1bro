@@ -26,6 +26,8 @@ Last updated for roadmap item 1 (trust fixes); no new timing campaign or impleme
 * **CI** - a clean-clone `implementations` job provisions Python, Rust, Go, Java and C++, builds all registered
   implementations, generates/verifies 1k/10k inputs, runs smoke plus forced correctness and rejects unexpected skips.
   CPU affinity is selected from the runner's allowed CPUs. `generator` runs the full tests, including the 100k checks.
+* **Registry correction** - Python now advertises only the nine operations its current driver supports;
+  premature OP06-OP09 entries were removed, not implemented. Roadmap item 2 will register them after validation.
 * **Fairness** - `docs/FAIRNESS_ISSUES.md` tracks current caveats, evidence and reporting mitigations.
 * **Docs** - 22 data-type concepts x 16 columns (`docs/data-types/`, 78 fields still marked `unverified`),
   conformance probes for 13 languages (7 executed).
