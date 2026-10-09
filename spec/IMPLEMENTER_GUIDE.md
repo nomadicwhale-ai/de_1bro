@@ -13,7 +13,7 @@ Read first: `spec/ops/README.md`, `spec/ops/OPxx.md` (exact semantics + DuckDB o
 ```yaml
 rust:                              # unique name
   track: L                         # L = language, S = data system
-  variant: stdlib                  # stdlib | parallel | ecosystem | native | default
+  variant: stdlib                  # stdlib | tuned | parallel | ecosystem | native | default
   build: ["cargo", "build", "--release", "--manifest-path", "languages/rust/Cargo.toml"]   # optional, cwd = repo root
   cmd: ["languages/rust/target/release/bench"]                 # cwd = repo root
   toolchain: {name: rustc, version_cmd: ["rustc", "--version"]}
@@ -86,8 +86,10 @@ Every (op, mode, threads) must report `OK`; `INCORRECT` means your result differ
   (no quoted fields); dim_product: `product_id,category,brand,weight_grams,tags,attributes` where the last two
   fields are RFC-4180 quoted JSON (doubled quotes, no newlines): read only the first three fields and ignore the
   rest of the line - no general quote handling is needed.
-* OP08: sort keys are `(transaction_timestamp micros, transaction_id)`; use the language's standard sort
-  (no external libraries); result = first id, last id and the wrapping uint64 sum of `rn * transaction_id`.
+* OP08: sort keys are `(transaction_timestamp micros, transaction_id)`; the primary `stdlib` variant uses
+  the language's standard sort (no external libraries). Separately labelled `tuned` variants may use custom
+  dependency-free primitives; `ecosystem` variants name their libraries. Result = first id, last id and the
+  wrapping uint64 sum of `rn * transaction_id`.
 * Register the new ops in `impl.yaml` `ops:` only after they pass at 1k, 10k, 1m (and 10m if feasible).
 * Oracle expected results exist for 1k, 10k, 1m, 10m (`results/expected/`); data for A, B, C exists locally
   (`make gen SIZE=1m DATASETS=A,B,C` regenerates it).
