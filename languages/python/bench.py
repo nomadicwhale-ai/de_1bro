@@ -3,6 +3,7 @@
 import argparse
 import csv
 import gc
+import heapq
 import json
 import math
 import os
@@ -185,8 +186,8 @@ COLS = {  # name -> (index, converter)
 }
 
 
-def chunk_files(root, rows):
-    d = os.path.join(root, "sales_fact", LABELS[rows])
+def chunk_files(root, rows, table="sales_fact"):
+    d = os.path.join(root, table, LABELS[rows])
     return [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.startswith("part-") and f.endswith(".csv")]
 
 
@@ -212,6 +213,29 @@ def load(path, names, acc):
                 acc["ts_frac"].extend(v[1])
             else:
                 acc[n].extend(v)
+
+
+def load_dims(root, rows, op):
+    """Read small join dimensions before the fact table; callers time this as loading."""
+    segments = {}
+    for path in chunk_files(root, rows, "dim_customer"):
+        with open(path, "r", encoding="utf-8", newline="") as f:
+            reader = csv.reader(f)
+            next(reader)
+            for row in reader:
+                segments[int(row[0])] = None if row[4] == NA else row[4]
+    dims = {"segment": segments}
+    if op == "OP07":
+        brands = {}
+        for path in chunk_files(root, rows, "dim_product"):
+            with open(path, "r", encoding="utf-8", newline="") as f:
+                next(f)
+                for line in f:
+                    # Only these unquoted fields are needed; the remainder is quoted JSON.
+                    product_id, _, brand, _ = line.split(",", 3)
+                    brands[int(product_id)] = None if brand == NA else brand
+        dims["brand"] = brands
+    return dims
 
 
 def new_acc(names):
@@ -292,6 +316,76 @@ def op05():
     def fin():
         return [(k[0], k[1], k[2], n, cs[k]) for k, n in cnt.items()], {}
     return ["country", "category", "days", "cents"], step, fin
+
+
+def op06(dims):
+    segments = dims["segment"]
+    groups = {}
+
+    def step(a):
+        for cid, cents, qty in zip(a["cid"], a["cents"], a["qty"]):
+            if cid not in segments:
+                continue
+            key = segments[cid]
+            group = groups.get(key)
+            if group is None:
+                group = groups[key] = [0, 0, 0, False]
+            group[0] += 1
+            group[1] += cents
+            if qty is not None:
+                group[2] += qty
+                group[3] = True
+
+    def fin():
+        return [(key, g[0], g[1], g[2] if g[3] else None) for key, g in groups.items()], {}
+    return ["cid", "cents", "qty"], step, fin
+
+
+def op07(dims):
+    segments, brands = dims["segment"], dims["brand"]
+    groups = {}
+
+    def step(a):
+        for cid, pid, cents in zip(a["cid"], a["pid"], a["cents"]):
+            if segments.get(cid) != "enterprise" or pid not in brands:
+                continue
+            key = brands[pid]
+            group = groups.get(key)
+            if group is None:
+                group = groups[key] = [0, 0]
+            group[0] += 1
+            group[1] += cents
+
+    def fin():
+        return [(key, g[0], g[1]) for key, g in groups.items()], {}
+    return ["cid", "pid", "cents"], step, fin
+
+
+def op08():
+    result = []
+
+    def step(a):
+        # Lexicographic seconds/fraction order is the exact microsecond timestamp order.
+        order = sorted(zip(a["ts_sec"], a["ts_frac"], a["tid"]))
+        positional_sum = sum(rank * row[2] for rank, row in enumerate(order, 1)) & MASK
+        result.append((order[0][2], order[-1][2], positional_sum))
+
+    def fin():
+        return result, {}
+    return ["ts", "tid"], step, fin
+
+
+def op09():
+    totals = defaultdict(int)
+
+    def step(a):
+        for cid, cents in zip(a["cid"], a["cents"]):
+            totals[cid] += cents
+
+    def fin():
+        top = heapq.nsmallest(100, totals.items(), key=lambda item: (-item[1], item[0]))
+        return [(rank, cid, cents) for rank, (cid, cents) in enumerate(top, 1)], {}
+    return ["cid", "cents"], step, fin
 
 
 def op10():
@@ -376,8 +470,8 @@ def op22():
     return ["tid", "cid", "cents", "ts", "days"], step, fin
 
 
-OPS = {"OP01": op01, "OP03": op03, "OP04": op04, "OP05": op05, "OP10": op10, "OP19": op19,
-       "OP21": op21, "OP22": op22}
+OPS = {"OP01": op01, "OP03": op03, "OP04": op04, "OP05": op05, "OP06": op06, "OP07": op07,
+       "OP08": op08, "OP09": op09, "OP10": op10, "OP19": op19, "OP21": op21, "OP22": op22}
 
 
 # ---------------------------------------------------------------- OP15 (parse everything)
@@ -427,6 +521,8 @@ def main():
     ap.add_argument("--input", required=True)
     ap.add_argument("--output-json", action="store_true")
     a = ap.parse_args()
+    if a.op == "OP08" and a.mode != "materialized":
+        ap.error("OP08 is materialized only")
     files = chunk_files(a.input, a.rows)
     gc.disable()
     pc = time.perf_counter
@@ -436,13 +532,19 @@ def main():
         rows, floats = run_op15(files)
         compute_ms = (pc() - t0) * 1000
     elif a.op in OPS:
-        names, step, fin = OPS[a.op]()
+        if a.op in ("OP06", "OP07"):
+            t0 = pc()
+            dims = load_dims(a.input, a.rows, a.op)
+            load_ms = (pc() - t0) * 1000
+            names, step, fin = OPS[a.op](dims)
+        else:
+            names, step, fin = OPS[a.op]()
         if a.mode == "materialized":
             acc = new_acc(names)
             t0 = pc()
             for f in files:
                 load(f, names, acc)
-            load_ms = (pc() - t0) * 1000
+            load_ms += (pc() - t0) * 1000
             t0 = pc()
             step(acc)
             rows, floats = fin()

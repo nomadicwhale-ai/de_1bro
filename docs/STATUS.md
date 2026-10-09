@@ -1,7 +1,8 @@
 # Status (Phase 3b slice complete)
 
-Last updated for roadmap items 1 (trust fixes) and 3 (labelled tuned variants); the one-run tuned validation
-is correctness evidence, not a new performance campaign.
+Last updated after roadmap items 1 (trust fixes), 2 (Python stdlib OP06-OP09, validated at 1k/10k/1m),
+and 3 (labelled tuned variants). The one-run tuned validation is correctness evidence, not a new performance
+campaign; Java, C++ and earlier OP06-OP09 support came in PRs #1-#3.
 
 ## Phase summary
 
@@ -11,6 +12,7 @@ is correctness evidence, not a new performance campaign.
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22; DuckDB oracle + pure-Python cross-check; result digests | **done, correctness-validated** (no timing campaign yet) |
 | 3a First results | timing campaign (5 runs + warm-up) for the 6 implementations at 1M/10M, generated report + charts | **done** - `report/REPORT.md`, `report/FINDINGS.md`, `results/published/phase3a/` |
 | 3b/3c Breadth | joins/sort/top-N (OP06-09) for all implementations, Java + C++ on all 13 ops | **slice done** - 8 implementations, 13 ops; `results/published/phase3b/` |
+| Roadmap item 2 | Python stdlib OP06-OP09; all five Track L languages support all 13 registered ops | **done, correctness-validated at 1k/10k/1m** |
 | 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; JS/TS, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next - prioritised in `docs/PLAN.md` (items 1-4 first) |
 | 4 Scale + analysis | 100M/1B runs, parallel track, profiler evidence, charts, final report | planned |
 
@@ -37,13 +39,18 @@ is correctness evidence, not a new performance campaign.
 * **CI** - a clean-clone `implementations` job provisions Python, Rust, Go, Java and C++, builds all registered
   implementations, generates/verifies 1k/10k inputs, runs smoke plus forced correctness and rejects unexpected skips.
   CPU affinity is selected from the runner's allowed CPUs. `generator` runs the full tests, including the 100k checks.
-* **Registry correction** - Python now advertises only the nine operations its current driver supports;
-  premature OP06-OP09 entries were removed, not implemented. Roadmap item 2 will register them after validation.
+* **Python coverage** - item 1 removed premature OP06-OP09 registration; item 2 implements and re-registers
+  these operations after validation, bringing the stdlib driver to all 13 registered operations.
 * **Fairness** - `docs/FAIRNESS_ISSUES.md` tracks current caveats, evidence and reporting mitigations.
 * **Docs** - 22 data-type concepts x 16 columns (`docs/data-types/`, 78 fields still marked `unverified`),
   conformance probes for 13 languages (7 executed).
 
 ## Correctness matrix (runner, single run, correctness only - NOT benchmark timings)
+
+**Roadmap item 2:** Python now supports all 13 operations. The full acceptance run at 1k/10k/1m produced
+75 OK records and 3 n/a records (OP08 streaming is undefined), with no incorrect, failed or skipped records.
+OP06/OP07/OP09 passed in both modes; OP08 passed materialized. The new operations have not been run at 10m.
+Reproduce with `python -m runner run --impl python --rows 1k,10k,1m --runs 1 --warmup 0 --force`.
 
 Phase 3b added `java` and `cpp` (track L, stdlib, all 13 ops, both modes except OP08 materialized-only) and OP06-OP09 for
 rust, go, duckdb, polars, sqlite. Validation at 1k/10k/1m: 624 + 12 records OK, 0 incorrect; timing campaigns: 804 OK records in total
