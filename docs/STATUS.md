@@ -1,6 +1,6 @@
 # Status (Phase 3b slice complete)
 
-Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
+Last updated for roadmap items 1 (trust fixes) and 4 (JavaScript/TypeScript); no new timing campaign.
 
 ## Phase summary
 
@@ -19,10 +19,17 @@ Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
 * **Generator** - `python -m generator gen|estimate|verify|golden`. Pure-Python reference == vectorised generator on
   every table (tests + `spec/golden.json`). 1B rows of `sales_fact` digest in ~100 s on 4 cores (`--sink null`).
 * **Oracle** - `runner/oracle.py` (DuckDB SQL from `runner/ops.py`) == independent pure-Python semantics
-  (`runner/ref_ops.py`) at 1k and 10k rows (`tests/test_oracle.py`). Expected results committed for
-  1k, 10k, 1m, 10m in `results/expected/`.
+  (`runner/ref_ops.py`) at 1k, 10k and 100k rows (`tests/test_oracle.py`, all 13 ops). Expected results committed for
+  1k, 10k, 1m, 10m in `results/expected/`, plus OP06-OP09 at 100k; those four ops' expected files are
+  self-checked against both evaluators at 1k/10k/100k.
 * **Runner** - process-isolated runs, per-process peak RSS (`wait4`), warm-up + timed runs, median/p95/IQR,
   resumable, schema-validated JSONL.
+* **CI** - a clean-clone `implementations` job provisions Python, Rust, Go, Java and C++, builds all registered
+  implementations, generates/verifies 1k/10k inputs, runs smoke plus forced correctness and rejects unexpected skips.
+  CPU affinity is selected from the runner's allowed CPUs. `generator` runs the full tests, including the 100k checks.
+* **Registry correction** - Python now advertises only the nine operations its current driver supports;
+  premature OP06-OP09 entries were removed, not implemented. Roadmap item 2 will register them after validation.
+* **Fairness** - `docs/FAIRNESS_ISSUES.md` tracks current caveats, evidence and reporting mitigations.
 * **Docs** - 22 data-type concepts x 16 columns (`docs/data-types/`, 78 fields still marked `unverified`),
   conformance probes for 13 languages (7 executed).
 
@@ -70,7 +77,8 @@ OP10 distinct counts, OP15 CSV parse, OP19 null handling, OP21 decimal vs float 
    compute tiny). Compare `load_ms + compute_ms` too, never `compute_ms` alone, before drawing conclusions.
 6. Size estimates in `docs/dataset-sizes.md` run 10-30% high; 1B Parquet (~28-35 GB) does not fit this container's disk -
    use `--sink null` for 1B here.
-7. Result digests are verified only against the DuckDB oracle + pure-Python at <=10k rows; 100k-10M rely on DuckDB alone.
+7. Oracle/result digests are independently cross-checked through 100k; 1M/10M still rely on DuckDB alone.
+   Clean-clone CI checks correctness, not performance or fairness; tracked caveats remain in `docs/FAIRNESS_ISSUES.md`.
 
 ## Reproduce
 
