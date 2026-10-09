@@ -1,7 +1,10 @@
 # Python (CPython 3.11, standard library only)
 
 Track L, variant `stdlib`, name `python`. Single file `bench.py`; no third-party packages.
+Supports all 13 registered operations (OP01,03,04,05,06,07,08,09,10,15,19,21,22).
 Run through the runner: `python3 -m runner run --impl python --rows 1k,10k,1m --runs 1 --warmup 0 --force`.
+Validated at these sizes: 75 OK records; OP08 streaming is n/a (3 records), as required by its spec.
+This is correctness validation, not a timing campaign; the new operations have not been run at 10m.
 
 ## Implementation notes
 * Reading: `csv.reader` over the chunk files (sorted names), consumed in batches of 65 536 rows and
@@ -16,6 +19,15 @@ Run through the runner: `python3 -m runner run --impl python --rows 1k,10k,1m --
 * Streaming: per chunk file, `load_ms` = read+parse+type conversion into column lists, `compute_ms` =
   the op (group-by dict updates, set unions, loops). Raw rows are dropped after each file.
   Materialized: all needed converted columns for all files are loaded first, then one compute pass.
+* OP06/OP07 load the small dimensions into Python dicts first, timed as `load_ms` in both modes.
+  OP06 joins customer segments and preserves NULL for an all-NULL quantity group. OP07 joins customer
+  segments and product brands, filters to enterprise customers, and aggregates exact cents by brand.
+  Product loading reads only the first three unquoted CSV fields, skipping the quoted JSON suffix.
+* OP08 is materialized-only: standard tuple sort by `(timestamp seconds, fractional micros, id)`,
+  equivalent to `(timestamp micros, id)`. Sorting, result endpoints and the wrapping positional sum
+  are timed as compute; digesting is not. Streaming is rejected rather than silently materialized.
+* OP09 aggregates cents in a dict across chunks, then uses `heapq.nsmallest` for the top 100 ordered
+  by descending revenue and ascending customer id. Memory grows with distinct customers, not raw rows.
 * OP15 (both modes): read+parse+summarise timed as `compute_ms`, `load_ms` = 0, batch-bounded memory.
 * NULL (`\N`) becomes `None`; empty strings stay `""`. Group keys are Python `str` (Unicode code points,
   equal iff UTF-8 bytes equal; no normalisation). Byte lengths use `str.encode`.
@@ -31,5 +43,6 @@ Run through the runner: `python3 -m runner run --impl python --rows 1k,10k,1m --
   the batch/`zip(*rows)`/`map` structure is the main mitigation.
 * `csv.reader` creates 13 `str` objects per row even for skipped columns (the reader is C but cannot skip).
 * Memory: materialized mode keeps Python int/str objects (28+ bytes each), much larger than typed arrays.
+  OP08 additionally constructs sorted tuples; join modes retain their small dimension dicts.
 * Fraction digits of timestamps and 2-decimal money are assumed to follow the generator's canonical format
   (money has a slow fallback; timestamps do not).
