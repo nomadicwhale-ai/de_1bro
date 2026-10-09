@@ -9,7 +9,7 @@ ends in a merged, verified increment; later items can be dropped without invalid
 |---|---|---|
 | Data | deterministic generator, 5 tables, 1k-1B (streaming), manifests, golden digests | `spec/generator.md`, `spec/golden.json`, tests |
 | Oracle | 13 ops: OP01,03,04,05,06,07,08,09,10,15,19,21,22; DuckDB == pure-Python at 1k/10k/100k; OP06-09 expected-file self-checks through 100k; expected results to 10M | `runner/ops.py`, `runner/ref_ops.py`, `results/expected/` |
-| Track L | python, rust, go, java, cpp (stdlib only) | `languages/*` (python lacks OP06-09) |
+| Track L | python, rust, go, java, cpp (stdlib only), all 13 ops | `languages/*`; Python OP06-09 validated at 1k/10k/1m |
 | Track S | duckdb, polars, sqlite | `systems/*` |
 | Results | 804 correct timing records (1M/10M) | `results/published/`, `report/REPORT.md`, `report/FINDINGS.md` |
 | Docs | data-type tables (78 `unverified` fields), conformance probes (7/13 languages run) | `docs/data-types/`, `conformance/` |
@@ -21,7 +21,7 @@ Effort: S = a few hundred lines / ~1 agent task, M = 2-3 agent tasks, L = open-e
 | # | Item | Effort | Value | Acceptance criteria |
 |---|---|---|---|---|
 | 1 | **Trust fixes (implemented)**: pure-Python vs DuckDB cross-check at 100k; OP06-09 expected-result self-check through 100k; clean-clone CI builds all implementations and runs `runner run --smoke` + 1k/10k correctness without unexpected skips; `docs/FAIRNESS_ISSUES.md` | S | high | CI green on a clean clone; cross-check test passes at 100k |
-| 2 | **Python OP06-09** (stdlib) so Track L is uniform across the 13 ops | S | medium | OK at 1k/10k/1m; impl.yaml updated |
+| 2 | **Done: Python OP06-09** (stdlib), making Track L uniform across the 13 ops | S | medium | 75 OK at 1k/10k/1m across all 13 ops; OP08 streaming n/a; impl.yaml updated |
 | 3 | **Flat-hash-map variants for C++ (OP04/09/10)** and primitive sort for Java OP08, as *labelled variants* next to the current implementations (variant `ecosystem`/`tuned`), so the report separates "naive stdlib" from "tuned stdlib" | S | high (removes the main fairness caveat) | both variants correct; report shows both |
 | 4 | **JavaScript (node) and TypeScript** std-only implementations, all 13 ops (BigInt/number caveats documented) | M | high (language coverage) | OK at 1k/10k/1m; 10m subset |
 | 5 | **Remaining ops**: OP02 filter, OP18 date/time, OP20 wide scan (needs dataset E), OP11 window, then OP12-14 (dataset D), OP16/17 I/O | M-L | high | spec + oracle + reference + >=4 implementations each |
