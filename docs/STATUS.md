@@ -13,6 +13,16 @@ Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
 | 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; JS/TS, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next - prioritised in `docs/PLAN.md` (items 1-4 first) |
 | 4 Scale + analysis | 100M/1B runs, parallel track, profiler evidence, charts, final report | planned |
 
+## Roadmap item 3 — labelled tuned variants
+
+* `cpp-tuned` (`tuned`): dependency-free flat maps/sets for OP04/09/10, both modes, one thread.
+* `java-tuned` (`tuned`): primitive index merge sort for OP08, materialized only, one thread.
+* Original `cpp` / `java` stdlib operation implementations, parsers and flags remain unchanged.
+* C++ baseline + tuned validation at 1k/10k/1m: 93 OK, 3 OP08-streaming n/a, zero incorrect/failures/schema problems.
+  Java acceptance validation is pending the JDK toolchain in this environment.
+* `make report` gives `stdlib` and `tuned` separate tables/charts/ranks. Item-3 published records use one run,
+  no warm-up and are correctness evidence, not publication-grade performance results.
+
 ## What exists and is verified
 
 * **Generator** - `python -m generator gen|estimate|verify|golden`. Pure-Python reference == vectorised generator on

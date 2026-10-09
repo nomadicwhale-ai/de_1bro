@@ -9,7 +9,7 @@
     "run_id": {"type": "string"},
     "track": {"enum": ["L", "S"], "description": "L = programming language, S = data system"},
     "implementation": {"type": "string", "description": "e.g. rust, python, duckdb"},
-    "variant": {"enum": ["stdlib", "parallel", "ecosystem", "native", "default"]},
+    "variant": {"enum": ["stdlib", "tuned", "parallel", "ecosystem", "native", "default"]},
     "toolchain": {
       "type": "object",
       "required": ["name", "version"],
