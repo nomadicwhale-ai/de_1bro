@@ -8,7 +8,7 @@ ends in a merged, verified increment; later items can be dropped without invalid
 | Area | Done | Evidence |
 |---|---|---|
 | Data | deterministic generator, 5 tables, 1k-1B (streaming), manifests, golden digests | `spec/generator.md`, `spec/golden.json`, tests |
-| Oracle | 13 ops: OP01,03,04,05,06,07,08,09,10,15,19,21,22; DuckDB == pure-Python at 1k/10k; expected results to 10M | `runner/ops.py`, `runner/ref_ops.py`, `results/expected/` |
+| Oracle | 13 ops: OP01,03,04,05,06,07,08,09,10,15,19,21,22; DuckDB == pure-Python at 1k/10k/100k; OP06-09 expected-file self-checks through 100k; expected results to 10M | `runner/ops.py`, `runner/ref_ops.py`, `results/expected/` |
 | Track L | python, rust, go, java, cpp (stdlib); labelled cpp-tuned / java-tuned (item 3) | `languages/*` (python lacks OP06-09) |
 | Track S | duckdb, polars, sqlite | `systems/*` |
 | Results | 804 correct timing records (1M/10M) | `results/published/`, `report/REPORT.md`, `report/FINDINGS.md` |
@@ -20,7 +20,7 @@ Effort: S = a few hundred lines / ~1 agent task, M = 2-3 agent tasks, L = open-e
 
 | # | Item | Effort | Value | Acceptance criteria |
 |---|---|---|---|---|
-| 1 | **Trust fixes (do first)**: extend the pure-Python vs DuckDB cross-check to 100k rows; add OP06-09 expected-result self-check at 100k; add a CI job that builds all implementations and runs `runner run --smoke` + 1k/10k correctness; create `docs/FAIRNESS_ISSUES.md` | S | high | CI green on a clean clone; cross-check test passes at 100k |
+| 1 | **Trust fixes (implemented)**: pure-Python vs DuckDB cross-check at 100k; OP06-09 expected-result self-check through 100k; clean-clone CI builds all implementations and runs `runner run --smoke` + 1k/10k correctness without unexpected skips; `docs/FAIRNESS_ISSUES.md` | S | high | CI green on a clean clone; cross-check test passes at 100k |
 | 2 | **Python OP06-09** (stdlib) so Track L is uniform across the 13 ops | S | medium | OK at 1k/10k/1m; impl.yaml updated |
 | 3 | **Flat-hash-map variants for C++ (OP04/09/10)** and primitive sort for Java OP08 — implemented as dependency-free `cpp-tuned` / `java-tuned` (variant `tuned`), with unchanged stdlib baselines | S | high (removes the main fairness caveat) | **done** — C++/Java baseline + tuned OK at 1k/10k/1m; report separates variants |
 | 4 | **JavaScript (node) and TypeScript** std-only implementations, all 13 ops (BigInt/number caveats documented) | M | high (language coverage) | OK at 1k/10k/1m; 10m subset |
@@ -31,7 +31,7 @@ Effort: S = a few hundred lines / ~1 agent task, M = 2-3 agent tasks, L = open-e
 | 9 | **Languages without local toolchains** (C#, Julia, Swift, Kotlin, Scala, R): run from their Dockerfiles in an environment that has them; otherwise stay `not_run` | L | medium | one language at a time, same contract |
 | 10 | **Explanations & evidence**: `perf stat` counters / flame graphs for the top and bottom implementation per op; `report/explanations/<op>.md`; resolve `unverified` data-type fields | L | high for "explain why results differ" | each op page cites measured evidence or says "hypothesis" |
 
-Suggested order under a tight budget: **1 -> 2 -> 3 -> 4**, then 5 (OP02/OP18 first), then 8 at 100M. Items 1-3 are cheap and
+Suggested order under a tight budget: verify/merge **1**, then **2 -> 3 -> 4**, then 5 (OP02/OP18 first), then 8 at 100M. Items 1-3 are cheap and
 make the existing results more defensible; item 4 adds the most visible coverage per unit cost.
 
 ## 3. Known limitations to fix or keep documenting
