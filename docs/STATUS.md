@@ -1,7 +1,7 @@
 # Status (Phase 3b slice complete)
 
-Last updated after roadmap items 1 (trust fixes) and 2 (Python stdlib OP06-OP09, validated at 1k/10k/1m).
-No new timing campaign or implementation variants; Java, C++ and earlier OP06-OP09 support came in PRs #1-#3.
+Last updated after roadmap items 1 (trust fixes), 2 (Python stdlib OP06-OP09) and 4 (JavaScript/TypeScript).
+No new timing campaign; Java, C++ and earlier OP06-OP09 support came in PRs #1-#3.
 
 ## Phase summary
 
@@ -11,8 +11,9 @@ No new timing campaign or implementation variants; Java, C++ and earlier OP06-OP
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22; DuckDB oracle + pure-Python cross-check; result digests | **done, correctness-validated** (no timing campaign yet) |
 | 3a First results | timing campaign (5 runs + warm-up) for the 6 implementations at 1M/10M, generated report + charts | **done** - `report/REPORT.md`, `report/FINDINGS.md`, `results/published/phase3a/` |
 | 3b/3c Breadth | joins/sort/top-N (OP06-09) for all implementations, Java + C++ on all 13 ops | **slice done** - 8 implementations, 13 ops; `results/published/phase3b/` |
-| Roadmap item 2 | Python stdlib OP06-OP09; all five Track L languages support all 13 registered ops | **done, correctness-validated at 1k/10k/1m** |
-| 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; JS/TS, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next - prioritised in `docs/PLAN.md` (items 1-4 first) |
+| Roadmap item 2 | Python stdlib OP06-OP09; all Track L languages support all 13 registered ops | **done, correctness-validated at 1k/10k/1m** |
+| Roadmap item 4 | JavaScript + TypeScript (Node.js), stdlib, all 13 ops | **implemented, correctness-validated** at 1k/10k/1m; OP01/06/22 at 10m |
+| 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next - prioritised in `docs/PLAN.md` (items 1-4 first) |
 | 4 Scale + analysis | 100M/1B runs, parallel track, profiler evidence, charts, final report | planned |
 
 ## What exists and is verified
@@ -58,12 +59,24 @@ Totals: 408/408 records OK at 1k-1m; 119/119 OK at 10m; 0 incorrect, 0 failed, 0
 Ops: OP01 scan-aggregate, OP03 group-by (low card.), OP04 group-by (high card.), OP05 group-by (3 keys),
 OP10 distinct counts, OP15 CSV parse, OP19 null handling, OP21 decimal vs float sums, OP22 conversion round trips.
 
+### Roadmap item 4: JavaScript / TypeScript
+
+* `javascript` and `typescript`: Track L `stdlib`, all 13 ops, one execution thread; streaming and materialized
+  (OP08 materialized-only). **150 OK records** at 1k/10k/1m, six expected OP08-streaming n/a; **12 OK** at
+  10m (OP01, OP06, OP22, both modes), zero incorrect/failed/schema problems. Node.js v22.23.1.
+* Typed TypeScript source and mechanically generated standalone JavaScript run the same V8 algorithms;
+  Node's built-in type stripping needs no npm dependencies. BigInt preserves IDs, cents, integer sums and
+  microseconds. Number/BigInt, GC, top-N sort and timing caveats: `languages/{javascript,typescript}/README.md`.
+* These are one-run correctness checks, **not a timing campaign**; no new rankings/results were published.
+  Reproduce: `python -m runner run --impl javascript,typescript --rows 1k,10k,1m --runs 1 --warmup 0 --force`;
+  subset: add `--rows 10m --op OP01,OP06,OP22` instead. Focused regressions: `tests/test_node_languages.py`.
+
 ## Known caveats (do not publish rankings before these are addressed)
 
 1. **Timing campaign is small:** 5 timed runs on one 4-vCPU machine (45 of 254 cells flagged noisy); 10M for Python/SQLite covers a subset of operations.
 2. **Not every combination was run at 10m** (python and sqlite subsets above); nothing has run above 10m.
 3. **Not-installed toolchains:** C#, Julia, Swift, Kotlin, Scala, R (conformance sources + Dockerfiles exist, untested);
-   no Java/C++/JS benchmark implementations yet. PostgreSQL, Spark, pandas, Arrow, ClickHouse not started.
+   JS/TS now validated (roadmap item 4); Java/C++ were added in Phase 3b. PostgreSQL, Spark, pandas, Arrow, ClickHouse not started.
 4. **Engine semantics worth a fairness note:** Polars rewrites `x / 100.0` as multiplication (driver works around it);
    Polars has no Kahan sum and SQLite's `sum()` is already compensated (OP21 floats compared with rtol 1e-9);
    DuckDB/Polars streaming modes ignore `--chunk-rows` and scan all files in one query.
