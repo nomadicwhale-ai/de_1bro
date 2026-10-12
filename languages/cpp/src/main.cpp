@@ -11,6 +11,7 @@
 #include "digest.hpp"
 #include "ops.hpp"
 #include "parse.hpp"
+#include "tuned.hpp"
 
 using namespace bench;
 using Clock = std::chrono::steady_clock;
@@ -42,7 +43,7 @@ static std::vector<std::string> listParts(const std::string& root, const std::st
 }
 
 int main(int argc, char** argv) {
-    std::string op, dataset = "A", mode = "streaming", input = "data";
+    std::string op, dataset = "A", mode = "streaming", input = "data", variant = "stdlib";
     int64_t rows = 0;
     for (int i = 1; i < argc; i++) {
         std::string a = argv[i];
@@ -52,10 +53,13 @@ int main(int argc, char** argv) {
         else if (a == "--rows") rows = std::atoll(val().c_str());
         else if (a == "--mode") mode = val();
         else if (a == "--input") input = val();
+        else if (a == "--variant") variant = val();
         else if (a == "--chunk-rows" || a == "--threads") val();
     }
     try {
         if (dataset != "A") throw std::runtime_error("only dataset A supported");
+        if (variant != "stdlib" && variant != "tuned") throw std::runtime_error("bad variant " + variant);
+        if (variant == "tuned" && !findTunedOp(op)) throw std::runtime_error("unsupported tuned op " + op);
         std::string label = sizeLabel(rows);
         auto files = listParts(input, "sales_fact", label);
         if (files.empty()) throw std::runtime_error("no CSV chunks for " + label);
@@ -75,7 +79,7 @@ int main(int argc, char** argv) {
                        Val::I(st.gb), Val::I(st.days), Val::I(st.sec), Val::I(st.frac), Val::I(st.ret)}};
             compMs = msSince(t0, Clock::now());
         } else {
-            const OpDef* def = findOp(op);
+            const OpDef* def = variant == "tuned" ? findTunedOp(op) : findOp(op);
             if (!def) throw std::runtime_error("unsupported op " + op);
             if (def->matOnly && mode != "materialized") throw std::runtime_error(op + " is materialized only");
             auto agg = def->mk();

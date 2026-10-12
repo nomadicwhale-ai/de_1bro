@@ -9,3 +9,15 @@ cpp:
   threads: [1]
   modes: [streaming, materialized]
   input: csv
+
+cpp-tuned:
+  track: L
+  variant: tuned
+  build: ["bash", "-c", "mkdir -p languages/cpp/bin && g++ -std=c++20 -O3 -DNDEBUG -o languages/cpp/bin/bench languages/cpp/src/*.cpp"]
+  cmd: ["languages/cpp/bin/bench", "--variant", "tuned"]
+  toolchain: {name: g++, version_cmd: ["g++", "--version"]}
+  flags: "-std=c++20 -O3"
+  ops: [OP04, OP09, OP10]
+  threads: [1]
+  modes: [streaming, materialized]
+  input: csv

@@ -2,6 +2,7 @@
 """Track S driver: Polars. See systems/polars/README.md for semantics and notes."""
 import argparse
 import glob
+import inspect
 import json
 import os
 import sys
@@ -187,6 +188,12 @@ def finish(df, op):
     return rows, {}
 
 
+# Polars 2 renamed the empty-string option; both APIs must preserve empty != NULL.
+CSV_EMPTY_OPTIONS = ({"empty_string_is_null": False}
+                     if "empty_string_is_null" in inspect.signature(pl.read_csv).parameters
+                     else {"missing_utf8_is_empty_string": True})
+
+
 def main():
     op = args.op
     load_ms = 0.0
@@ -194,11 +201,12 @@ def main():
         files = sorted(glob.glob(os.path.join(ddir, "part-*.csv")))
         t0 = time.perf_counter()
         if args.mode == "materialized":
-            df = pl.concat([pl.read_csv(f, schema=CSV_SCHEMA, null_values=["\\N"], missing_utf8_is_empty_string=True, has_header=True,
-                                        n_threads=args.threads) for f in files])
+            df = pl.concat([pl.read_csv(f, schema=CSV_SCHEMA, null_values=["\\N"], has_header=True,
+                                        **CSV_EMPTY_OPTIONS) for f in files])
             res = op15(df.lazy()).collect()
         else:
-            res = op15(pl.scan_csv(files, schema=CSV_SCHEMA, null_values=["\\N"], missing_utf8_is_empty_string=True, has_header=True)
+            res = op15(pl.scan_csv(files, schema=CSV_SCHEMA, null_values=["\\N"], has_header=True,
+                                   **CSV_EMPTY_OPTIONS)
                        ).collect(engine="streaming")
         rows, floats = finish(res, op)
         compute_ms = (time.perf_counter() - t0) * 1000

@@ -1,4 +1,5 @@
-"""DuckDB oracle == independent pure-Python semantics, on 1k and 10k rows."""
+"""DuckDB oracle == independent pure-Python semantics at 1k, 10k and 100k rows."""
+import json
 import math
 from pathlib import Path
 
@@ -10,7 +11,7 @@ from runner import oracle
 from runner.ops import OPS
 from runner.ref_ops import NEEDS_DIMS, REF, civil_from_days
 
-DATA = Path(__file__).resolve().parent.parent / "data"
+EXPECTED = Path(__file__).resolve().parent.parent / "results" / "expected"
 
 
 def test_civil_from_days():
@@ -20,7 +21,7 @@ def test_civil_from_days():
         assert civil_from_days(days) == (d.year, d.month, d.day)
 
 
-@pytest.fixture(scope="module", params=[1000, 10000])
+@pytest.fixture(scope="module", params=[1000, 10000, 100000])
 def sized(request, tmp_path_factory):
     n = request.param
     out = tmp_path_factory.mktemp("data")
@@ -45,3 +46,20 @@ def test_oracle_matches_reference(op, sized):
     assert exp["checksum"] == checksum
     for k, v in floats.items():
         assert math.isclose(exp["floats"][k], v, rel_tol=1e-9)
+
+
+@pytest.mark.parametrize("op", ["OP06", "OP07", "OP08", "OP09"])
+def test_expected_results_self_check(op, sized):
+    """Pin join/sort/top-N files to both independent evaluators, including 100k."""
+    n, out, rows, dims = sized
+    expected = json.loads((EXPECTED / f"{op}_A_{n}.json").read_text())
+    actual = oracle.compute(op, out, n)
+    (checksum, count), floats = REF[op](rows, dims) if op in NEEDS_DIMS else REF[op](rows)
+    assert expected["op"] == op
+    assert expected["dataset"] == "A"
+    assert expected["rows"] == n
+    assert expected["checksum"] == actual["checksum"] == checksum
+    assert expected["row_count"] == actual["row_count"] == count
+    assert expected["floats"] == actual["floats"] == floats
+    assert expected["data_table_digest"] == actual["data_table_digest"]
+    assert expected["generator_version"] == actual["generator_version"]

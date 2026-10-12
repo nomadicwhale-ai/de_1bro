@@ -1,6 +1,8 @@
 # Status (Phase 3b slice complete)
 
-Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
+Last updated after roadmap items 1 (trust fixes), 2 (Python stdlib OP06-OP09, validated at 1k/10k/1m),
+3 (labelled tuned variants) and 4 (JavaScript/TypeScript). The one-run tuned validation is correctness evidence,
+not a new performance campaign; Java, C++ and earlier OP06-OP09 support came in PRs #1-#3.
 
 ## Phase summary
 
@@ -10,22 +12,46 @@ Last updated after adding Java, C++ and OP06-OP09 (PRs #1-#3 merged earlier).
 | 2 Vertical slice | Python/Rust/Go + DuckDB/Polars/SQLite, ops OP01,03,04,05,10,15,19,21,22; DuckDB oracle + pure-Python cross-check; result digests | **done, correctness-validated** (no timing campaign yet) |
 | 3a First results | timing campaign (5 runs + warm-up) for the 6 implementations at 1M/10M, generated report + charts | **done** - `report/REPORT.md`, `report/FINDINGS.md`, `results/published/phase3a/` |
 | 3b/3c Breadth | joins/sort/top-N (OP06-09) for all implementations, Java + C++ on all 13 ops | **slice done** - 8 implementations, 13 ops; `results/published/phase3b/` |
-| 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; JS/TS, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next - prioritised in `docs/PLAN.md` (items 1-4 first) |
+| Roadmap item 2 | Python stdlib OP06-OP09; all Track L languages support all 13 registered ops | **done, correctness-validated at 1k/10k/1m** |
+| Roadmap item 4 | JavaScript + TypeScript (Node.js), stdlib, all 13 ops | **implemented, correctness-validated** at 1k/10k/1m; OP01/06/22 at 10m |
+| 3c+ remaining breadth | OP02, OP11-14, OP16-18, OP20; C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark | next - prioritised in `docs/PLAN.md` (items 1-4 first) |
 | 4 Scale + analysis | 100M/1B runs, parallel track, profiler evidence, charts, final report | planned |
+
+## Roadmap item 3 — labelled tuned variants
+
+* `cpp-tuned` (`tuned`): dependency-free flat maps/sets for OP04/09/10, both modes, one thread.
+* `java-tuned` (`tuned`): primitive index merge sort for OP08, materialized only, one thread.
+* Original `cpp` / `java` stdlib operation implementations, parsers and flags remain unchanged.
+* C++/Java baseline + tuned validation at 1k/10k/1m: **171 OK, 6 OP08-streaming n/a**, zero incorrect/failures/schema
+  problems. C++: 93 OK +3 n/a; Java (OpenJDK 21.0.2): 78 OK +3 n/a. All 70 tests passed.
+* `make report` gives `stdlib` and `tuned` separate tables/charts/ranks. Item-3 published records use one run,
+  no warm-up and are correctness evidence, not publication-grade performance results.
 
 ## What exists and is verified
 
 * **Generator** - `python -m generator gen|estimate|verify|golden`. Pure-Python reference == vectorised generator on
   every table (tests + `spec/golden.json`). 1B rows of `sales_fact` digest in ~100 s on 4 cores (`--sink null`).
 * **Oracle** - `runner/oracle.py` (DuckDB SQL from `runner/ops.py`) == independent pure-Python semantics
-  (`runner/ref_ops.py`) at 1k and 10k rows (`tests/test_oracle.py`). Expected results committed for
-  1k, 10k, 1m, 10m in `results/expected/`.
+  (`runner/ref_ops.py`) at 1k, 10k and 100k rows (`tests/test_oracle.py`, all 13 ops). Expected results committed for
+  1k, 10k, 1m, 10m in `results/expected/`, plus OP06-OP09 at 100k; those four ops' expected files are
+  self-checked against both evaluators at 1k/10k/100k.
 * **Runner** - process-isolated runs, per-process peak RSS (`wait4`), warm-up + timed runs, median/p95/IQR,
   resumable, schema-validated JSONL.
+* **CI** - a clean-clone `implementations` job provisions Python, Rust, Go, Java and C++, builds all registered
+  implementations, generates/verifies 1k/10k inputs, runs smoke plus forced correctness and rejects unexpected skips.
+  CPU affinity is selected from the runner's allowed CPUs. `generator` runs the full tests, including the 100k checks.
+* **Python coverage** - item 1 removed premature OP06-OP09 registration; item 2 implements and re-registers
+  these operations after validation, bringing the stdlib driver to all 13 registered operations.
+* **Fairness** - `docs/FAIRNESS_ISSUES.md` tracks current caveats, evidence and reporting mitigations.
 * **Docs** - 22 data-type concepts x 16 columns (`docs/data-types/`, 78 fields still marked `unverified`),
   conformance probes for 13 languages (7 executed).
 
 ## Correctness matrix (runner, single run, correctness only - NOT benchmark timings)
+
+**Roadmap item 2:** Python now supports all 13 operations. The full acceptance run at 1k/10k/1m produced
+75 OK records and 3 n/a records (OP08 streaming is undefined), with no incorrect, failed or skipped records.
+OP06/OP07/OP09 passed in both modes; OP08 passed materialized. The new operations have not been run at 10m.
+Reproduce with `python -m runner run --impl python --rows 1k,10k,1m --runs 1 --warmup 0 --force`.
 
 Phase 3b added `java` and `cpp` (track L, stdlib, all 13 ops, both modes except OP08 materialized-only) and OP06-OP09 for
 rust, go, duckdb, polars, sqlite. Validation at 1k/10k/1m: 624 + 12 records OK, 0 incorrect; timing campaigns: 804 OK records in total
@@ -44,12 +70,24 @@ Totals: 408/408 records OK at 1k-1m; 119/119 OK at 10m; 0 incorrect, 0 failed, 0
 Ops: OP01 scan-aggregate, OP03 group-by (low card.), OP04 group-by (high card.), OP05 group-by (3 keys),
 OP10 distinct counts, OP15 CSV parse, OP19 null handling, OP21 decimal vs float sums, OP22 conversion round trips.
 
+### Roadmap item 4: JavaScript / TypeScript
+
+* `javascript` and `typescript`: Track L `stdlib`, all 13 ops, one execution thread; streaming and materialized
+  (OP08 materialized-only). **150 OK records** at 1k/10k/1m, six expected OP08-streaming n/a; **12 OK** at
+  10m (OP01, OP06, OP22, both modes), zero incorrect/failed/schema problems. Node.js v22.23.1.
+* Typed TypeScript source and mechanically generated standalone JavaScript run the same V8 algorithms;
+  Node's built-in type stripping needs no npm dependencies. BigInt preserves IDs, cents, integer sums and
+  microseconds. Number/BigInt, GC, top-N sort and timing caveats: `languages/{javascript,typescript}/README.md`.
+* These are one-run correctness checks, **not a timing campaign**; no new rankings/results were published.
+  Reproduce: `python -m runner run --impl javascript,typescript --rows 1k,10k,1m --runs 1 --warmup 0 --force`;
+  subset: add `--rows 10m --op OP01,OP06,OP22` instead. Focused regressions: `tests/test_node_languages.py`.
+
 ## Known caveats (do not publish rankings before these are addressed)
 
 1. **Timing campaign is small:** 5 timed runs on one 4-vCPU machine (45 of 254 cells flagged noisy); 10M for Python/SQLite covers a subset of operations.
 2. **Not every combination was run at 10m** (python and sqlite subsets above); nothing has run above 10m.
 3. **Not-installed toolchains:** C#, Julia, Swift, Kotlin, Scala, R (conformance sources + Dockerfiles exist, untested);
-   no Java/C++/JS benchmark implementations yet. PostgreSQL, Spark, pandas, Arrow, ClickHouse not started.
+   JS/TS now validated (roadmap item 4); Java/C++ were added in Phase 3b. PostgreSQL, Spark, pandas, Arrow, ClickHouse not started.
 4. **Engine semantics worth a fairness note:** Polars rewrites `x / 100.0` as multiplication (driver works around it);
    Polars has no Kahan sum and SQLite's `sum()` is already compensated (OP21 floats compared with rtol 1e-9);
    DuckDB/Polars streaming modes ignore `--chunk-rows` and scan all files in one query.
@@ -57,7 +95,8 @@ OP10 distinct counts, OP15 CSV parse, OP19 null handling, OP21 decimal vs float 
    compute tiny). Compare `load_ms + compute_ms` too, never `compute_ms` alone, before drawing conclusions.
 6. Size estimates in `docs/dataset-sizes.md` run 10-30% high; 1B Parquet (~28-35 GB) does not fit this container's disk -
    use `--sink null` for 1B here.
-7. Result digests are verified only against the DuckDB oracle + pure-Python at <=10k rows; 100k-10M rely on DuckDB alone.
+7. Oracle/result digests are independently cross-checked through 100k; 1M/10M still rely on DuckDB alone.
+   Clean-clone CI checks correctness, not performance or fairness; tracked caveats remain in `docs/FAIRNESS_ISSUES.md`.
 
 ## Reproduce
 

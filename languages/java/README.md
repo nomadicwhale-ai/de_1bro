@@ -1,4 +1,4 @@
-# Java (Track L, variant `stdlib`)
+# Java (Track L, variants `stdlib` and `tuned`)
 
 Registered as `java` in `impl.yaml`. Java 21, JDK only (no jars). Build: `javac -d languages/java/build languages/java/src/*.java`
 (output is git-ignored). Run: `java -Xmx6g -XX:+UseSerialGC -cp languages/java/build Bench ...`.
@@ -27,12 +27,23 @@ All 13 ops (OP01 OP03-OP10 OP15 OP19 OP21 OP22), modes streaming + materialized 
 * **Joins (OP06/OP07)**: dimension tables are loaded first (counted in `load_ms`), reading only the leading fields
   (id, segment / brand) and ignoring the quoted JSON tail; probes use `LMap` id -> row, with attribute dictionary codes.
 * **OP08**: standard library sort: `Arrays.sort(Integer[], Comparator)` (TimSort) on boxed row indexes comparing
-  `(ts, transaction_id)`; a primitive sort cannot carry the two keys. It is slow (about 3 s at 1m, about 19 s at 10m)
+  `(ts, transaction_id)`; the baseline uses boxed indices to carry the two keys. It is slow (about 3 s at 1m, about 19 s at 10m)
   and allocation heavy; this is the idiomatic stdlib result, left as is. Position sum uses wrapping `long` arithmetic.
 * **Modes**: streaming parses one chunk into a reused batch, aggregates, repeats; materialized parses all chunks into one
   batch preallocated for `--rows`, then aggregates once. Same parse/aggregation code in both.
 * **OP15** fuses parse and summarise per row (all 13 columns converted), `load_ms = 0`.
 * `compute_ms` includes building the result rows but not the digest or JSON output.
+
+## Tuned variant
+* `java-tuned`, variant `tuned`, supports only OP08, materialized mode, one thread. Same parser, JVM flags,
+  timing boundaries and result digest as `java`; `--variant tuned` selects it (runner adds it).
+* `PrimitiveSort.java` performs a bottom-up merge sort on two primitive `int[]` index buffers, comparing
+  the original full signed `long` timestamp then transaction id. No boxed indices, key packing, precision
+  loss, assumptions about generator ranges, libraries or parallelism. Auxiliary indexes use 8 bytes/row.
+* Allocating buffers, sorting, wrapping positional sum and result creation are timed as `compute_ms`;
+  digest and JSON are outside timing. The original `Ops.Op08` boxed-index stdlib sort is unchanged.
+* Validated alongside `java` at 1k/10k/1m on OpenJDK 21.0.2; report tables/charts/ranks keep `stdlib`
+  and `tuned` separate. Reproduce: `python -m runner run --impl java,java-tuned --rows 1k,10k,1m --runs 1 --warmup 0 --force`.
 
 ## Known limitations / unfairness
 * CSV parsing assumes no quoted fields in sales_fact/dim_customer (generator never emits them); `\r\n` is tolerated.

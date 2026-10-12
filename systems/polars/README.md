@@ -15,8 +15,9 @@ Driver: `systems/polars/bench.py` (python `polars` 1.44.x), registered as `polar
 * NULL-aware sums (`sum_quantity` NULL when all NULL) use `when(count>0).then(sum)`; small ints are cast to
   Int64 before summing (polars would otherwise overflow Int32 sums in some paths).
 * OP15: `pl.read_csv` (per chunk file, concatenated) / `pl.scan_csv(...).collect(engine="streaming")` with an
-  explicit schema, `null_values=["\N"]`, `missing_utf8_is_empty_string=True` (an empty unquoted field is the
-  empty string, not NULL), date/timestamp read as strings and parsed with exact formats
+  explicit schema, `null_values=["\N"]`, `missing_utf8_is_empty_string=True` (Polars 1.x) or
+  `empty_string_is_null=False` (Polars 2.x): an empty unquoted field is the empty string, not NULL.
+  CSV readers use the configured global thread pool, avoiding the removed 2.x `n_threads` option; date/timestamp read as strings and parsed with exact formats
   (`%Y-%m-%d`, `%Y-%m-%d %H:%M:%S%.f`, `strict=True`), then summary expressions. Whole read+parse+summary is
   `compute_ms`, `load_ms = 0`. Both modes use the same logic (eager vs streaming engine).
 
