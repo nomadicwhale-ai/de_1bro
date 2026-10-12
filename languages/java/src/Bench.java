@@ -20,7 +20,7 @@ public final class Bench {
     static double ms(long ns) { return ns / 1e6; }
 
     public static void main(String[] args) throws Exception {
-        String op = "", dataset = "A", mode = "streaming", input = "data";
+        String op = "", dataset = "A", mode = "streaming", input = "data", variant = "stdlib";
         long rows = 0;
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -29,11 +29,14 @@ public final class Bench {
                 case "--rows" -> rows = Long.parseLong(args[++i]);
                 case "--mode" -> mode = args[++i];
                 case "--input" -> input = args[++i];
+                case "--variant" -> variant = args[++i];
                 case "--chunk-rows", "--threads" -> i++;
                 default -> { }
             }
         }
         if (!dataset.equals("A")) fail("only dataset A supported");
+        if (!variant.equals("stdlib") && !variant.equals("tuned")) fail("bad variant " + variant);
+        if (variant.equals("tuned") && !op.equals("OP08")) fail("unsupported tuned op " + op);
         String label = sizeLabel(rows);
         List<String> files = new ArrayList<>();
         try (var st = Files.list(Path.of(input, "sales_fact", label))) {
@@ -61,7 +64,7 @@ public final class Bench {
         } else {
             Ops.Def def = Ops.OPS.get(op);
             if (def == null) { fail("unsupported op " + op); return; }
-            Ops.Agg agg = def.mk().get();
+            Ops.Agg agg = variant.equals("tuned") ? new PrimitiveSort.Op08() : def.mk().get();
             Csv.Batch b;
             if (mode.equals("streaming")) {
                 if (op.equals("OP08")) { fail("OP08 is materialized only"); return; }

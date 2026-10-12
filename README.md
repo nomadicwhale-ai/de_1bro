@@ -16,6 +16,10 @@ specification and `docs/METHODOLOGY.md` for the rules.
 | 3c+ Breadth | remaining ops (OP02, 11-14, 16-18, 20), JS/TS and more languages, PostgreSQL/pandas/Arrow/Spark | next |
 | 4 Scale + analysis | 100M/1B runs, parallel track, charts, report | planned |
 
+Roadmap item 3 adds dependency-free labelled `cpp-tuned` (OP04/09/10 flat hash maps/sets) and `java-tuned`
+(OP08 primitive sort) alongside the unchanged `cpp`/`java` stdlib baselines. `make report` shows separate
+variant tables, charts and ranks; the 1k/10k/1m validation campaign is correctness evidence, not a performance claim.
+
 Details: [`docs/STATUS.md`](docs/STATUS.md) (verified matrix + caveats) and [`docs/PLAN.md`](docs/PLAN.md) (prioritised roadmap, risks, handoff).
 
 ## Quick start
