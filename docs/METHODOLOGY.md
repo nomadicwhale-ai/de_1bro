@@ -5,7 +5,8 @@ protocol that Phase 2+ implementations and the runner follow.
 
 ## Tracks
 * **Track L** – hand-written programs per language; variants `stdlib` (single-threaded, primary),
-  `parallel` (stdlib concurrency, fixed N threads), `ecosystem` (named libraries, ranked separately).
+  `tuned` (dependency-free custom containers/sort), `parallel` (stdlib concurrency, fixed N threads),
+  `ecosystem` (named libraries). Variants have separate report tables/charts and are ranked separately.
 * **Track S** – data systems (DuckDB, PostgreSQL, Spark, Polars, pandas, Arrow, ClickHouse, SQLite ≤10M).
 * Tracks are **never ranked against each other**: different optimisers, vectorisation, storage and I/O layers.
 

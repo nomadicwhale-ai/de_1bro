@@ -9,7 +9,7 @@ ends in a merged, verified increment; later items can be dropped without invalid
 |---|---|---|
 | Data | deterministic generator, 5 tables, 1k-1B (streaming), manifests, golden digests | `spec/generator.md`, `spec/golden.json`, tests |
 | Oracle | 13 ops: OP01,03,04,05,06,07,08,09,10,15,19,21,22; DuckDB == pure-Python at 1k/10k/100k; OP06-09 expected-file self-checks through 100k; expected results to 10M | `runner/ops.py`, `runner/ref_ops.py`, `results/expected/` |
-| Track L | python, rust, go, java, cpp (stdlib only), all 13 ops | `languages/*`; Python OP06-09 validated at 1k/10k/1m |
+| Track L | python, rust, go, java, cpp (stdlib), all 13 ops; labelled cpp-tuned / java-tuned (item 3) | `languages/*`; Python OP06-09 validated at 1k/10k/1m |
 | Track S | duckdb, polars, sqlite | `systems/*` |
 | Results | 804 correct timing records (1M/10M) | `results/published/`, `report/REPORT.md`, `report/FINDINGS.md` |
 | Docs | data-type tables (78 `unverified` fields), conformance probes (7/13 languages run) | `docs/data-types/`, `conformance/` |
@@ -22,7 +22,7 @@ Effort: S = a few hundred lines / ~1 agent task, M = 2-3 agent tasks, L = open-e
 |---|---|---|---|---|
 | 1 | **Trust fixes (implemented)**: pure-Python vs DuckDB cross-check at 100k; OP06-09 expected-result self-check through 100k; clean-clone CI builds all implementations and runs `runner run --smoke` + 1k/10k correctness without unexpected skips; `docs/FAIRNESS_ISSUES.md` | S | high | CI green on a clean clone; cross-check test passes at 100k |
 | 2 | **Done: Python OP06-09** (stdlib), making Track L uniform across the 13 ops | S | medium | 75 OK at 1k/10k/1m across all 13 ops; OP08 streaming n/a; impl.yaml updated |
-| 3 | **Flat-hash-map variants for C++ (OP04/09/10)** and primitive sort for Java OP08, as *labelled variants* next to the current implementations (variant `ecosystem`/`tuned`), so the report separates "naive stdlib" from "tuned stdlib" | S | high (removes the main fairness caveat) | both variants correct; report shows both |
+| 3 | **Flat-hash-map variants for C++ (OP04/09/10)** and primitive sort for Java OP08 — implemented as dependency-free `cpp-tuned` / `java-tuned` (variant `tuned`), with unchanged stdlib baselines | S | high (removes the main fairness caveat) | **done** — C++/Java baseline + tuned OK at 1k/10k/1m; report separates variants |
 | 4 | **JavaScript (node) and TypeScript** std-only implementations, all 13 ops (BigInt/number caveats documented) | M | high (language coverage) | OK at 1k/10k/1m; 10m subset |
 | 5 | **Remaining ops**: OP02 filter, OP18 date/time, OP20 wide scan (needs dataset E), OP11 window, then OP12-14 (dataset D), OP16/17 I/O | M-L | high | spec + oracle + reference + >=4 implementations each |
 | 6 | **More systems**: pandas, PyArrow compute (cheap, pip), then PostgreSQL (server install), Spark local (JVM + pyspark), ClickHouse (if installable) | M-L | medium-high | same contract; `status: not_run` + reason where infeasible |
@@ -42,7 +42,9 @@ make the existing results more defensible; item 4 adds the most visible coverage
 * Python and SQLite are only validated on a subset of operations at 10M; nothing runs above 10M.
 * DuckDB/Polars streaming ignore `--chunk-rows` and scan all files in one query; Track L streaming is true chunked.
 * `compute_ms` vs `load_ms` splits are implementation-defined; rank by `load + compute` (as the report does).
-* `std::unordered_map` (C++) and boxed-index sort (Java) are deliberately idiomatic-stdlib; item 3 adds tuned variants.
+* `std::unordered_map` (C++) and boxed-index sort (Java) remain the deliberately idiomatic-stdlib baselines;
+  item 3 adds flat hash maps/sets and primitive merge sort as separately ranked `tuned` variants. The item-3
+  one-run/no-warm-up campaign is correctness evidence only; rerun before performance claims.
 * Size estimates in `docs/dataset-sizes.md` run 10-30% high; 1B Parquet (~35 GB) does not fit this container's disk.
 * 78 data-type fields remain `unverified`; conformance output wins when it disagrees.
 

@@ -38,7 +38,7 @@ implementations must not be extrapolated to the full list.
 # Phase 3b additions (Java, C++, joins/sort/top-N)
 
 Data: `results/published/phase3b/` (java and cpp on all 13 ops at 1M/10M; OP06-OP09 for rust, go, duckdb, polars, sqlite).
-Whole report now covers 446 records (104 flagged `noisy`), all correct against the oracle. Rust/Go/Python numbers for
+The Phase 3a/3b report covers 446 records (104 flagged `noisy`), all correct against the oracle. Rust/Go/Python numbers for
 OP01-OP05, OP10, OP15, OP19, OP21, OP22 come from the earlier Phase 3a campaign (same idle machine, different time).
 Same caveat as above: these describe these implementations, not the languages.
 
@@ -50,7 +50,7 @@ Same caveat as above: these describe these implementations, not the languages.
   node per element; Rust/Go/Java use flat or custom maps. This is an implementation choice that the README documents,
   not a statement about C++ - a flat hash map would likely close the gap.
 * **Java is the slowest Track L implementation on most operations** (typically 1.4-2.3x C++), and 4x slower on OP08 because
-  the standard-library comparator sort works on boxed indexes (a primitive sort cannot carry the 2-key order). Each run is a
+  the standard-library comparator sort works on boxed indexes in the baseline. Each run is a
   fresh JVM, so JIT warm-up and GC are inside the timing; the effect is largest at small sizes.
 * Rust is slowest of the compiled three on OP05 (5.1 s vs C++ 2.9 s, Go 3.2 s) - a composite-key hashing choice, see its README.
 
@@ -60,6 +60,14 @@ Same caveat as above: these describe these implementations, not the languages.
   (single thread).
 * New operations in Track S: OP06 join DuckDB 1.4 s / Polars 2.4 s; OP08 sort Polars 1.6 s / DuckDB 2.5 s;
   OP09 top-100 DuckDB 1.2 s / Polars 2.1 s. SQLite at 10M takes 55-62 s per operation (load + compute), almost all of it CSV import.
+
+## Roadmap item 3: tuned variants
+* `cpp-tuned` replaces node-based maps/sets on OP04/09/10; `java-tuned` adds primitive index merge sort on OP08.
+  Both are dependency-free `tuned` variants, separate from unchanged `stdlib` baselines in tables/charts/ranks.
+* Published item-3 records are one-run/no-warm-up correctness checks at 1k/10k/1m, not comparable performance
+  evidence against the earlier campaigns; no speedup claim is made. Original + tuned C++/Java validation:
+  171 OK +6 OP08-streaming n/a, zero incorrect/failures/schema problems; full tests passed. Environment IDs
+  in the generated report preserve the earlier 4-core Xeon context separately from the item-3 VM.
 
 ## Still not covered
 OP02, OP11-OP14, OP16-OP18, OP20; JavaScript/TypeScript, C#, Julia, Swift, Kotlin, Scala, R; PostgreSQL, pandas, Arrow, Spark,
